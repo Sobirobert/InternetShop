@@ -1,6 +1,5 @@
 ﻿using Application.Mappings;
 using AutoMapper;
-using Domain.Entities.Cosmos;
 
 namespace Application.Dto.Cosmos;
 
