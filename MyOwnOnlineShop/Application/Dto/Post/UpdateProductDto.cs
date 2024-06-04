@@ -17,7 +17,7 @@ public class UpdateProductDto : IMap
 
     public void Mapping(Profile profile)
     {
-        profile.CreateMap<CreateProductDto, Product>()
-             .ForMember(dest => dest.LastModified, opt => opt.MapFrom(src => src.LastModified));
+        profile.CreateMap<CreateProductDto, Product>();
+            // .ForMember(dest => dest.LastModified, opt => opt.MapFrom(src => src.LastModified));
     }
 }

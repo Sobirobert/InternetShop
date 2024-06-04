@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ public static class DependencyInjection
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
-        //services.AddScoped<IProductService, ProductService>();
+        services.AddScoped<IProductService, ProductService>();
         //services.AddScoped<ICosmosPostService, CosmosPostService>();
         //services.AddScoped<IPictureService, PictureService>();
         //services.AddScoped<IAttachmentService, AttachmentService>();

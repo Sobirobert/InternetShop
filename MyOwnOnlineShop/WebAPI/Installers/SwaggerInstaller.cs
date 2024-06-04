@@ -25,7 +25,7 @@ public class SwaggerInstaller : IInstaller
                 BearerFormat = "JWT",
                 Reference = new OpenApiReference
                 {
-                    Id = JwtBearerDefaults.AuthenticationScheme,
+                   // Id = JwtBearerDefaults.AuthenticationScheme,
                     Type = ReferenceType.SecurityScheme
                 }
             };
