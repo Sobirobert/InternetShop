@@ -53,6 +53,9 @@ public class Product : AuditableEntity
         Price = price;
         Type = type;
         Category = category;
+        Created = DateTime.UtcNow;
+
+
     }
 
     public Product(int id, string title, string description, double price, int yearOfProduction, Enums.Type type, Category category)
@@ -64,5 +67,6 @@ public class Product : AuditableEntity
         YearOfProduction = yearOfProduction;
         Type = type;
         Category = category;
+        Created = DateTime.UtcNow;
     }
 }
