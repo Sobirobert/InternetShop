@@ -34,7 +34,7 @@ public class ProductController : ControllerBase
     [HttpGet("[action]")]
     public IActionResult GetSortFields()
     {
-        return Ok(SortingHelper.GetSortFields().Select(x => x.Key));
+        return Ok(/*SortingHelper.GetSortFields().Select(x => x.Key)*/);
     }
 
     [SwaggerOperation(Summary = "Retrieves all posts")]
@@ -42,79 +42,17 @@ public class ProductController : ControllerBase
     [AllowAnonymous]
     //[Authorize(Roles = UserRoles.Admin)]
     [HttpGet]
-    public async Task<IActionResult> Get([FromQuery] PaginationFilter paginationFilter, [FromQuery] SortingFilter sortingFilter, [FromQuery] string filterBy = "")
+    public async Task<IActionResult> Get()
     {
-        var validPaginationFilter = new PaginationFilter(paginationFilter.PageNumber, paginationFilter.PageSize);
-        var validSortingFilter = new SortingFilter(sortingFilter.SortField, sortingFilter.Ascending);
-
-        var posts = await _postService.GetAllPostsAsync(validPaginationFilter.PageNumber, validPaginationFilter.PageSize,
-                                                        validSortingFilter.SortField, validSortingFilter.Ascending,
-                                                        filterBy);
-
-        var totalRecords = await _postService.GetAllPostsCountAsync(filterBy);
-
-        return Ok(PaginationHelper.CreatePageResponse(posts, validPaginationFilter, totalRecords));
+       return Ok();
     }
-
-
-    //[SwaggerOperation(Summary = "Retrieves all posts witch cache")]
-    //[EnableQuery]
-    //[Authorize(Roles = UserRoles.Admin)]
-    //[HttpGet("[action]")]
-    //public async Task<IActionResult> GetWithCache([FromQuery] PaginationFilter paginationFilter, [FromQuery] SortingFilter sortingFilter, [FromQuery] string filterBy = "")
-    //{
-    //    var posts = _memoryCache.Get<IEnumerable<PostDto>>("posts");
-
-    //    var validPaginationFilter = new PaginationFilter(paginationFilter.PageNumber, paginationFilter.PageSize);
-    //    var validSortingFilter = new SortingFilter(sortingFilter.SortField, sortingFilter.Ascending);
-    //    if (posts == null)
-    //    {                                                                         // pobieranie postów z cache służy nie do pobierania wszystkich, tylko postów z określonego czasu
-    //        _logger.LogInformation("Fetching from service.");
-    //        posts = await _postService.GetAllPostsAsync(validPaginationFilter.PageNumber, validPaginationFilter.PageSize,
-    //                                                   validSortingFilter.SortField, validSortingFilter.Ascending, filterBy);
-    //        _memoryCache.Set("posts", posts, TimeSpan.FromMinutes(1));
-    //    }
-    //    else
-    //    {
-    //        _logger.LogInformation("Fetching from cache.");
-    //    }
-
-    //    var totalRecords = await _postService.GetAllPostsCountAsync(filterBy);
-    //    return Ok(PaginationHelper.CreatePageResponse(posts, validPaginationFilter, totalRecords));
-    //}
-
-    //[SwaggerOperation(Summary = "Retrieves all posts")]
-    //[Authorize(Roles = UserRoles.Admin)]
-    //[HttpGet("[action]")]
-    //public IQueryable<PostDto> GetAll()
-    //{
-    //    var posts = _memoryCache.Get<IQueryable<PostDto>>("posts");
-    //    if (posts == null)
-    //    {                                                                         // pobieranie postów z cache służy nie do pobierania wszystkich, tylko postów z określonego czasu
-    //        _logger.LogInformation("Fetching from service.");
-    //        posts = _postService.GetAllPostsAsync();
-    //        _memoryCache.Set("posts", posts, TimeSpan.FromMinutes(1));
-    //    }
-    //    else
-    //    {
-    //        _logger.LogInformation("Fetching from cache.");
-    //    }
-
-    //    return posts;
-    //}
 
     [SwaggerOperation(Summary = "Retrieves a specific post by unique Id")]
     [Microsoft.AspNetCore.Authorization.AllowAnonymous]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetPostByID(int id)
     {
-        var post = await _productService.GetPostByIdAsync(id);
-        if (post == null)
-        {
-            return NotFound(id);
-        }
-
-        return Ok(new Response<PostDto>(post));
+        return Ok();
     }
 
     //[ValidateFilter]
@@ -124,21 +62,7 @@ public class ProductController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(CreateProductDto newPost)
     {
-        //var validator = new CreatePostDtoValidator();
-        //var result = validator.Validate(newPost);
-        //if (!result.IsValid)
-        //{
-        //    return BadRequest(new Response<bool>
-        //    {
-        //        Succeeded = false,
-        //        Message = "Something went wrong.",
-        //        Errors = result.Errors.Select(x => x.ErrorMessage)
-        //    });
-        //}
-
-        var post = await _productService.AddNewPostAsync(newPost, User.FindFirstValue(ClaimTypes.NameIdentifier));
-        _metrics.Measure.Counter.Increment(MetricsRegistry.CreatedPostsCounter);
-        return Created($"api/posts/{post.Id}", new Response<PostDto>(post));
+        return Ok();
     }
 
     [SwaggerOperation(Summary = "Update a existing post")]
@@ -146,14 +70,7 @@ public class ProductController : ControllerBase
     [HttpPut]
     public async Task<IActionResult> Update(UpdateProductDto updateProduct)
     {
-        var userOwnsPost = await _productService.UserOwnsPostAsync(updatePost.Id, User.FindFirstValue(ClaimTypes.NameIdentifier));
-        if (!userOwnsPost)
-        {
-            return BadRequest(new Response(false, "You do not own this post."));
-        }
-
-        await _productService.UpdatePostAsync(updatePost);
-        return NoContent();
+        return Ok();
     }
 
     [SwaggerOperation(Summary = "Delete a specific post")]
@@ -161,13 +78,6 @@ public class ProductController : ControllerBase
     [HttpDelete("Id")]
     public async Task<IActionResult> Delete(int id)
     {
-        var userOwnsPost = await _productService.UserOwnsPostAsync(id, User.FindFirstValue(ClaimTypes.NameIdentifier));
-        var isAdmin = User.FindFirstValue(ClaimTypes.Role).Contains(UserRoles.Admin);
-        if (!isAdmin && !userOwnsPost)
-        {
-            return BadRequest(new Response(false, "You do not own this post."));
-        }
-        await _productService.DeletePostAsync(id);
-        return NoContent();
+        return Ok();
     }
 }

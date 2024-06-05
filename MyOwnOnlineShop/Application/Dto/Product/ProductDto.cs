@@ -7,7 +7,7 @@ using System;
 
 namespace Application.Dto;
 
-public class PostDto : IMap
+public class ProductDto : IMap
 {
     public int Id { get; set; }
     public string Title { get; set; }
@@ -22,7 +22,7 @@ public class PostDto : IMap
 
     public void Mapping(Profile profile)
     {
-        profile.CreateMap<Product, PostDto>()
+        profile.CreateMap<Product, ProductDto>()
             .ForMember(dest => dest.CreationDate, opt => opt.MapFrom(src => src.Created));
     }
 }

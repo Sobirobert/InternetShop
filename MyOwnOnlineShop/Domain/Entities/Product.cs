@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities;
 
-[Table("Product")]
+[Table("Products")]
 public class Product : AuditableEntity
 {
     [Key]
@@ -13,14 +13,12 @@ public class Product : AuditableEntity
 
     [Required]
     [MaxLength(100)]
-    [MinLength(5)]
     public string Title { get; set; }
 
     [Required]
     [MaxLength(2000)]
     public string DescriptionOfProduct { get; set; }
 
-    [MinLength(4)]
     [Required]
     public int YearOfProduction { get; set; }
     
@@ -37,8 +35,8 @@ public class Product : AuditableEntity
     [Required]
     public Category Category { get; set; }
 
-    public ICollection<Picture> Pictures { get; set; }
-    public ICollection<Attachment> Attachments { get; set; }
+    //public ICollection<Picture> Pictures { get; set; }
+   // public ICollection<Attachment> Attachments { get; set; }
 
     public Product()
     { }

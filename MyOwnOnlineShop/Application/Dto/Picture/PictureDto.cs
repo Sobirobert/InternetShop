@@ -13,6 +13,6 @@ public class PictureDto : IMap
 
     public void Mapping(Profile profile)
     {
-        profile.CreateMap<Picture, PictureDto>();
+        //profile.CreateMap<Picture, PictureDto>();
     }
 }

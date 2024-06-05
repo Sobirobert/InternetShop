@@ -11,6 +11,6 @@ public class AttachmentDto : IMap
 
     public void Mapping(Profile profile)
     {
-        profile.CreateMap<Attachment, AttachmentDto>();
+        //profile.CreateMap<Attachment, AttachmentDto>();
     }
 }

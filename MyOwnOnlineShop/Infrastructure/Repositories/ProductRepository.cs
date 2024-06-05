@@ -1,39 +1,55 @@
 ﻿using Domain.Entities;
 using Domain.Interfaces;
+using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
 public class ProductRepository : IProductRepository
 {
-    //private readonly BloggerContext _context;
+    private readonly OnlineShopContext _context;
 
-    public Task<Product> AddAsync(Product product)
+    public ProductRepository(OnlineShopContext context)
     {
-        throw new NotImplementedException();
+        _context = context;
     }
 
-    public Task DeleteAsync(Product product)
+    public async Task<IEnumerable<Product>> GetAllAsync(/*int pageNumber, int pageSize, string sortField, bool ascending, string filterBy*/)
     {
-        throw new NotImplementedException();
+        return await _context.Products.ToListAsync();
+    }
+    public async Task<Product> GetByIdAsync(int id)
+    {
+        return await _context.Products.SingleOrDefaultAsync(x => x.Id == id);
+    }
+    public async Task<int> GetAllCountAsync(string filterBy)
+    {
+        return await _context.Products.Where(m => m.Title.ToLower().Contains(filterBy.ToLower()) || m.Content.ToLower().Contains(filterBy.ToLower())).CountAsync();
     }
 
-    public Task<IEnumerable<Product>> GetAllAsync(int pageNumber, int pageSize, string sortField, bool ascending, string filterBy)
+    public async Task<Product> AddAsync(Product product)
     {
-        throw new NotImplementedException();
+        product.Created = DateTime.Now;
+        await _context.Products.AddAsync(product);
+        await _context.SaveChangesAsync();
+        return product;
+    }
+    public async Task UpdateAsync(Product product)
+    {
+        product.LastModified = DateTime.Now;
+        _context.Products.Update(product);
+        await _context.SaveChangesAsync();
+        
     }
 
-    public Task<int> GetAllCountAsync(string filterBy)
+    public async Task DeleteAsync(Product product)
     {
-        throw new NotImplementedException();
+        _context.Products.Remove(product);
+        await _context.SaveChangesAsync();
     }
 
-    public Task<Product> GetByIdAsync(int id)
-    {
-        throw new NotImplementedException();
-    }
+    
 
-    public Task UpdateAsync(Product product)
-    {
-        throw new NotImplementedException();
-    }
+
+    
 }
