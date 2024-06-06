@@ -10,7 +10,7 @@ public interface IProductService
 
     Task<ProductDto> GetPostByIdAsync(int id);
 
-    Task<ProductDto> AddNewPostAsync(CreateProductDto newProduct, string userId);
+    Task<ProductDto> AddNewPostAsync(CreateProductDto newProduct);
 
     Task UpdatePostAsync(UpdateProductDto updateProduct);
 

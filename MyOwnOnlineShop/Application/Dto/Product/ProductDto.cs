@@ -2,8 +2,6 @@
 using AutoMapper;
 using Domain.Entities;
 using Domain.Enums;
-using System.ComponentModel.DataAnnotations;
-using System;
 
 namespace Application.Dto;
 

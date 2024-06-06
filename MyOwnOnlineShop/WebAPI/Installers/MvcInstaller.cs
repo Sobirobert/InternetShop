@@ -1,8 +1,9 @@
-﻿
-using Application;
+﻿using Application;
 using Infrastructure;
+using Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebAPI.Installers;
 
@@ -12,27 +13,8 @@ public class MvcInstaller : IInstaller
     {
         services.AddApplication();
         services.AddInfrastructure();
-
-        //var metrics = AppMetrics.CreateDefaultBuilder().Build();
-        //services.AddMetrics(metrics);
-
-        //services.AddMemoryCache();
-
         services.AddControllers();
-            //.AddFluentValidation(options =>
-            //{
-            //    options.RegisterValidatorsFromAssemblyContaining<CreatePostDtoValidator>();
-            //})
-            //.AddJsonOptions(options =>
-            //{
-            //    options.JsonSerializerOptions.WriteIndented = true;
-            //})
-            //.AddXmlSerializerFormatters();
-
         services.AddAuthorization();
-
-        //services.AddTransient<UserResolverService>();
-        //services.AddScoped<ErrorHandlingMiddelware>();
 
         services.AddApiVersioning(x =>
         {

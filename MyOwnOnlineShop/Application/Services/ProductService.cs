@@ -3,11 +3,6 @@ using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Services;
 
@@ -38,13 +33,14 @@ public class ProductService : IProductService
         var post = await _productRepository.GetByIdAsync(id);
         return _mapper.Map<ProductDto>(post);
     }
-    public async Task<ProductDto> AddNewPostAsync(CreateProductDto newProduct, string userId)
+
+    public async Task<ProductDto> AddNewPostAsync(CreateProductDto newProduct)
     {
         var product = _mapper.Map<Product>(newProduct);
-        product.UserId = userId;
         var result = await _productRepository.AddAsync(product);
         return _mapper.Map<ProductDto>(result);
     }
+
     public async Task UpdatePostAsync(UpdateProductDto updateProduct)
     {
         var existingPost = await _productRepository.GetByIdAsync(updateProduct.Id);
@@ -57,7 +53,6 @@ public class ProductService : IProductService
         var product = await _productRepository.GetByIdAsync(id);
         await _productRepository.DeleteAsync(product);
     }
-
 
     public async Task<bool> UserOwnsPostAsync(int productId, string userId)
     {

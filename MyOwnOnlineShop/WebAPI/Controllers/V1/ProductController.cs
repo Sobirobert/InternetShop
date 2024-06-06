@@ -1,18 +1,14 @@
-﻿using Application.Dto;
+﻿
+using Application.Dto;
 using Application.Interfaces;
-using Infrastructure.Identity;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Security.Claims;
 
 namespace WebAPI.Controllers.V1;
 
 [Route("api/[controller]")]
 [ApiVersion("1.0")]
-[Authorize]
-[ApiController]
 public class ProductController : ControllerBase
 {
     private readonly IProductService _productService;
@@ -30,54 +26,56 @@ public class ProductController : ControllerBase
         //_mediator = mediator;
     }
 
-    [SwaggerOperation(Summary = "Retrieves sort fields")]  // Do tego jest porzebny nuget Swashbuckle.AspNetCore.Annotations 
-    [HttpGet("[action]")]
-    public IActionResult GetSortFields()
-    {
-        return Ok(/*SortingHelper.GetSortFields().Select(x => x.Key)*/);
-    }
+    //[SwaggerOperation(Summary = "Retrieves sort fields")]  // Do tego jest porzebny nuget Swashbuckle.AspNetCore.Annotations
+    //[HttpGet("[action]")]
+    //public IActionResult GetSortFields()
+    //{
+    //    return Ok(/*SortingHelper.GetSortFields().Select(x => x.Key)*/);
+    //}
 
-    [SwaggerOperation(Summary = "Retrieves all posts")]
-    //[Cached(600)]
-    [AllowAnonymous]
-    //[Authorize(Roles = UserRoles.Admin)]
+    [SwaggerOperation(Summary = "Retrieves all Products")]
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-       return Ok();
+        var product = await _productService.GetAllPostsAsync();
+        return Ok(product);
     }
 
-    [SwaggerOperation(Summary = "Retrieves a specific post by unique Id")]
-    [Microsoft.AspNetCore.Authorization.AllowAnonymous]
+    [SwaggerOperation(Summary = "Find the product by Id")]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetPostByID(int id)
     {
-        return Ok();
+        var product = await _productService.GetPostByIdAsync(id);
+        if (product == null)
+        {
+            return NotFound(id);
+        }
+
+        return Ok(product);
     }
 
-    //[ValidateFilter]
+    
     [SwaggerOperation(Summary = "Create a new post")]
-    [AllowAnonymous]
-    //[Authorize(Roles = UserRoles.User + UserRoles.Admin + UserRoles.AdminOrUser)]
     [HttpPost]
-    public async Task<IActionResult> Create(CreateProductDto newPost)
+    public async Task<IActionResult> Create(CreateProductDto newProduct)
     {
-        return Ok();
+        var product = await _productService.AddNewPostAsync(newProduct);
+        return Ok(product);
     }
 
     [SwaggerOperation(Summary = "Update a existing post")]
-    [Authorize(Roles = UserRoles.User)]
     [HttpPut]
     public async Task<IActionResult> Update(UpdateProductDto updateProduct)
     {
-        return Ok();
+        await _productService.UpdatePostAsync(updateProduct);
+        return NoContent();
     }
 
     [SwaggerOperation(Summary = "Delete a specific post")]
-    [Authorize(Roles = UserRoles.AdminOrUser)]
     [HttpDelete("Id")]
     public async Task<IActionResult> Delete(int id)
     {
-        return Ok();
+        await _productService.DeletePostAsync(id);
+        return NoContent();
     }
 }

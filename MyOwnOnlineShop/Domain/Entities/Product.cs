@@ -21,7 +21,7 @@ public class Product : AuditableEntity
 
     [Required]
     public int YearOfProduction { get; set; }
-    
+
     [Required]
     public double Price { get; set; }
 
@@ -36,7 +36,7 @@ public class Product : AuditableEntity
     public Category Category { get; set; }
 
     //public ICollection<Picture> Pictures { get; set; }
-   // public ICollection<Attachment> Attachments { get; set; }
+    // public ICollection<Attachment> Attachments { get; set; }
 
     public Product()
     { }
@@ -55,7 +55,8 @@ public class Product : AuditableEntity
         DescriptionOfProduct = descriptionOfProduct;
         YearOfProduction = yearOfProduction;
     }
-    public Product(Category categpry,int id, string title, string descriptionOfProduct, int yearOfProduction, Enums.Type type, double price)
+
+    public Product(Category categpry, int id, string title, string descriptionOfProduct, int yearOfProduction, Enums.Type type, double price)
     {
         Category = categpry;
         Id = id;

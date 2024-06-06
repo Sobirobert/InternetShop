@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿namespace WebAPI.Installers;
 
-namespace WebAPI.Installers;
-
-public static class InstallerExtensions 
+public static class InstallerExtensions
 {
     public static void InstallServicesInAssembly(this IServiceCollection services, IConfiguration configuration)
     {

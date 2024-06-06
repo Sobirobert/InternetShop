@@ -7,9 +7,9 @@ namespace Infrastructure.Repositories;
 
 public class ProductRepository : IProductRepository
 {
-    private readonly OnlineShopContext _context;
+    private readonly OnlineShopDBContext _context;
 
-    public ProductRepository(OnlineShopContext context)
+    public ProductRepository(OnlineShopDBContext context)
     {
         _context = context;
     }
@@ -18,13 +18,15 @@ public class ProductRepository : IProductRepository
     {
         return await _context.Products.ToListAsync();
     }
+
     public async Task<Product> GetByIdAsync(int id)
     {
         return await _context.Products.SingleOrDefaultAsync(x => x.Id == id);
     }
+
     public async Task<int> GetAllCountAsync(string filterBy)
     {
-        return await _context.Products.Where(m => m.Title.ToLower().Contains(filterBy.ToLower()) || m.Content.ToLower().Contains(filterBy.ToLower())).CountAsync();
+        return await _context.Products.Where(m => m.Title.ToLower().Contains(filterBy.ToLower()) || m.DescriptionOfProduct.ToLower().Contains(filterBy.ToLower())).CountAsync();
     }
 
     public async Task<Product> AddAsync(Product product)
@@ -34,12 +36,12 @@ public class ProductRepository : IProductRepository
         await _context.SaveChangesAsync();
         return product;
     }
+
     public async Task UpdateAsync(Product product)
     {
         product.LastModified = DateTime.Now;
         _context.Products.Update(product);
         await _context.SaveChangesAsync();
-        
     }
 
     public async Task DeleteAsync(Product product)
@@ -47,9 +49,4 @@ public class ProductRepository : IProductRepository
         _context.Products.Remove(product);
         await _context.SaveChangesAsync();
     }
-
-    
-
-
-    
 }
