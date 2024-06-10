@@ -14,7 +14,6 @@ public class CreateProductDto : IMap
     public string UserId { get; set; }
     public Type Type { get; set; }
     public Category Category { get; set; }
-    public DateTime CreationDate { get; set; }
 
     public void Mapping(Profile profile)
     {

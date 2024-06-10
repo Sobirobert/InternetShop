@@ -3,7 +3,11 @@ using Application.Dto;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Hosting;
 using Swashbuckle.AspNetCore.Annotations;
+using WebAPI.Filters;
+using WebAPI.Helpers;
+using WebAPI.Wrappers;
 
 namespace WebAPI.Controllers.V1;
 
@@ -12,46 +16,35 @@ namespace WebAPI.Controllers.V1;
 public class ProductController : ControllerBase
 {
     private readonly IProductService _productService;
-    private readonly IMemoryCache _memoryCache;
-    private readonly ILogger _logger;
-    //private readonly IMetrics _metrics;
-    //private readonly IMediator _mediator;
 
-    public ProductController(IProductService productService, IMemoryCache memoryCache, ILogger<ProductController> logger)
+    public ProductController(IProductService productService)
     {
         _productService = productService;
-        _memoryCache = memoryCache;
-        _logger = logger;
-        //_metrics = metrics;
-        //_mediator = mediator;
     }
-
-    //[SwaggerOperation(Summary = "Retrieves sort fields")]  // Do tego jest porzebny nuget Swashbuckle.AspNetCore.Annotations
-    //[HttpGet("[action]")]
-    //public IActionResult GetSortFields()
-    //{
-    //    return Ok(/*SortingHelper.GetSortFields().Select(x => x.Key)*/);
-    //}
 
     [SwaggerOperation(Summary = "Retrieves all Products")]
     [HttpGet]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> GetAllProducts([FromQuery] PaginationFilter paginationFilter)
     {
-        var product = await _productService.GetAllPostsAsync();
-        return Ok(product);
+        var validPaginationFilter = new PaginationFilter(paginationFilter.PageNumber, paginationFilter.PageSize);
+
+        var products = await _productService.GetAllProductsAsync(validPaginationFilter.PageNumber, validPaginationFilter.PageSize);
+        var totalRecords = await _productService.GetAllProductsCountAsync();
+
+        return Ok(PaginationHelper.CreatePageResponse(products, validPaginationFilter, totalRecords));
     }
 
     [SwaggerOperation(Summary = "Find the product by Id")]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetPostByID(int id)
     {
-        var product = await _productService.GetPostByIdAsync(id);
+        var product = await _productService.GetProductByIdAsync(id);
         if (product == null)
         {
             return NotFound(id);
         }
 
-        return Ok(product);
+        return Ok(new Response<ProductDto>(product));
     }
 
     
@@ -59,15 +52,15 @@ public class ProductController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(CreateProductDto newProduct)
     {
-        var product = await _productService.AddNewPostAsync(newProduct);
-        return Ok(product);
+        var product = await _productService.AddNewProductAsync(newProduct);
+        return Created($"api/product/{product.Id}", new Response<ProductDto>(product));
     }
 
     [SwaggerOperation(Summary = "Update a existing post")]
     [HttpPut]
     public async Task<IActionResult> Update(UpdateProductDto updateProduct)
     {
-        await _productService.UpdatePostAsync(updateProduct);
+        await _productService.UpdateProductAsync(updateProduct);
         return NoContent();
     }
 
@@ -75,7 +68,7 @@ public class ProductController : ControllerBase
     [HttpDelete("Id")]
     public async Task<IActionResult> Delete(int id)
     {
-        await _productService.DeletePostAsync(id);
+        await _productService.DeleteProductAsync(id);
         return NoContent();
     }
 }

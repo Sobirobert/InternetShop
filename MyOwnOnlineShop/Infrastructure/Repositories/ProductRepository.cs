@@ -14,9 +14,9 @@ public class ProductRepository : IProductRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<Product>> GetAllAsync(/*int pageNumber, int pageSize, string sortField, bool ascending, string filterBy*/)
+    public async Task<IEnumerable<Product>> GetAllAsync(int pageNumber, int pageSize/*, string sortField, bool ascending, string filterBy*/)
     {
-        return await _context.Products.ToListAsync();
+        return await _context.Products.Skip((pageNumber - 1)*pageSize).Take(pageSize).ToListAsync();
     }
 
     public async Task<Product> GetByIdAsync(int id)
@@ -24,9 +24,10 @@ public class ProductRepository : IProductRepository
         return await _context.Products.SingleOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task<int> GetAllCountAsync(string filterBy)
+    public async Task<int> GetAllCountAsync(/*string filterBy*/)
     {
-        return await _context.Products.Where(m => m.Title.ToLower().Contains(filterBy.ToLower()) || m.DescriptionOfProduct.ToLower().Contains(filterBy.ToLower())).CountAsync();
+        return await _context.Products.CountAsync();
+        //return await _context.Products.Where(m => m.Title.ToLower().Contains(filterBy.ToLower()) || m.DescriptionOfProduct.ToLower().Contains(filterBy.ToLower())).CountAsync();
     }
 
     public async Task<Product> AddAsync(Product product)

@@ -4,17 +4,17 @@ namespace Application.Interfaces;
 
 public interface IProductService
 {
-    Task<IEnumerable<ProductDto>> GetAllPostsAsync(/*int pageNumber, int pageSize, string sortField, bool ascending, string filterBy*/);
+    Task<IEnumerable<ProductDto>> GetAllProductsAsync(int pageNumber, int pageSize/*, string sortField, bool ascending, string filterBy*/);
 
-    Task<int> GetAllPostsCountAsync(string filterBy);
+    Task<int> GetAllProductsCountAsync(/*string filterBy*/);
 
-    Task<ProductDto> GetPostByIdAsync(int id);
+    Task<ProductDto> GetProductByIdAsync(int id);
 
-    Task<ProductDto> AddNewPostAsync(CreateProductDto newProduct);
+    Task<ProductDto> AddNewProductAsync(CreateProductDto newProduct);
 
-    Task UpdatePostAsync(UpdateProductDto updateProduct);
+    Task UpdateProductAsync(UpdateProductDto updateProduct);
 
-    Task DeletePostAsync(int id);
+    Task DeleteProductAsync(int id);
 
-    Task<bool> UserOwnsPostAsync(int productId, string userId);
+    Task<bool> UserOwnsProductAsync(int productId, string userId);
 }
