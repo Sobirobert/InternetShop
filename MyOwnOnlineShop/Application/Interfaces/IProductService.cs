@@ -4,9 +4,9 @@ namespace Application.Interfaces;
 
 public interface IProductService
 {
-    Task<IEnumerable<ProductDto>> GetAllProductsAsync(int pageNumber, int pageSize/*, string sortField, bool ascending, string filterBy*/);
+    Task<IEnumerable<ProductDto>> GetAllProductsAsync(int pageNumber, int pageSize, string sortField, bool ascending, string filterBy);
 
-    Task<int> GetAllProductsCountAsync(/*string filterBy*/);
+    Task<int> GetAllProductsCountAsync(string filterBy);
 
     Task<ProductDto> GetProductByIdAsync(int id);
 

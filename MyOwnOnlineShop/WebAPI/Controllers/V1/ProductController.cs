@@ -22,14 +22,23 @@ public class ProductController : ControllerBase
         _productService = productService;
     }
 
+    [SwaggerOperation(Summary = "Retrieves sort fields")] 
+    [HttpGet("[action]")]
+    public IActionResult GetSortFields()
+    {
+        return Ok(SortingHelper.GetSortFields().Select(x => x.Key));
+    }
+
     [SwaggerOperation(Summary = "Retrieves all Products")]
     [HttpGet]
-    public async Task<IActionResult> GetAllProducts([FromQuery] PaginationFilter paginationFilter)
+    public async Task<IActionResult> GetAllProducts([FromQuery] PaginationFilter paginationFilter, [FromQuery] SortingFilter sortingFilter, [FromQuery] string filterBy = "")
     {
         var validPaginationFilter = new PaginationFilter(paginationFilter.PageNumber, paginationFilter.PageSize);
+        var validSortingFilter = new SortingFilter(sortingFilter.SortField, sortingFilter.Ascending);
 
-        var products = await _productService.GetAllProductsAsync(validPaginationFilter.PageNumber, validPaginationFilter.PageSize);
-        var totalRecords = await _productService.GetAllProductsCountAsync();
+        var products = await _productService.GetAllProductsAsync(validPaginationFilter.PageNumber, validPaginationFilter.PageSize,
+                                                                 validSortingFilter.SortField, validSortingFilter.Ascending, filterBy);
+        var totalRecords = await _productService.GetAllProductsCountAsync(filterBy);
 
         return Ok(PaginationHelper.CreatePageResponse(products, validPaginationFilter, totalRecords));
     }

@@ -17,15 +17,15 @@ public class ProductService : IProductService
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<ProductDto>> GetAllProductsAsync(int pageNumber, int pageSize/*, string sortField, bool ascending, string filterBy*/)
+    public async Task<IEnumerable<ProductDto>> GetAllProductsAsync(int pageNumber, int pageSize, string sortField, bool ascending, string filterBy)
     {
-        var posts = await _productRepository.GetAllAsync(pageNumber, pageSize);
+        var posts = await _productRepository.GetAllAsync(pageNumber, pageSize, sortField, ascending, filterBy);
         return _mapper.Map<IEnumerable<ProductDto>>(posts);
     }
 
-    public async Task<int> GetAllProductsCountAsync(/*string filterBy*/)
+    public async Task<int> GetAllProductsCountAsync(string filterBy)
     {
-        return await _productRepository.GetAllCountAsync(/*filterBy*/);
+        return await _productRepository.GetAllCountAsync(filterBy);
     }
 
     public async Task<ProductDto> GetProductByIdAsync(int id)
