@@ -1,10 +1,13 @@
 ﻿
 using Application.Dto;
 using Application.Interfaces;
+using Infrastructure.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Hosting;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Security.Claims;
 using WebAPI.Filters;
 using WebAPI.Helpers;
 using WebAPI.Wrappers;
@@ -13,6 +16,8 @@ namespace WebAPI.Controllers.V1;
 
 [Route("api/[controller]")]
 [ApiVersion("1.0")]
+[Authorize(Roles = UserRoles.User)]
+[ApiController]
 public class ProductController : ControllerBase
 {
     private readonly IProductService _productService;
@@ -30,6 +35,7 @@ public class ProductController : ControllerBase
     }
 
     [SwaggerOperation(Summary = "Retrieves all Products")]
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> GetAllProducts([FromQuery] PaginationFilter paginationFilter, [FromQuery] SortingFilter sortingFilter, [FromQuery] string filterBy = "")
     {
@@ -44,6 +50,7 @@ public class ProductController : ControllerBase
     }
 
     [SwaggerOperation(Summary = "Find the product by Id")]
+    [AllowAnonymous]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetPostByID(int id)
     {
@@ -61,7 +68,7 @@ public class ProductController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(CreateProductDto newProduct)
     {
-        var product = await _productService.AddNewProductAsync(newProduct);
+        var product = await _productService.AddNewProductAsync(newProduct, User.FindFirstValue(ClaimTypes.NameIdentifier));
         return Created($"api/product/{product.Id}", new Response<ProductDto>(product));
     }
 
@@ -69,14 +76,27 @@ public class ProductController : ControllerBase
     [HttpPut]
     public async Task<IActionResult> Update(UpdateProductDto updateProduct)
     {
+        var userOwnsPost = await _productService.UserOwnsProductAsync(updateProduct.Id, User.FindFirstValue(ClaimTypes.NameIdentifier));
+        if (!userOwnsPost)
+        {
+            return BadRequest(new Response(false, "You do not own this post."));
+        }
+
         await _productService.UpdateProductAsync(updateProduct);
         return NoContent();
     }
 
     [SwaggerOperation(Summary = "Delete a specific post")]
+    [Authorize(Roles = UserRoles.AdminOrUser)]
     [HttpDelete("Id")]
     public async Task<IActionResult> Delete(int id)
     {
+        var userOwnsPost = await _productService.UserOwnsProductAsync(id, User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var isAdmin = User.FindFirstValue(ClaimTypes.Role).Contains(UserRoles.Admin);
+        if (!userOwnsPost && !isAdmin)
+        {
+            return BadRequest(new Response(false, "You do not own this post."));
+        }
         await _productService.DeleteProductAsync(id);
         return NoContent();
     }
