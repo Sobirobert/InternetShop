@@ -5,7 +5,6 @@ namespace EndToEndTests
         [Fact]
         public void Test1()
         {
-
         }
     }
 }

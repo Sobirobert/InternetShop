@@ -19,8 +19,8 @@ public class ProductService : IProductService
 
     public async Task<IEnumerable<ProductDto>> GetAllProductsAsync(int pageNumber, int pageSize, string sortField, bool ascending, string filterBy)
     {
-        var posts = await _productRepository.GetAllAsync(pageNumber, pageSize, sortField, ascending, filterBy);
-        return _mapper.Map<IEnumerable<ProductDto>>(posts);
+        var products = await _productRepository.GetAllAsync(pageNumber, pageSize, sortField, ascending, filterBy);
+        return _mapper.Map<IEnumerable<ProductDto>>(products);
     }
 
     public async Task<int> GetAllProductsCountAsync(string filterBy)
@@ -30,8 +30,8 @@ public class ProductService : IProductService
 
     public async Task<ProductDto> GetProductByIdAsync(int id)
     {
-        var post = await _productRepository.GetByIdAsync(id);
-        return _mapper.Map<ProductDto>(post);
+        var product = await _productRepository.GetByIdAsync(id);
+        return _mapper.Map<ProductDto>(product);
     }
 
     public async Task<ProductDto> AddNewProductAsync(CreateProductDto newProduct, string userId)
@@ -45,8 +45,8 @@ public class ProductService : IProductService
     public async Task UpdateProductAsync(UpdateProductDto updateProduct)
     {
         var existingPost = await _productRepository.GetByIdAsync(updateProduct.Id);
-        var post = _mapper.Map(updateProduct, existingPost);
-        await _productRepository.UpdateAsync(post);
+        var product = _mapper.Map(updateProduct, existingPost);
+        await _productRepository.UpdateAsync(product);
     }
 
     public async Task DeleteProductAsync(int id)
@@ -57,14 +57,14 @@ public class ProductService : IProductService
 
     public async Task<bool> UserOwnsProductAsync(int productId, string userId)
     {
-        var post = await _productRepository.GetByIdAsync(productId);
+        var product = await _productRepository.GetByIdAsync(productId);
 
-        if (post == null)
+        if (product == null)
         {
             return false;
         }
 
-        if (post.UserId != userId)
+        if (product.UserId != userId)
         {
             return false;
         }

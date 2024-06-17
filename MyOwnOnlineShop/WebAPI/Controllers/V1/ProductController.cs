@@ -1,11 +1,8 @@
-﻿
-using Application.Dto;
+﻿using Application.Dto;
 using Application.Interfaces;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Hosting;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Security.Claims;
 using WebAPI.Filters;
@@ -16,7 +13,6 @@ namespace WebAPI.Controllers.V1;
 
 [Route("api/[controller]")]
 [ApiVersion("1.0")]
-[Authorize(Roles = UserRoles.User)]
 [ApiController]
 public class ProductController : ControllerBase
 {
@@ -27,7 +23,7 @@ public class ProductController : ControllerBase
         _productService = productService;
     }
 
-    [SwaggerOperation(Summary = "Retrieves sort fields")] 
+    [SwaggerOperation(Summary = "Retrieves sort fields")]
     [HttpGet("[action]")]
     public IActionResult GetSortFields()
     {
@@ -63,8 +59,8 @@ public class ProductController : ControllerBase
         return Ok(new Response<ProductDto>(product));
     }
 
-    
     [SwaggerOperation(Summary = "Create a new post")]
+    [Authorize(Roles = UserRoles.Admin)]
     [HttpPost]
     public async Task<IActionResult> Create(CreateProductDto newProduct)
     {
@@ -72,7 +68,8 @@ public class ProductController : ControllerBase
         return Created($"api/product/{product.Id}", new Response<ProductDto>(product));
     }
 
-    [SwaggerOperation(Summary = "Update a existing post")]
+    [SwaggerOperation(Summary = "Update a existing Product")]
+    [Authorize(Roles = UserRoles.Admin)]
     [HttpPut]
     public async Task<IActionResult> Update(UpdateProductDto updateProduct)
     {
@@ -87,7 +84,7 @@ public class ProductController : ControllerBase
     }
 
     [SwaggerOperation(Summary = "Delete a specific post")]
-    [Authorize(Roles = UserRoles.AdminOrUser)]
+    [Authorize(Roles = UserRoles.Admin)]
     [HttpDelete("Id")]
     public async Task<IActionResult> Delete(int id)
     {

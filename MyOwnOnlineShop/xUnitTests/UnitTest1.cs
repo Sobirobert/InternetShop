@@ -7,7 +7,6 @@ namespace xUnitTests
         [Fact]
         public void Test1()
         {
-
         }
     }
 }

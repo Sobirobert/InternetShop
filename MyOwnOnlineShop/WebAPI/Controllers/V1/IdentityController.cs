@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Security.Claims;
 using System.Text;
 using WebAPI.Models;
@@ -22,7 +23,7 @@ public class IdentityController : ControllerBase
     private readonly IConfiguration _configuration;
     private readonly IEmailSenderService _emailSenderService;
 
-    public IdentityController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, 
+    public IdentityController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration,
         IEmailSenderService emailSenderService)
     {
         _roleManager = roleManager;
@@ -39,10 +40,10 @@ public class IdentityController : ControllerBase
     [ProducesResponseType(typeof(RegisterResponseStatus200), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(RegisterResponseStatus500), StatusCodes.Status500InternalServerError)]
     [HttpPost]
-    [Route("Register")]
-    public async Task<IActionResult> Register(RegisterModel register)
+    [Route("Register User")]
+    public async Task<IActionResult> RegisterUser(RegisterModel register)
     {
-        var userExists = await _userManager.FindByNameAsync(register.Username);
+        var userExists = await _userManager.FindByNameAsync(register.UserName);
         if (userExists != null)
         {
             return StatusCode(StatusCodes.Status500InternalServerError, new Response<bool>
@@ -56,7 +57,16 @@ public class IdentityController : ControllerBase
         {
             Email = register.Email,
             SecurityStamp = Guid.NewGuid().ToString(),
-            UserName = register.Username
+            UserNick = register.UserName,
+            UserName = register.UserName,
+            UserSurname = register.UserSurname,
+            PhoneNumber = register.PhoneNumber,
+            Street = register.Street,
+            HouseNumber = register.HouseNumber,
+            FlatNumber = register.FlatNumber,
+            City = register.City,
+            PostalCode = register.City,
+            Country = register.Country,
         };
 
         var result = await _userManager.CreateAsync(user, register.Password);
@@ -84,55 +94,10 @@ public class IdentityController : ControllerBase
     /// Registers the user in the system
     /// </summary>
     [HttpPost]
-    [Route("SuperUserRegister")]
-    public async Task<IActionResult> SuperUserRegister(RegisterModel register)
-    {
-        var userExists = await _userManager.FindByNameAsync(register.Username);
-        if (userExists != null)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, new Response
-            {
-                Succeeded = false,
-                Message = "User already exists!"
-            });
-        }
-
-        ApplicationUser user = new ApplicationUser()
-        {
-            Email = register.Email,
-            SecurityStamp = Guid.NewGuid().ToString(),
-            UserName = register.Username
-        };
-
-        var result = await _userManager.CreateAsync(user, register.Password);
-        if (!result.Succeeded)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, new Response<bool>
-            {
-                Succeeded = false,
-                Message = "User creation failed! Please check user details and try again",
-                Errors = result.Errors.Select(x => x.Description)
-            });
-        }
-
-        if (!await _roleManager.RoleExistsAsync(UserRoles.AdminOrUser))
-            await _roleManager.CreateAsync(new IdentityRole(UserRoles.AdminOrUser));
-
-        await _userManager.AddToRoleAsync(user, UserRoles.AdminOrUser);
-
-        await _emailSenderService.Send(user.Email, "Registration confirmation", EmailTemplate.WelcomeMessage, user);
-
-        return Ok(new Response { Succeeded = true, Message = "SuperUser created successfully!" });
-    }
-
-    /// <summary>
-    /// Registers the user in the system
-    /// </summary>
-    [HttpPost]
     [Route("RegisterAdmin")]
     public async Task<IActionResult> RegisterAdmin(RegisterModel register)
     {
-        var userExists = await _userManager.FindByNameAsync(register.Username);
+        var userExists = await _userManager.FindByNameAsync(register.UserName);
         if (userExists != null)
         {
             return StatusCode(StatusCodes.Status500InternalServerError, new Response
@@ -146,7 +111,16 @@ public class IdentityController : ControllerBase
         {
             Email = register.Email,
             SecurityStamp = Guid.NewGuid().ToString(),
-            UserName = register.Username
+            UserNick = register.UserName,
+            UserName = register.UserName,
+            UserSurname = register.UserSurname,
+            PhoneNumber = register.PhoneNumber,
+            Street = register.Street,
+            HouseNumber = register.HouseNumber,
+            FlatNumber = register.FlatNumber,
+            City = register.City,
+            PostalCode = register.City,
+            Country = register.Country,
         };
 
         var result = await _userManager.CreateAsync(user, register.Password);
@@ -155,7 +129,7 @@ public class IdentityController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, new Response<bool>
             {
                 Succeeded = false,
-                Message = "User creation failed! Please check user details and try again",
+                Message = "Admin creation failed! Please check user details and try again",
                 Errors = result.Errors.Select(x => x.Description)
             });
         }
@@ -164,6 +138,7 @@ public class IdentityController : ControllerBase
             await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
 
         await _userManager.AddToRoleAsync(user, UserRoles.Admin);
+        await _emailSenderService.Send(user.Email, "Registration confirmation", EmailTemplate.WelcomeMessage, user);
 
         return Ok(new Response { Succeeded = true, Message = "User created successfully!" });
     }

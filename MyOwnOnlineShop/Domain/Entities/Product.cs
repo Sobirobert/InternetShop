@@ -1,5 +1,4 @@
 ﻿using Domain.Common;
-using Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -32,10 +31,7 @@ public class Product : AuditableEntity
     [Required]
     public Enums.Type Type { get; set; }
 
-    [Required]
-    public Category Category { get; set; }
-
-    //public ICollection<Picture> Pictures { get; set; }
+    public ICollection<Picture> Pictures { get; set; }
     // public ICollection<Attachment> Attachments { get; set; }
 
     public Product()
@@ -56,9 +52,8 @@ public class Product : AuditableEntity
         YearOfProduction = yearOfProduction;
     }
 
-    public Product(Category categpry, int id, string title, string descriptionOfProduct, int yearOfProduction, Enums.Type type, double price)
+    public Product(int id, string title, string descriptionOfProduct, int yearOfProduction, Enums.Type type, double price)
     {
-        Category = categpry;
         Id = id;
         Type = type;
         YearOfProduction = yearOfProduction;

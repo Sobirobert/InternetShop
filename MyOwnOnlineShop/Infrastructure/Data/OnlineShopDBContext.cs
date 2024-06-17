@@ -1,6 +1,8 @@
 ﻿using Application.Services;
 using Domain.Common;
 using Domain.Entities;
+using Domain.Entities.Category;
+using FluentEmail.Core.Models;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -11,13 +13,16 @@ public class OnlineShopDBContext : IdentityDbContext<ApplicationUser>
 {
     private readonly UserResolverService _userResolverService;
 
-    public OnlineShopDBContext(DbContextOptions<OnlineShopDBContext> options, UserResolverService userService) 
+    public OnlineShopDBContext(DbContextOptions<OnlineShopDBContext> options, UserResolverService userService)
         : base(options)
     {
         _userResolverService = userService;
     }
 
     public DbSet<Product> Products { get; set; }
+    public DbSet<Picture> Pictures { get; set; }
+    public DbSet<Domain.Entities.Attachment> Attachments { get; set; }
+    public DbSet<Category> Categories { get; set; }
 
     public async Task<int> SaveChangesAsync()
     {
