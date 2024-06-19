@@ -28,7 +28,7 @@ public class PictureController : ControllerBase
     [HttpGet("[action]/{productId}")]
     public async Task<IActionResult> GetByPostId(int productId)
     {
-        var pictures = await _pictureSerwice.GetPicturesByPostIdAsync(productId);
+        var pictures = await _pictureSerwice.GetPicturesByProductIdAsync(productId);
         return Ok(new Response<IEnumerable<PictureDto>>(pictures));
     }
 
@@ -61,7 +61,7 @@ public class PictureController : ControllerBase
             return BadRequest(new Response(false, "You do not own this post.")); 
         }
 
-        var picture = await _pictureSerwice.AddPictureToPostAsync(productId, file); 
+        var picture = await _pictureSerwice.AddPictureToProductAsync(productId, file); 
         return Created($"api/pictures/{picture.Id}", new Response<PictureDto>(picture));
     }
 

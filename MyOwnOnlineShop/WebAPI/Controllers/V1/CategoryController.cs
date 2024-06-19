@@ -26,36 +26,36 @@ namespace WebAPI.Controllers.V1
             _productService = productService;
         }
 
-        [HttpGet]
-        public IActionResult Index()
-        {
-            var categories = _categoryService.GetAllCategoriesAsync();
-            return NoContent();
-        }
+        //[HttpGet]
+        //public IActionResult Index()
+        //{
+        //    var categories = _categoryService.GetAllCategoriesAsync();
+        //    return NoContent();
+        //}
 
-        [HttpGet("{id}")]
-        public IActionResult Details(int id)
-        {
-            var category = _categoryService.GetCategoryByIdAsync(id);
-            if (category == null)
-            {
-                return NotFound();
-            }
-            return NoContent();
-        }
+        //[HttpGet("{id}")]
+        //public IActionResult Details(int id)
+        //{
+        //    var category = _categoryService.GetCategoryByIdAsync(id);
+        //    if (category == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return NoContent();
+        //}
 
-        [SwaggerOperation(Summary = "Create the new Category")]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(Category category)
-        {
-            if (ModelState.IsValid)
-            {
-                _categoryService.CreateCategoryAsync(category);
-                return RedirectToAction(nameof(Index));
-            }
-            return NoContent();
-        }
+        //[SwaggerOperation(Summary = "Create the new Category")]
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public IActionResult Create(Category category)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _categoryService.CreateCategoryAsync(category);
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    return NoContent();
+        //}
 
         [HttpPut]
         [ValidateAntiForgeryToken]

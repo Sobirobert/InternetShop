@@ -1,10 +1,13 @@
 ﻿using Application.Dto;
 using Application.Interfaces;
+using Application.Validators;
+using FluentValidation;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Security.Claims;
+using WebAPI.Attributes;
 using WebAPI.Filters;
 using WebAPI.Helpers;
 using WebAPI.Wrappers;
@@ -63,11 +66,12 @@ public class ProductController : ControllerBase
     [Authorize(Roles = UserRoles.Admin)]
     [HttpPost]
     public async Task<IActionResult> Create(CreateProductDto newProduct)
-    {
+    {       
         var product = await _productService.AddNewProductAsync(newProduct, User.FindFirstValue(ClaimTypes.NameIdentifier));
         return Created($"api/product/{product.Id}", new Response<ProductDto>(product));
     }
 
+    [ValidateFilter]
     [SwaggerOperation(Summary = "Update a existing Product")]
     [Authorize(Roles = UserRoles.Admin)]
     [HttpPut]

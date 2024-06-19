@@ -22,10 +22,10 @@ public class PictureService : IPictureService
         _productRepository = productRepository;
     }
 
-    public async Task<PictureDto> AddPictureToPostAsync(int productId, IFormFile file)
+    public async Task<PictureDto> AddPictureToProductAsync(int productId, IFormFile file)
     {
         var product = await _productRepository.GetByIdAsync(productId);
-        var existingPictures = await _pictureRepository.GetByPostIdAsync(productId);
+        var existingPictures = await _pictureRepository.GetByProductIdAsync(productId);
 
         var picture = new Picture()
         {
@@ -39,9 +39,9 @@ public class PictureService : IPictureService
         return _mapper.Map<PictureDto>(result);
     }
 
-    public async Task<IEnumerable<PictureDto>> GetPicturesByPostIdAsync(int productId)
+    public async Task<IEnumerable<PictureDto>> GetPicturesByProductIdAsync(int productId)
     {
-        var pictures = await _pictureRepository.GetByPostIdAsync(productId);
+        var pictures = await _pictureRepository.GetByProductIdAsync(productId);
         return _mapper.Map<IEnumerable<PictureDto>>(pictures);
     }
 

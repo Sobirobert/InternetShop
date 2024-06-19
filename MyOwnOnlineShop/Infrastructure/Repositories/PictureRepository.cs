@@ -14,7 +14,7 @@ public class PictureRepository : IPictureRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<Picture>> GetByPostIdAsync(int productId)
+    public async Task<IEnumerable<Picture>> GetByProductIdAsync(int productId)
     {
         return await _context.Pictures.Include(x => x.Products).Where(x => x.Products.Select(x => x.Id).Contains(productId)).ToListAsync();
     }

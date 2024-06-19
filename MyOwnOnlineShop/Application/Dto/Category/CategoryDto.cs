@@ -3,7 +3,7 @@ using AutoMapper;
 
 namespace Application.Dto.Category;
 
-internal class CategoryDto : IMap
+public class CategoryDto : IMap
 {
     public int Id { get; set; }
     public string Name { get; set; }

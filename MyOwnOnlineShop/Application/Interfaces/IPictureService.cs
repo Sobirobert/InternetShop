@@ -5,9 +5,9 @@ namespace Application.Interfaces;
 
 public interface IPictureService
 {
-    Task<PictureDto> AddPictureToPostAsync(int postId, IFormFile file);
+    Task<PictureDto> AddPictureToProductAsync(int postId, IFormFile file);
 
-    Task<IEnumerable<PictureDto>> GetPicturesByPostIdAsync(int postId);
+    Task<IEnumerable<PictureDto>> GetPicturesByProductIdAsync(int postId);
 
     Task<PictureDto> GetPictureByIdAsync(int id);
 

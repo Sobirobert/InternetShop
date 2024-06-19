@@ -44,8 +44,8 @@ public class ProductService : IProductService
 
     public async Task UpdateProductAsync(UpdateProductDto updateProduct)
     {
-        var existingPost = await _productRepository.GetByIdAsync(updateProduct.Id);
-        var product = _mapper.Map(updateProduct, existingPost);
+        var existingProduct = await _productRepository.GetByIdAsync(updateProduct.Id);
+        var product = _mapper.Map(updateProduct, existingProduct);
         await _productRepository.UpdateAsync(product);
     }
 

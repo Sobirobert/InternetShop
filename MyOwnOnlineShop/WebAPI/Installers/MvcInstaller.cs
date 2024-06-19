@@ -1,5 +1,7 @@
 ﻿using Application;
 using Application.Services;
+using Application.Validators;
+using FluentValidation.AspNetCore;
 using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
@@ -14,6 +16,10 @@ public class MvcInstaller : IInstaller
         services.AddApplication();
         services.AddInfrastructure();
         services.AddControllers()
+            .AddFluentValidation(options =>
+            {
+                options.RegisterValidatorsFromAssemblyContaining<CreateProductDtoValidator>();
+            })
             .AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.WriteIndented = true;
