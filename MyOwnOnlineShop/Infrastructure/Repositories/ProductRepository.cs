@@ -18,7 +18,8 @@ public class ProductRepository : IProductRepository
     public async Task<IEnumerable<Product>> GetAllAsync(int pageNumber, int pageSize, string sortField, bool ascending, string filterBy)
     {
         return await _context.Products
-            .Where(m => m.Title.ToLower().Contains(filterBy.ToLower()) || m.DescriptionOfProduct.ToLower().Contains(filterBy.ToLower()))
+            .Include(c => c.Category)
+            .Where(m => m.Title.ToLower().Contains(filterBy.ToLower()) || m.ShortDescription.ToLower().Contains(filterBy.ToLower()))
             .OrderByPropertyName(sortField, ascending)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
@@ -35,7 +36,7 @@ public class ProductRepository : IProductRepository
     {
         return await _context.Products
             .Where(m => m.Title.ToLower()
-            .Contains(filterBy.ToLower()) || m.DescriptionOfProduct.ToLower()
+            .Contains(filterBy.ToLower()) || m.ShortDescription.ToLower()
             .Contains(filterBy.ToLower()))
             .CountAsync();
     }
@@ -59,5 +60,10 @@ public class ProductRepository : IProductRepository
     {
         _context.Products.Remove(product);
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<IEnumerable<Product>> ProductOfTheWeek()
+    {
+        return _context.Products.Include(c => c.Category).Where(p => p.IsProductOfTheWeek);
     }
 }

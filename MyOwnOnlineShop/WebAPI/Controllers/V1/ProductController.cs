@@ -47,7 +47,7 @@ public class ProductController : ControllerBase
 
         return Ok(PaginationHelper.CreatePageResponse(products, validPaginationFilter, totalRecords));
     }
-
+    [ValidateFilter]
     [SwaggerOperation(Summary = "Find the product by Id")]
     [AllowAnonymous]
     [HttpGet("{id}")]
@@ -61,7 +61,7 @@ public class ProductController : ControllerBase
 
         return Ok(new Response<ProductDto>(product));
     }
-
+    [ValidateFilter]
     [SwaggerOperation(Summary = "Create a new post")]
     [Authorize(Roles = UserRoles.Admin)]
     [HttpPost]
@@ -86,7 +86,7 @@ public class ProductController : ControllerBase
         await _productService.UpdateProductAsync(updateProduct);
         return NoContent();
     }
-
+    [ValidateFilter]
     [SwaggerOperation(Summary = "Delete a specific post")]
     [Authorize(Roles = UserRoles.Admin)]
     [HttpDelete("Id")]

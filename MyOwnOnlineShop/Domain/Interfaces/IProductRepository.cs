@@ -10,6 +10,8 @@ public interface IProductRepository
 
     Task<Product> GetByIdAsync(int id);
 
+    Task<IEnumerable<Product>> ProductOfTheWeek();
+
     Task<Product> AddAsync(Product product);
 
     Task UpdateAsync(Product product);

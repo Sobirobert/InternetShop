@@ -1,7 +1,6 @@
 ﻿using Application.Services;
 using Domain.Common;
 using Domain.Entities;
-using Domain.Entities.Category;
 using FluentEmail.Core.Models;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -23,6 +22,9 @@ public class OnlineShopDBContext : IdentityDbContext<ApplicationUser>
     public DbSet<Picture> Pictures { get; set; }
     public DbSet<Domain.Entities.Attachment> Attachments { get; set; }
     public DbSet<Category> Categories { get; set; }
+    public DbSet<Order> Orders { get; set; }
+    public DbSet<OrderDetail> OrderDetails { get; set; }
+    public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
 
     public async Task<int> SaveChangesAsync()
     {

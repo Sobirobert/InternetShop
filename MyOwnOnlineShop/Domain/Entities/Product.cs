@@ -11,12 +11,16 @@ public class Product : AuditableEntity
     public int Id { get; set; }
 
     [Required]
-    [MaxLength(100)]
     public string Title { get; set; }
 
     [Required]
-    [MaxLength(2000)]
-    public string DescriptionOfProduct { get; set; }
+    public string ShortDescription { get; set; }
+
+    [Required]
+    public string LongDescription { get; set; }
+
+    [Required]
+    public string Details { get; set; }
 
     [Required]
     public int YearOfProduction { get; set; }
@@ -25,40 +29,21 @@ public class Product : AuditableEntity
     public double Price { get; set; }
 
     [Required]
-    [MaxLength(450)]
     public string UserId { get; set; }
 
     [Required]
+    public bool IsProductOfTheWeek { get; set; }
+    [Required]
     public Enums.Type Type { get; set; }
+    [Required]
+    public int CategoryId { get; set; }
+    [Required]
+    public Category Category { get; set; }
 
     public ICollection<Picture> Pictures { get; set; }
-    // public ICollection<Attachment> Attachments { get; set; }
+    public ICollection<Attachment> Attachments { get; set; }
 
     public Product()
     { }
 
-    public Product(int id, string title, string descriptionOfProduct)
-    {
-        Id = id;
-        Title = title;
-        DescriptionOfProduct = descriptionOfProduct;
-    }
-
-    public Product(int id, string title, string descriptionOfProduct, int yearOfProduction)
-    {
-        Id = id;
-        Title = title;
-        DescriptionOfProduct = descriptionOfProduct;
-        YearOfProduction = yearOfProduction;
-    }
-
-    public Product(int id, string title, string descriptionOfProduct, int yearOfProduction, Enums.Type type, double price)
-    {
-        Id = id;
-        Type = type;
-        YearOfProduction = yearOfProduction;
-        Title = title;
-        DescriptionOfProduct = descriptionOfProduct;
-        Price = price;
-    }
 }

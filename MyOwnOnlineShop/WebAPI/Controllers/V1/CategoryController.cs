@@ -1,8 +1,6 @@
 ﻿using Application.Dto;
 using Application.Dto.Category;
 using Application.Interfaces;
-using Domain.Entities;
-using Domain.Entities.Category;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

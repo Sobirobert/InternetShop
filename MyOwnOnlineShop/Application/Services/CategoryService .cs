@@ -3,7 +3,6 @@ using Application.Dto.Category;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
-using Domain.Entities.Category;
 using Domain.Interfaces;
 
 namespace Application.Services;

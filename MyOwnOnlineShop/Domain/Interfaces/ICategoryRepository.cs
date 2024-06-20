@@ -1,4 +1,4 @@
-﻿using Domain.Entities.Category;
+﻿using Domain.Entities;
 
 namespace Domain.Interfaces
 {

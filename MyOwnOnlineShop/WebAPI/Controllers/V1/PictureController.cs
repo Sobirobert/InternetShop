@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Security.Claims;
+using WebAPI.Attributes;
 using WebAPI.Wrappers;
 
 namespace WebAPI.Controllers.V1;
@@ -24,7 +25,7 @@ public class PictureController : ControllerBase
         _productService = productService;
     }
 
-    [SwaggerOperation(Summary = "Retrieves a picture by uniqe post id")]
+    [SwaggerOperation(Summary = "Retrieves all picture by unique product id")]
     [HttpGet("[action]/{productId}")]
     public async Task<IActionResult> GetByPostId(int productId)
     {
@@ -45,34 +46,35 @@ public class PictureController : ControllerBase
         return Ok(new Response<PictureDto>(picture));
     }
 
-    [SwaggerOperation(Summary = "Add a new picture to post")]
+    [ValidateFilter]
+    [SwaggerOperation(Summary = "Add a new picture to product")]
     [HttpPost("{productId}")]
     public async Task<IActionResult> AddToPostAsync(int productId, IFormFile file)
     {
         var product = await _productService.GetProductByIdAsync(productId);
         if (product == null)
         {
-            return BadRequest(new Response(false, $"Post with id {productId} does not exist."));
+            return BadRequest(new Response(false, $"Product with id {productId} does not exist."));
         }
 
         var userOwner = await _productService.UserOwnsProductAsync(productId, User.FindFirstValue(ClaimTypes.NameIdentifier));
         if (!userOwner)
         {
-            return BadRequest(new Response(false, "You do not own this post.")); 
+            return BadRequest(new Response(false, "You do not own this product.")); 
         }
 
         var picture = await _pictureSerwice.AddPictureToProductAsync(productId, file); 
         return Created($"api/pictures/{picture.Id}", new Response<PictureDto>(picture));
     }
 
-    [SwaggerOperation(Summary = "Sets the main picture of the post")]
+    [SwaggerOperation(Summary = "Sets the main picture of the product")]
     [HttpPut("[action]/{productId}/{id}")]
     public async Task<IActionResult> SetMainPicture(int productId, int id)
     {
         var userOwnsProduct = await _productService.UserOwnsProductAsync(productId, User.FindFirstValue(ClaimTypes.NameIdentifier));
         if (!userOwnsProduct)
         {
-            return BadRequest(new Response(false, "You do not own this post."));
+            return BadRequest(new Response(false, "You do not own this product."));
         }
 
         await _pictureSerwice.SetMainPicture(productId, id);
@@ -86,7 +88,7 @@ public class PictureController : ControllerBase
         var userOwnsProduct = await _productService.UserOwnsProductAsync(productId, User.FindFirstValue(ClaimTypes.NameIdentifier));
         if (!userOwnsProduct)
         {
-            return BadRequest(new Response(false, "You do not own this post."));
+            return BadRequest(new Response(false, "You do not own this product."));
         }
 
         await _pictureSerwice.DeletePictureAsync(id);

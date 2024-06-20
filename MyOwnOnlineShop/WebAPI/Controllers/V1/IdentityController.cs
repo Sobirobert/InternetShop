@@ -46,7 +46,7 @@ public class IdentityController : ControllerBase
         var userExists = await _userManager.FindByNameAsync(register.UserName);
         if (userExists != null)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, new Response<bool>
+            return StatusCode(StatusCodes.Status500InternalServerError, new Response
             {
                 Succeeded = false,
                 Message = "User already exists!"
@@ -91,8 +91,10 @@ public class IdentityController : ControllerBase
     }
 
     /// <summary>
-    /// Registers the user in the system
+    /// Registers the Admin in the system
     /// </summary>
+    [ProducesResponseType(typeof(AdminRegisterResponseStatus200), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(AdminRegisterResponseStatus500), StatusCodes.Status500InternalServerError)]
     [HttpPost]
     [Route("RegisterAdmin")]
     public async Task<IActionResult> RegisterAdmin(RegisterModel register)
@@ -103,7 +105,7 @@ public class IdentityController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, new Response
             {
                 Succeeded = false,
-                Message = "User already exists!"
+                Message = "Admin already exists!"
             });
         }
 
