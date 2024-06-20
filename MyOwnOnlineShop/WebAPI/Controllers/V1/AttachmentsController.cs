@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Security.Claims;
+using WebAPI.Attributes;
 using WebAPI.Wrappers;
 
 namespace WebAPI.Controllers.V1
@@ -33,6 +34,7 @@ namespace WebAPI.Controllers.V1
             return Ok(new Response<IEnumerable<AttachmentDto>>(pictures));
         }
 
+        [ValidateFilter]
         [SwaggerOperation(Summary = "Download a specific attachment by unique if")]
         [HttpGet("{productId}/{id}")]
         public async Task<IActionResult> DownloadAsync(int id, int productId)
@@ -51,6 +53,7 @@ namespace WebAPI.Controllers.V1
             return File(attachment.Content, System.Net.Mime.MediaTypeNames.Application.Octet, attachment.Name);
         }
 
+        [ValidateFilter]
         [SwaggerOperation(Summary = "Add a new attachment to post")]
         [HttpPost("{postId}")]
         public async Task<IActionResult> AddToPostAsync(int postId, IFormFile file)

@@ -1,6 +1,6 @@
 ﻿using Application;
 using Application.Services;
-using Application.Validators;
+using Application.Validators.ProductDto;
 using FluentValidation.AspNetCore;
 using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +25,7 @@ public class MvcInstaller : IInstaller
                 options.JsonSerializerOptions.WriteIndented = true;
             })
             .AddXmlSerializerFormatters();
+
         services.AddAuthorization();
         services.AddTransient<UserResolverService>();
 

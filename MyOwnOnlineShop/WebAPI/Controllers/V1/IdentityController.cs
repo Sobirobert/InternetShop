@@ -46,7 +46,7 @@ public class IdentityController : ControllerBase
         var userExists = await _userManager.FindByNameAsync(register.UserName);
         if (userExists != null)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, new Response<bool>
+            return StatusCode(StatusCodes.Status500InternalServerError, new Response
             {
                 Succeeded = false,
                 Message = "User already exists!"
