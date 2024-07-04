@@ -17,5 +17,8 @@ public class Attachment
     [MaxLength(200)]
     public string Path { get; set; }
 
+    [Required]
+    public int UserId { get; set; }
+
     public ICollection<Product> Products { get; set; }
 }

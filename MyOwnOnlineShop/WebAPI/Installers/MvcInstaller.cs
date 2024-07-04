@@ -26,8 +26,7 @@ public class MvcInstaller : IInstaller
             })
             .AddXmlSerializerFormatters();
 
-        services.AddAuthorization();
-        services.AddTransient<UserResolverService>();
+        
         services.AddRazorPages();
         services.AddApiVersioning(x =>
         {
@@ -37,6 +36,8 @@ public class MvcInstaller : IInstaller
             x.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
         });
 
+        services.AddTransient<UserResolverService>();
         services.AddScoped<ErrorHandlingMiddelware>();
+        services.AddAuthorization();
     }
 }

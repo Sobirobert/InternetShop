@@ -5,6 +5,6 @@ namespace Domain.Interfaces;
 
 public interface IOrderRepository
 {
-    Task<List<ShoppingCartItem>> CreateOrder(Order order);
+    Task<IEnumerable<ShoppingCartItem>> CreateOrder(Order order, int shoppingCartId);
 
 }

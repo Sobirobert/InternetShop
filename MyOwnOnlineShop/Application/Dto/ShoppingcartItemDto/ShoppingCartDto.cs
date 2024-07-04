@@ -6,7 +6,7 @@ using Domain.Entities;
 
 namespace Application.Dto.ShoppingcartItemDto;
 
-public class ShoppingCartItemDto : IMap
+public class ShoppingCartDto : IMap
 {
     public int ShoppingCartId { get; set; }
     public int ShoppingCartItemId { get; set; }
@@ -15,6 +15,6 @@ public class ShoppingCartItemDto : IMap
     
     public void Mapping(Profile profile)
     {
-        profile.CreateMap<ShoppingCartItem, ShoppingCartItemDto>();
+        profile.CreateMap<ShoppingCartItem, ShoppingCartDto>();
     }
 }

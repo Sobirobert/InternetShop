@@ -4,7 +4,7 @@ namespace Application.Interfaces;
 
 public interface ICategoryService
 {
-    Task<IEnumerable<CategoryDto>> GetAllCategoriesAsync();
+    Task<IEnumerable<CategoryShowAllDto>> GetAllCategoriesAsync();
 
     Task<CategoryDto> GetCategoryByIdAsync(int id);
 

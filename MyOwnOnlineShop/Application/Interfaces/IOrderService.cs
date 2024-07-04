@@ -6,5 +6,5 @@ namespace Application.Interfaces;
 
 public interface IOrderService
 {
-    Task<List<ShoppingCartItemDto>> CreateOrder(OrderDto orderDto);
+    Task<List<ShoppingCartDto>> CreateOrder(OrderDto orderDto, int shoppingCartId);
 }

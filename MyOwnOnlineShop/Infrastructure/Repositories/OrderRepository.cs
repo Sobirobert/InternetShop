@@ -4,7 +4,7 @@ using Infrastructure.Data;
 
 namespace Infrastructure.Repositories;
 
-public class OrderRepository //: IOrderRepository
+public class OrderRepository  /*: IOrderRepository */
 {
     private readonly OnlineShopDBContext _context;
     private readonly ShoppingCartRepository _shoppingCart;
@@ -15,11 +15,11 @@ public class OrderRepository //: IOrderRepository
         _shoppingCart = shoppingCart;
     }
 
-    //public async Task<List<ShoppingCartItem>> CreateOrder(Order order)
+    //public async Task<IEnumerable<ShoppingCartItem>> CreateOrder(Order order, int shoppingCartID)
     //{
     //    order.OrderPlaced = DateTime.Now;
     //    var shoppingCartItems = _shoppingCart.ShoppingCartItems;
-    //    order.OrderTotal = await _shoppingCart.GetShoppingCartTotalAsync();
+    //    order.OrderTotal = await _shoppingCart.GetShoppingCartTotalAsync(shoppingCartID);
     //    order.OrderDetails = new List<OrderDetail>();
 
     //    foreach (var shoppingCartItem in shoppingCartItems)
@@ -37,7 +37,7 @@ public class OrderRepository //: IOrderRepository
     //    await _context.Orders.AddAsync(order);
 
     //    await _context.SaveChangesAsync();
-    //    var orderList = await _shoppingCart.GetShoppingCartItemsAsync();
+    //    var orderList = await _shoppingCart.GetShoppingCartItemsAsync(shoppingCartID);
     //    return orderList;
     //}
 }

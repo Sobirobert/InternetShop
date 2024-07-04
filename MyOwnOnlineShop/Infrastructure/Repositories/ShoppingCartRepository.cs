@@ -22,11 +22,11 @@ public class ShoppingCartRepository : IShoppingCartRepository
         return shoppingCartIDs;
     }
 
-    public async Task<IEnumerable<ShoppingCartItem>> GetShoppingCartItemsAsync(int shoppingCartId)
+    public async Task<IEnumerable<Product>> GetShoppingCartItemsAsync(int shoppingCartId)
     {
         return await _context.ShoppingCartItems
             .Where(c => c.ShoppingCartId == shoppingCartId)
-            .Include(s => s.Product).ToListAsync();
+            .Select(s => s.Product).ToListAsync();
     }
 
     public async Task<ShoppingCartItem> GetShoppingCartByIdAsync(int id)
@@ -69,21 +69,22 @@ public class ShoppingCartRepository : IShoppingCartRepository
     {
         var shoppingCartItem =
                   await _context.ShoppingCartItems.SingleOrDefaultAsync(
-                       s => s.Product.Id == product.Id && s.ShoppingCartId == shoppingCartId);
+                       s => s.ShoppingCartId == shoppingCartId && s.Product.Id == product.Id);
 
         var localAmount = 0;
-
         if (shoppingCartItem != null)
         {
-            if (shoppingCartItem.Amount >= 1)
+            if (shoppingCartItem.Amount > 1)
             {
                 shoppingCartItem.Amount--;
                 localAmount = shoppingCartItem.Amount;
                 Console.WriteLine($"Your ShoppingCart amount is = {localAmount}");
+                _context.ShoppingCartItems.Remove(shoppingCartItem);
             }
             else
             {
                 _context.ShoppingCartItems.Remove(shoppingCartItem);
+                Console.WriteLine($"Your ShoppingCart amount is = 0 ");
             }
         }
         else 

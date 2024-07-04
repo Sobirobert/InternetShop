@@ -1,6 +1,8 @@
 ﻿using Application.Dto;
 using Application.Dto.Category;
 using Application.Interfaces;
+using AutoMapper;
+using Domain.Entities;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,22 +27,26 @@ namespace WebAPI.Controllers.V1
         }
 
         //[HttpGet]
-        //public IActionResult Index()
+        //public async Task<IActionResult> GetAllCategories()
         //{
         //    var categories = _categoryService.GetAllCategoriesAsync();
-        //    return NoContent();
+        //    if (categories == null)
+        //    {
+        //        return BadRequest(new Response(false, "Categories are empty"));
+        //    }
+        //    return Ok(new Response<IEnumerable<CategoryShowAllDto>>(categories));
         //}
 
-        //[HttpGet("{id}")]
-        //public IActionResult Details(int id)
-        //{
-        //    var category = _categoryService.GetCategoryByIdAsync(id);
-        //    if (category == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return NoContent();
-        //}
+        [HttpGet("{id}")]
+        public IActionResult Details(int id)
+        {
+            var category = _categoryService.GetCategoryByIdAsync(id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+            return NoContent();
+        }
 
         //[SwaggerOperation(Summary = "Create the new Category")]
         //[HttpPost]

@@ -43,7 +43,4 @@ public class Product : AuditableEntity
     public ICollection<Picture> Pictures { get; set; }
     public ICollection<Attachment> Attachments { get; set; }
 
-    public Product()
-    { }
-
 }

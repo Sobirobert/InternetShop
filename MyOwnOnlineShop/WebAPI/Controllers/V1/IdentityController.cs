@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Domain.Enums;
 using Infrastructure.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -43,7 +44,7 @@ public class IdentityController : ControllerBase
     [Route("Register User")]
     public async Task<IActionResult> RegisterUser(RegisterModel register)
     {
-        var userExists = await _userManager.FindByNameAsync(register.UserName);
+        var userExists = await _userManager.FindByNameAsync(register.UserNick);
         if (userExists != null)
         {
             return StatusCode(StatusCodes.Status500InternalServerError, new Response
@@ -99,7 +100,7 @@ public class IdentityController : ControllerBase
     [Route("RegisterAdmin")]
     public async Task<IActionResult> RegisterAdmin(RegisterModel register)
     {
-        var userExists = await _userManager.FindByNameAsync(register.UserName);
+        var userExists = await _userManager.FindByNameAsync(register.UserNick);
         if (userExists != null)
         {
             return StatusCode(StatusCodes.Status500InternalServerError, new Response
