@@ -12,8 +12,8 @@ public class FluentEmailInstaller : IInstaller
                 .AddRazorRenderer()
                 .AddSmtpSender(Configuration["FluentEmail:SmptSender:Host"],
                      int.Parse(Configuration["FluentEmail:SmptSender:Port"]),
-                                Configuration["FluentEmail:SmptSender:Username"],
-                                Configuration["FluentEmail:SmptSender:Password"]);
+                               Configuration["FluentEmail:SmptSender:Username"],
+                               Configuration["FluentEmail:SmptSender:Password"]);
 
         services.AddScoped<IEmailSenderService, EmailSenderService>();
     }

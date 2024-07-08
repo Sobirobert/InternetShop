@@ -3,7 +3,7 @@ namespace WebAPI.Models;
 
 public class RegisterModel
 {
-    public string UserName { get; set; }
+    public string NameUser { get; set; }
     public string UserSurname { get; set; }
     public string UserNick { get; set; }
     public string Email { get; set; }

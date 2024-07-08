@@ -11,7 +11,7 @@ public class CategoryDto : IMap
     public string CategoryName { get; set; }
     public string Description { get; set; }
     public List<Product> Products { get; set; }
-    public int CategoryShowAllDto { get; set; }
+    public int CategoryShowAll { get; set; }
     public DateTime CreateDateTime { get; set; }
 
     public void Mapping(Profile profile)

@@ -9,18 +9,18 @@ public class RegisterModelExample : IExamplesProvider<RegisterModel>
     {
         return new RegisterModel
         {
-            UserName = "yourFirstName",
+            NameUser = "yourFirstName",
             UserSurname = "yourSurname",
             UserNick = "yourUniqueNick",
             Email = "yourEmailAdress@example.com",
-            PhoneNumber = "123456789",
             Password = "Password123$$",
             Street = "Main street",
             HouseNumber = "3a",
             FlatNumber = "34/8",
             City = "Warsaw",
             PostalCode = "88-200",
-            Country = "Poland"
+            Country = "Poland",
+            PhoneNumber = "123456789"
         };
     }
 }

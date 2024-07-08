@@ -25,8 +25,11 @@ public class MvcInstaller : IInstaller
                 options.JsonSerializerOptions.WriteIndented = true;
             })
             .AddXmlSerializerFormatters();
+        services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 
-        
+        services.AddAuthorization();
+        services.AddTransient<UserResolverService>();
+        services.AddScoped<ErrorHandlingMiddelware>();
         services.AddRazorPages();
         services.AddApiVersioning(x =>
         {
@@ -36,8 +39,6 @@ public class MvcInstaller : IInstaller
             x.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
         });
 
-        services.AddTransient<UserResolverService>();
-        services.AddScoped<ErrorHandlingMiddelware>();
-        services.AddAuthorization();
+        
     }
 }

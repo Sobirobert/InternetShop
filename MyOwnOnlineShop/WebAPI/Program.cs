@@ -1,32 +1,48 @@
+using Microsoft.Extensions.Logging;
 using WebAPI.Installers;
 using WebAPI.MiddelWares;
 
-var builder = WebApplication.CreateBuilder(args);
+namespace WebAPI;
 
-// Add services to the container.
-builder.Services.InstallServicesInAssembly(builder.Configuration);
-
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+public class Program
 {
-    app.UseDeveloperExceptionPage();
-    app.UseSwagger();
-    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI v1"));
+    public static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
+        builder.Services.InstallServicesInAssembly(builder.Configuration);
+        builder.Services.AddEndpointsApiExplorer();
+
+        builder.Services.AddSwaggerGen();
+
+        var app = builder.Build();
+
+        if (app.Environment.IsDevelopment())
+        {
+            //app.UseDeveloperExceptionPage();
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI v1"));
+        }
+        app.UseMiddleware<ErrorHandlingMiddelware>();
+        app.UseHttpsRedirection();
+        app.UseRouting();
+        app.UseAuthentication();
+        app.UseAuthorization();
+        app.MapControllers();
+
+        try
+        {
+            // throw new Exception("Fatal error!");
+            app.Run();
+        }
+        catch (Exception ex)
+        {
+           // logger.Fatal(ex, "Application stopped because of exception");
+            throw;
+        }
+        finally
+        {
+            //LogManager.Shutdown();
+        }
+    }
 }
 
-app.UseMiddleware<ErrorHandlingMiddelware>();
-app.UseHttpsRedirection();
-app.UseRouting();
-app.UseAuthorization();
-app.UseAuthentication();
-
-//app.MapAreaControllerRoute(
-//    name: "default",
-//    pattern: "{controller=Home}/{action=Index}/{id?}");
-app.Run();

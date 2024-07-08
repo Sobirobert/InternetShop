@@ -1,12 +1,12 @@
-﻿using Application.Interfaces;
+﻿
+
+using Application.Interfaces;
 using Domain.Enums;
 using Infrastructure.Identity;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using System.IO;
 using System.Security.Claims;
 using System.Text;
 using WebAPI.Models;
@@ -58,15 +58,15 @@ public class IdentityController : ControllerBase
         {
             Email = register.Email,
             SecurityStamp = Guid.NewGuid().ToString(),
-            UserNick = register.UserName,
-            UserName = register.UserName,
+            NameUser = register.NameUser,
+            UserName = register.UserNick,
             UserSurname = register.UserSurname,
             PhoneNumber = register.PhoneNumber,
             Street = register.Street,
             HouseNumber = register.HouseNumber,
             FlatNumber = register.FlatNumber,
             City = register.City,
-            PostalCode = register.City,
+            PostalCode = register.PostalCode,
             Country = register.Country,
         };
 
@@ -114,15 +114,15 @@ public class IdentityController : ControllerBase
         {
             Email = register.Email,
             SecurityStamp = Guid.NewGuid().ToString(),
-            UserNick = register.UserName,
-            UserName = register.UserName,
+            NameUser = register.NameUser,
+            UserName = register.UserNick,
             UserSurname = register.UserSurname,
             PhoneNumber = register.PhoneNumber,
             Street = register.Street,
             HouseNumber = register.HouseNumber,
             FlatNumber = register.FlatNumber,
             City = register.City,
-            PostalCode = register.City,
+            PostalCode = register.PostalCode,
             Country = register.Country,
         };
 
@@ -153,7 +153,7 @@ public class IdentityController : ControllerBase
     [Route("Login")]
     public async Task<IActionResult> Login(LoginModel login)
     {
-        var user = await _userManager.FindByNameAsync(login.Username);
+        var user = await _userManager.FindByNameAsync(login.UserNick);
         if (user != null && await _userManager.CheckPasswordAsync(user, login.Password))
         {
             var authClaims = new List<Claim>
