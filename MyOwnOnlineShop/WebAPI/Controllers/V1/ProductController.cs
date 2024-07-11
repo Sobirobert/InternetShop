@@ -61,13 +61,19 @@ public class ProductController : ControllerBase
 
         return Ok(new Response<ProductDto>(product));
     }
-    [ValidateFilter]
+
+    /// <summary>
+    /// Type 0 = New,
+    /// Type 1 = Used,
+    /// Type 2 = Damaged
+    /// </summary>
+[ValidateFilter]
     [SwaggerOperation(Summary = "Create a new post")]
     [Authorize(Roles = UserRoles.Admin)]
     [HttpPost]
     public async Task<IActionResult> Create(CreateProductDto newProduct)
     {       
-        var product = await _productService.AddNewProduct(newProduct, User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var product = await _productService.AddNewProduct(newProduct);
         return Created($"api/product/{product.Id}", new Response<ProductDto>(product));
     }
 
@@ -77,12 +83,6 @@ public class ProductController : ControllerBase
     [HttpPut]
     public async Task<IActionResult> Update(UpdateProductDto updateProduct)
     {
-        var userOwnsProduct = await _productService.UserOwnsProduct(updateProduct.Id, User.FindFirstValue(ClaimTypes.NameIdentifier));
-        if (!userOwnsProduct)
-        {
-            return BadRequest(new Response(false, "You do not own this post."));
-        }
-
         await _productService.UpdateProduct(updateProduct);
         return NoContent();
     }
@@ -92,9 +92,8 @@ public class ProductController : ControllerBase
     [HttpDelete("Id")]
     public async Task<IActionResult> Delete(int id)
     {
-        var userOwnsProduct = await _productService.UserOwnsProduct(id, User.FindFirstValue(ClaimTypes.NameIdentifier));
         var isAdmin = User.FindFirstValue(ClaimTypes.Role).Contains(UserRoles.Admin);
-        if (!userOwnsProduct && !isAdmin)
+        if (!isAdmin)
         {
             return BadRequest(new Response(false, "You do not own this post."));
         }

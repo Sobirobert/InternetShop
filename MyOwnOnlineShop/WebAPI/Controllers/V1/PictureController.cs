@@ -56,13 +56,6 @@ public class PictureController : ControllerBase
         {
             return BadRequest(new Response(false, $"Product with id {productId} does not exist."));
         }
-
-        var userOwner = await _productService.UserOwnsProduct(productId, User.FindFirstValue(ClaimTypes.NameIdentifier));
-        if (!userOwner)
-        {
-            return BadRequest(new Response(false, "You do not own this product.")); 
-        }
-
         var picture = await _pictureSerwice.AddPictureToProduct(productId, file); 
         return Created($"api/pictures/{picture.Id}", new Response<PictureDto>(picture));
     }
@@ -71,24 +64,18 @@ public class PictureController : ControllerBase
     [HttpPut("[action]/{productId}/{id}")]
     public async Task<IActionResult> SetMainPicture(int productId, int id)
     {
-        var userOwnsProduct = await _productService.UserOwnsProduct(productId, User.FindFirstValue(ClaimTypes.NameIdentifier));
-        if (!userOwnsProduct)
-        {
-            return BadRequest(new Response(false, "You do not own this product."));
-        }
-
         await _pictureSerwice.SetMainPicture(productId, id);
         return NoContent();
     }
 
     [SwaggerOperation(Summary = "Delete a specific picture")]
     [HttpDelete("{productId}/{id}")]
-    public async Task<IActionResult> Delate(int id, int productId)
+    public async Task<IActionResult> Delate(int id)
     {
-        var userOwnsProduct = await _productService.UserOwnsProduct(productId, User.FindFirstValue(ClaimTypes.NameIdentifier));
-        if (!userOwnsProduct)
+        var userOwnsProduct = await _productService.GetProductById(id);
+        if (userOwnsProduct == null)
         {
-            return BadRequest(new Response(false, "You do not own this product."));
+            return BadRequest(new Response(false, "Product isn't exist"));
         }
 
         await _pictureSerwice.DeletePicture(id);

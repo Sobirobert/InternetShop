@@ -16,8 +16,8 @@ public class CreateProductDtoValidator : AbstractValidator<CreateProductDto>
 
         #region DescriptionOfProduct
 
-        RuleFor(x => x.DescriptionOfProduct).NotEmpty().WithMessage("Product can not have an empty Description.");
-        RuleFor(x => x.DescriptionOfProduct).Length(3, 2500).WithMessage("The description must be between 3 and 2500 characters long");
+        //RuleFor(x => x.DescriptionOfProduct).NotEmpty().WithMessage("Product can not have an empty Description.");
+        //RuleFor(x => x.DescriptionOfProduct).Length(3, 2500).WithMessage("The description must be between 3 and 2500 characters long");
 
         #endregion DescriptionOfProduct
 

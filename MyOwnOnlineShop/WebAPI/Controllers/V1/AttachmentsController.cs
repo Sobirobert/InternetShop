@@ -39,10 +39,10 @@ namespace WebAPI.Controllers.V1
         [HttpGet("{productId}/{id}")]
         public async Task<IActionResult> DownloadAsync(int id, int productId)
         {
-            var userOwnsProduct = await _productService.UserOwnsProduct(productId, User.FindFirstValue(ClaimTypes.NameIdentifier));
-            if (!userOwnsProduct)
+            var product = await _productService.GetProductById(productId);
+            if (product == null)
             {
-                return BadRequest(new Response(false, "You do not own this post."));
+                return BadRequest(new Response(false, $"Post with id {productId} does not exist."));
             }
 
             var attachment = await _attachmentService.DownloadAttachmentById(id);
@@ -56,34 +56,28 @@ namespace WebAPI.Controllers.V1
         [ValidateFilter]
         [SwaggerOperation(Summary = "Add a new attachment to post")]
         [HttpPost("{postId}")]
-        public async Task<IActionResult> AddToPostAsync(int postId, IFormFile file)
+        public async Task<IActionResult> AddToPostAsync(int productId, IFormFile file)
         {
-            var post = await _productService.GetProductById(postId);
-            if (post == null)
+            var product = await _productService.GetProductById(productId);
+            if (product == null)
             {
-                return BadRequest(new Response(false, $"Post with id {postId} does not exist."));
+                return BadRequest(new Response(false, $"Post with id {productId} does not exist."));
             }
 
-            var userOwnsPost = await _productService.UserOwnsProduct(postId, User.FindFirstValue(ClaimTypes.NameIdentifier));
-            if (!userOwnsPost)
-            {
-                return BadRequest(new Response(false, "You do not own this post."));
-            }
-
-            var attachment = await _attachmentService.AddAttachmentToProduct(postId, file);
+            var attachment = await _attachmentService.AddAttachmentToProduct(productId, file);
             return Created($"api/attachments/{attachment.Id}", new Response<AttachmentDto>(attachment));
         }
 
         [SwaggerOperation(Summary = "Delete a specific attachment")]
         [HttpDelete("{postId}/{id}")]
-        public async Task<IActionResult> DeleteAsync(int id, int postId)
+        public async Task<IActionResult> DeleteAsync(int attachmentsId, int productId)
         {
-            var userOwnsPost = await _productService.UserOwnsProduct(postId, User.FindFirstValue(ClaimTypes.NameIdentifier));
-            if (!userOwnsPost)
+            var product = await _productService.GetProductById(productId);
+            if (product == null)
             {
-                return BadRequest(new Response(false, "You do not own this post."));
+                return BadRequest(new Response(false, $"Post with id {productId} does not exist."));
             }
-            await _attachmentService.DelateAttachment(id);
+            await _attachmentService.DelateAttachment(attachmentsId);
             return NoContent();
         }
     }

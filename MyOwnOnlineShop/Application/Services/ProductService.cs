@@ -34,10 +34,9 @@ public class ProductService : IProductService
         return _mapper.Map<ProductDto>(product);
     }
 
-    public async Task<ProductDto> AddNewProduct(CreateProductDto newProduct, string userId)
+    public async Task<ProductDto> AddNewProduct(CreateProductDto newProduct)
     {
         var product = _mapper.Map<Product>(newProduct);
-        product.UserId = userId;
         var result = await _productRepository.Add(product);
         return _mapper.Map<ProductDto>(result);
     }
@@ -53,22 +52,5 @@ public class ProductService : IProductService
     {
         var product = await _productRepository.GetById(id);
         await _productRepository.Delete(product);
-    }
-
-    public async Task<bool> UserOwnsProduct(int productId, string userId)
-    {
-        var product = await _productRepository.GetById(productId);
-
-        if (product == null)
-        {
-            return false;
-        }
-
-        if (product.UserId != userId)
-        {
-            return false;
-        }
-
-        return true;
     }
 }

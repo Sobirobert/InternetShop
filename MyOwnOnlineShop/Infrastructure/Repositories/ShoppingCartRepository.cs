@@ -22,10 +22,10 @@ public class ShoppingCartRepository : IShoppingCartRepository
         return shoppingCartIDs;
     }
 
-    public async Task<IEnumerable<Product>> GetShoppingCartItems(int shoppingCartId)
+    public async Task<IEnumerable<Product>> GetShoppingCartItems(int id)
     {
         return await _context.ShoppingCartItems
-            .Where(c => c.ShoppingCartId == shoppingCartId)
+            .Where(c => c.ShoppingCartId == id)
             .Select(s => s.Product).ToListAsync();
     }
 
@@ -34,16 +34,16 @@ public class ShoppingCartRepository : IShoppingCartRepository
         return await _context.ShoppingCartItems.SingleOrDefaultAsync(x => x.ShoppingCartId == id);
     }
 
-    public async Task AddToCart(Product product, int shoppingCartId)
+    public async Task AddToCart(Product product, int id)
     {
         var shoppingCartItem = await _context.ShoppingCartItems
-            .SingleOrDefaultAsync(s => s.ShoppingCartId == shoppingCartId);
+            .SingleOrDefaultAsync(s => s.ShoppingCartId == id);
 
         if (shoppingCartItem == null)
         {
             shoppingCartItem = new ShoppingCartItem
             {
-                ShoppingCartId = shoppingCartId,
+                ShoppingCartId = id,
                 Product = product,
                 Amount = 1
             };
@@ -58,18 +58,18 @@ public class ShoppingCartRepository : IShoppingCartRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<double> GetShoppingCartTotal(int shoppingCartId)
+    public async Task<double> GetShoppingCartTotal(int id)
     {
-        var total = await _context.ShoppingCartItems.Where(c => c.ShoppingCartId ==  shoppingCartId)
+        var total = await _context.ShoppingCartItems.Where(c => c.ShoppingCartId ==  id)
                 .Select(c => c.Product.Price * c.Amount).SumAsync();
         return total;
     }
 
-    public async Task RemoveFromCart(Product product, int shoppingCartId)
+    public async Task RemoveFromCart(Product product, int id)
     {
         var shoppingCartItem =
                   await _context.ShoppingCartItems.SingleOrDefaultAsync(
-                       s => s.ShoppingCartId == shoppingCartId && s.Product.Id == product.Id);
+                       s => s.ShoppingCartId == id && s.Product.Id == product.Id);
 
         var localAmount = 0;
         if (shoppingCartItem != null)

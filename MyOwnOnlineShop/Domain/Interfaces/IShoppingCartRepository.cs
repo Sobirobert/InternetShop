@@ -5,10 +5,10 @@ namespace Domain.Interfaces;
 public interface IShoppingCartRepository
 {
     Task<List<int>> GetAllShoppingCart();
-    Task<IEnumerable<Product>> GetShoppingCartItems(int shoppingCartId);
+    Task<IEnumerable<Product>> GetShoppingCartItems(int id);
     Task<ShoppingCartItem> GetShoppingCartById(int id);
-    Task<double> GetShoppingCartTotal(int shoppingCartId);
-    Task ClearCart(int shoppingCartId);
-    Task AddToCart(Product product, int shoppingCartId);
-    Task RemoveFromCart(Product product, int shoppingCartId);
+    Task<double> GetShoppingCartTotal(int id);
+    Task ClearCart(int id);
+    Task AddToCart(Product product, int id);
+    Task RemoveFromCart(Product product, int id);
 }

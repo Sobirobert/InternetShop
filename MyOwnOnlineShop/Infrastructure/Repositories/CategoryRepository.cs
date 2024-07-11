@@ -17,7 +17,7 @@ namespace Infrastructure.Repositories
         public async Task<int> GetProductsCountInCategory(int id)
         {
             var cateory = await _context.Categories.SingleOrDefaultAsync(c => c.Id == id);
-            var count = await _context.Products.Where(x => x.Category == cateory).CountAsync();
+            var count = await _context.Products.Where(x => x.CategoryId == cateory.Id).CountAsync();
             return count;
         }
 
