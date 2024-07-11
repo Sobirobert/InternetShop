@@ -4,11 +4,11 @@ namespace Domain.Interfaces;
 
 public interface IShoppingCartRepository
 {
-    Task<List<int>> GetAllShoppingCartAsync();
-    Task<IEnumerable<Product>> GetShoppingCartItemsAsync(int shoppingCartId);
-    Task<ShoppingCartItem> GetShoppingCartByIdAsync(int id);
-    Task<double> GetShoppingCartTotalAsync(int shoppingCartId);
-    Task ClearCartAsync(int shoppingCartId);
-    Task AddToCartAsync(Product product, int shoppingCartId);
-    Task RemoveFromCartAsync(Product product, int shoppingCartId);
+    Task<List<int>> GetAllShoppingCart();
+    Task<IEnumerable<Product>> GetShoppingCartItems(int shoppingCartId);
+    Task<ShoppingCartItem> GetShoppingCartById(int id);
+    Task<double> GetShoppingCartTotal(int shoppingCartId);
+    Task ClearCart(int shoppingCartId);
+    Task AddToCart(Product product, int shoppingCartId);
+    Task RemoveFromCart(Product product, int shoppingCartId);
 }

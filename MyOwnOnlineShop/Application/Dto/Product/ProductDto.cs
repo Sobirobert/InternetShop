@@ -1,9 +1,6 @@
 ﻿using Application.Mappings;
 using AutoMapper;
 using Domain.Entities;
-using System.ComponentModel.DataAnnotations;
-using System;
-using Application.Dto.Category;
 
 namespace Application.Dto;
 
@@ -19,8 +16,7 @@ public class ProductDto : IMap
     public string UserId { get; set; }
     public bool IsProductOfTheWeek { get; set; }
     public Type Type { get; set; }
-    public int CategoryId { get; set; }
-    public CategoryDto CategoryDto { get; set; }
+    public Category Category { get; set; }
     public DateTime CreationDate { get; set; }
 
     public void Mapping(Profile profile)

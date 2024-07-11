@@ -15,7 +15,7 @@ public class ProductRepository : IProductRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<Product>> GetAllAsync(int pageNumber, int pageSize, string sortField, bool ascending, string filterBy)
+    public async Task<IEnumerable<Product>> GetAll(int pageNumber, int pageSize, string sortField, bool ascending, string filterBy)
     {
         return await _context.Products
             .Include(c => c.Category)
@@ -26,13 +26,13 @@ public class ProductRepository : IProductRepository
             .ToListAsync();
     }
 
-    public async Task<Product> GetByIdAsync(int id)
+    public async Task<Product> GetById(int id)
     {
         return await _context.Products
             .SingleOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task<int> GetAllCountAsync(string filterBy)
+    public async Task<int> GetAllCount(string filterBy)
     {
         return await _context.Products
             .Where(m => m.Title.ToLower()
@@ -41,7 +41,7 @@ public class ProductRepository : IProductRepository
             .CountAsync();
     }
 
-    public async Task<Product> AddAsync(Product product)
+    public async Task<Product> Add(Product product)
     {
         product.Created = DateTime.Now;
         await _context.Products.AddAsync(product);
@@ -49,14 +49,14 @@ public class ProductRepository : IProductRepository
         return product;
     }
 
-    public async Task UpdateAsync(Product product)
+    public async Task Update(Product product)
     {
         product.LastModified = DateTime.Now;
         _context.Products.Update(product);
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(Product product)
+    public async Task Delete(Product product)
     {
         _context.Products.Remove(product);
         await _context.SaveChangesAsync();

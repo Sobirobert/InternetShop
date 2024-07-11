@@ -22,10 +22,10 @@ public class PictureService : IPictureService
         _productRepository = productRepository;
     }
 
-    public async Task<PictureDto> AddPictureToProductAsync(int productId, IFormFile file)
+    public async Task<PictureDto> AddPictureToProduct(int productId, IFormFile file)
     {
-        var product = await _productRepository.GetByIdAsync(productId);
-        var existingPictures = await _pictureRepository.GetByProductIdAsync(productId);
+        var product = await _productRepository.GetById(productId);
+        var existingPictures = await _pictureRepository.GetByProductId(productId);
 
         var picture = new Picture()
         {
@@ -35,30 +35,30 @@ public class PictureService : IPictureService
             Main = existingPictures.Count() == 0 ? true : false
         };
 
-        var result = await _pictureRepository.AddAsync(picture);
+        var result = await _pictureRepository.Add(picture);
         return _mapper.Map<PictureDto>(result);
     }
 
-    public async Task<IEnumerable<PictureDto>> GetPicturesByProductIdAsync(int productId)
+    public async Task<IEnumerable<PictureDto>> GetPicturesByProductId(int productId)
     {
-        var pictures = await _pictureRepository.GetByProductIdAsync(productId);
+        var pictures = await _pictureRepository.GetByProductId(productId);
         return _mapper.Map<IEnumerable<PictureDto>>(pictures);
     }
 
-    public async Task<PictureDto> GetPictureByIdAsync(int id)
+    public async Task<PictureDto> GetPictureById(int id)
     {
-        var picture = await _pictureRepository.GetByIdAsync(id);
+        var picture = await _pictureRepository.GetById(id);
         return _mapper.Map<PictureDto>(picture);
     }
 
-    public async Task DeletePictureAsync(int id)
+    public async Task DeletePicture(int id)
     {
-        var picture = await _pictureRepository.GetByIdAsync(id);
-        await _pictureRepository.DeleteAsync(picture);
+        var picture = await _pictureRepository.GetById(id);
+        await _pictureRepository.Delete(picture);
     }
 
     public async Task SetMainPicture(int productId, int id)
     {
-        await _pictureRepository.SetMainPictureAsync(productId, id);
+        await _pictureRepository.SetMainPicture(productId, id);
     }
 }

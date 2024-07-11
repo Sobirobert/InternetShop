@@ -30,7 +30,7 @@ namespace WebAPI.Controllers.V1
         [HttpGet("[action]/{productId}")]
         public async Task<IActionResult> GetByProductIdAsync(int productId)
         {
-            var pictures = await _attachmentService.GetAttachmentsByProductIdAsync(productId);
+            var pictures = await _attachmentService.GetAttachmentsByProductId(productId);
             return Ok(new Response<IEnumerable<AttachmentDto>>(pictures));
         }
 
@@ -39,13 +39,13 @@ namespace WebAPI.Controllers.V1
         [HttpGet("{productId}/{id}")]
         public async Task<IActionResult> DownloadAsync(int id, int productId)
         {
-            var userOwnsProduct = await _productService.UserOwnsProductAsync(productId, User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var userOwnsProduct = await _productService.UserOwnsProduct(productId, User.FindFirstValue(ClaimTypes.NameIdentifier));
             if (!userOwnsProduct)
             {
                 return BadRequest(new Response(false, "You do not own this post."));
             }
 
-            var attachment = await _attachmentService.DownloadAttachmentByIdAsync(id);
+            var attachment = await _attachmentService.DownloadAttachmentById(id);
             if (attachment == null)
             {
                 return NotFound();
@@ -58,19 +58,19 @@ namespace WebAPI.Controllers.V1
         [HttpPost("{postId}")]
         public async Task<IActionResult> AddToPostAsync(int postId, IFormFile file)
         {
-            var post = await _productService.GetProductByIdAsync(postId);
+            var post = await _productService.GetProductById(postId);
             if (post == null)
             {
                 return BadRequest(new Response(false, $"Post with id {postId} does not exist."));
             }
 
-            var userOwnsPost = await _productService.UserOwnsProductAsync(postId, User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var userOwnsPost = await _productService.UserOwnsProduct(postId, User.FindFirstValue(ClaimTypes.NameIdentifier));
             if (!userOwnsPost)
             {
                 return BadRequest(new Response(false, "You do not own this post."));
             }
 
-            var attachment = await _attachmentService.AddAttachmentToProductAsync(postId, file);
+            var attachment = await _attachmentService.AddAttachmentToProduct(postId, file);
             return Created($"api/attachments/{attachment.Id}", new Response<AttachmentDto>(attachment));
         }
 
@@ -78,12 +78,12 @@ namespace WebAPI.Controllers.V1
         [HttpDelete("{postId}/{id}")]
         public async Task<IActionResult> DeleteAsync(int id, int postId)
         {
-            var userOwnsPost = await _productService.UserOwnsProductAsync(postId, User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var userOwnsPost = await _productService.UserOwnsProduct(postId, User.FindFirstValue(ClaimTypes.NameIdentifier));
             if (!userOwnsPost)
             {
                 return BadRequest(new Response(false, "You do not own this post."));
             }
-            await _attachmentService.DelateAttachmentAsync(id);
+            await _attachmentService.DelateAttachment(id);
             return NoContent();
         }
     }

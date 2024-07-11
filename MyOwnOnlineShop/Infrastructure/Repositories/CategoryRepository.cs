@@ -14,35 +14,48 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Category>> GetAllAsync()
+        public async Task<int> GetProductsCountInCategory(int id)
         {
-            return await _context.Categories
-                .ToListAsync();
+            var cateory = await _context.Categories.SingleOrDefaultAsync(c => c.Id == id);
+            var count = await _context.Products.Where(x => x.Category == cateory).CountAsync();
+            return count;
         }
 
-        public async Task<Category> GetByIdAsync(int id)
+        public async Task<IEnumerable<Category>> GetAll()
+        {
+            return await _context.Categories.ToListAsync();
+        }
+        public async Task<Category> GetById(int id)
         {
             return await _context.Categories
                 .SingleOrDefaultAsync(c => c.Id == id);
         }
 
-        public async Task<Category> AddAsync(Category category)
+        public async Task<Category> GetByName(string name)
+        {
+            return await _context.Categories
+                .SingleOrDefaultAsync(c => c.CategoryName == name);
+        }
+
+        public async Task<Category> Add(Category category)
         {
             var createdCategory = await _context.Categories.AddAsync(category);
             await _context.SaveChangesAsync();
             return createdCategory.Entity;
         }
 
-        public async Task UpdateAsync(Category category)
+        public async Task Update(Category category)
         {
+            category.LastModified = DateTime.Now;
             _context.Categories.Update(category);
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(Category category)
+        public async Task Delete(Category category)
         {
             _context.Categories.Remove(category);
             await _context.SaveChangesAsync();
         }
+
     }
 }

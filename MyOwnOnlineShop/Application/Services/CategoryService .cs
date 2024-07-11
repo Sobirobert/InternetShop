@@ -1,7 +1,7 @@
-﻿using Application.Dto;
-using Application.Dto.Category;
+﻿using Application.Dto.CategoryDto;
 using Application.Interfaces;
 using AutoMapper;
+using Azure;
 using Domain.Entities;
 using Domain.Interfaces;
 
@@ -17,34 +17,52 @@ public class CategoryService : ICategoryService
         _categoryRepository = categoryRepository;
         _mapper = mapper;
     }
-    public async Task<IEnumerable<CategoryShowAllDto>> GetAllCategoriesAsync()
+
+    public async Task<IEnumerable<CategoryDto>> GetAllCategories()
     {
-        var categories = await _categoryRepository.GetAllAsync();
-        return _mapper.Map<IEnumerable<CategoryShowAllDto>>(categories);
+        var categories = await _categoryRepository.GetAll();
+        return _mapper.Map<IEnumerable<CategoryDto>>(categories);
     }
 
-    public async Task<CategoryDto> GetCategoryByIdAsync(int id)
+    public async Task<int> GetProductsCount(int id)
     {
-        var category = await _categoryRepository.GetByIdAsync(id);
+        var countProducts = await _categoryRepository.GetProductsCountInCategory(id);
+        return countProducts;
+    }
+
+    public async Task<CategoryDto> GetCategoryById(int id)
+    {
+        var category = await _categoryRepository.GetById(id);
         return _mapper.Map<CategoryDto>(category);
     }
-    public async Task<CategoryDto> CreateCategoryAsync(CreateCategoryDto newcategory)
+
+    public async Task<CategoryDto> GetCategoryByName(string name)
+    {
+        var category = await _categoryRepository.GetByName(name);
+        return _mapper.Map<CategoryDto>(category);
+    }
+
+    public async Task<CategoryDto> CreateCategory(CreateCategoryDto newcategory)
     {
         var category = _mapper.Map<Category>(newcategory);
-        var result = await _categoryRepository.AddAsync(category);
+        var result = await _categoryRepository.Add(category);
         return _mapper.Map<CategoryDto>(result);
     }
 
-    public async Task UpdateCategoryAsync(UpdateCategoryDto categoryUpdate)
+    public async Task UpdateCategory(UpdateCategoryDto categoryUpdate)
     {
-        var existingCategory = await _categoryRepository.GetByIdAsync(categoryUpdate.Id);
+        var existingCategory = await _categoryRepository.GetById(categoryUpdate.Id);
+        if (existingCategory != null)
+        {
+            
+        }
         var category = _mapper.Map(categoryUpdate, existingCategory);
-        await _categoryRepository.UpdateAsync(category);
+        await _categoryRepository.Update(category);
     }
 
-    public async Task DeleteCategoryAsync(int id)
+    public async Task DeleteCategory(int id)
     {
-        var category = await _categoryRepository.GetByIdAsync(id);
-        await _categoryRepository.DeleteAsync(category);
+        var category = await _categoryRepository.GetById(id);
+        await _categoryRepository.Delete(category);
     }
 }

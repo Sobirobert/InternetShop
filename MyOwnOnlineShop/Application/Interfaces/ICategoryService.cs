@@ -1,16 +1,14 @@
-﻿using Application.Dto.Category;
+﻿using Application.Dto.CategoryDto;
 
 namespace Application.Interfaces;
 
 public interface ICategoryService
 {
-    Task<IEnumerable<CategoryShowAllDto>> GetAllCategoriesAsync();
-
-    Task<CategoryDto> GetCategoryByIdAsync(int id);
-
-    Task<CategoryDto> CreateCategoryAsync(CreateCategoryDto category);
-
-    Task UpdateCategoryAsync(UpdateCategoryDto category);
-
-    Task DeleteCategoryAsync(int id);
+    Task<int> GetProductsCount(int id);
+    Task<IEnumerable<CategoryDto>> GetAllCategories();
+    Task<CategoryDto> GetCategoryById(int id);
+    Task<CategoryDto> GetCategoryByName(string name);
+    Task<CategoryDto> CreateCategory(CreateCategoryDto category);
+    Task UpdateCategory(UpdateCategoryDto category);
+    Task DeleteCategory(int id);
 }

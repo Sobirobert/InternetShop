@@ -21,35 +21,35 @@ public class ShoppingCartService : IShoppingCartService
 
     public async Task<IEnumerable<ProductDto>> GetAllItemsFromShoppingCartById(int shoppingCartId)
     {
-        var allProducts = await _shoppingCartRepository.GetShoppingCartItemsAsync(shoppingCartId);
+        var allProducts = await _shoppingCartRepository.GetShoppingCartItems(shoppingCartId);
         return _mapper.Map<IEnumerable<ProductDto>>(allProducts);
     }
 
-    public async Task<List<int>> GetAllShoppingCartIdAsync()
+    public async Task<List<int>> GetAllShoppingCartId()
     {
-        var allSchoppingCartIds = await _shoppingCartRepository.GetAllShoppingCartAsync();
+        var allSchoppingCartIds = await _shoppingCartRepository.GetAllShoppingCart();
         return allSchoppingCartIds;
     }
 
-    public async Task<double> GetTotalPriceOfShoppingCartAsync(int shoppingCartId)
+    public async Task<double> GetTotalPriceOfShoppingCart(int shoppingCartId)
     {
-        var totalPrice = await _shoppingCartRepository.GetShoppingCartTotalAsync(shoppingCartId);
+        var totalPrice = await _shoppingCartRepository.GetShoppingCartTotal(shoppingCartId);
         return totalPrice;
     }
-    public async Task<ShoppingCartDto> AddNewProductToShippingCartAsync(ProductDto product, int shoppingCartId)
+    public async Task<ShoppingCartDto> AddNewProductToShippingCart(ProductDto product, int shoppingCartId)
     {
         throw new NotImplementedException();
     }
 
-    public async Task ClearShoppingCartAsync(int shoppingCartId)
+    public async Task ClearShoppingCart(int shoppingCartId)
     {
         throw new NotImplementedException();
     }
 
-    public async Task RemoveProductFromShoppingCartByIdAsync(ProductDto productDto, int shoppingCartId)
+    public async Task RemoveProductFromShoppingCartById(ProductDto productDto, int shoppingCartId)
     {
         var product = _mapper.Map<Product>(productDto);
-        await _shoppingCartRepository.RemoveFromCartAsync(product, shoppingCartId);
+        await _shoppingCartRepository.RemoveFromCart(product, shoppingCartId);
     }
 
     //public async Task ClearCartAsync()

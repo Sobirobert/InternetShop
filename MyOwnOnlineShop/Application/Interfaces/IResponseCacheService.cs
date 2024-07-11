@@ -2,7 +2,7 @@
 
 public interface IResponseCacheService
 {
-    Task CacheResponseAsync(string cacheKey, object response, TimeSpan timeLive);
+    Task CacheResponse(string cacheKey, object response, TimeSpan timeLive);
 
-    Task<string?> GetCachedResponseAsync(string cacheKey);
+    Task<string?> GetCachedResponse(string cacheKey);
 }

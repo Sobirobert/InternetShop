@@ -5,11 +5,11 @@ namespace Application.Interfaces;
 
 public interface IAttachmentService
 {
-    Task<IEnumerable<AttachmentDto>> GetAttachmentsByProductIdAsync(int productId);
+    Task<IEnumerable<AttachmentDto>> GetAttachmentsByProductId(int productId);
 
-    Task<DownloadAttachmentDto> DownloadAttachmentByIdAsync(int id);
+    Task<DownloadAttachmentDto> DownloadAttachmentById(int id);
 
-    Task<AttachmentDto> AddAttachmentToProductAsync(int productId, IFormFile filer);
+    Task<AttachmentDto> AddAttachmentToProduct(int productId, IFormFile filer);
 
-    Task DelateAttachmentAsync(int id);
+    Task DelateAttachment(int id);
 }

@@ -4,14 +4,15 @@ namespace Domain.Interfaces
 {
     public interface ICategoryRepository
     {
-        Task<IEnumerable<Category>> GetAllAsync();
+        Task<IEnumerable<Category>> GetAll();
+        Task<int> GetProductsCountInCategory(int id);
+        Task<Category> GetById(int id);
+        Task<Category> GetByName(string name);
 
-        Task<Category> GetByIdAsync(int id);
+        Task<Category> Add(Category category);
 
-        Task<Category> AddAsync(Category category);
+        Task Update(Category category);
 
-        Task UpdateAsync(Category category);
-
-        Task DeleteAsync(Category category);
+        Task Delete(Category category);
     }
 }

@@ -4,13 +4,13 @@ namespace Domain.Interfaces;
 
 public interface IPictureRepository
 {
-    Task<IEnumerable<Picture>> GetByProductIdAsync(int postId);
+    Task<IEnumerable<Picture>> GetByProductId(int postId);
 
-    Task<Picture> AddAsync(Picture picture);
+    Task<Picture> Add(Picture picture);
 
-    Task<Picture> GetByIdAsync(int id);
+    Task<Picture> GetById(int id);
 
-    Task SetMainPictureAsync(int postId, int id);
+    Task SetMainPicture(int postId, int id);
 
-    Task DeleteAsync(Picture picture);
+    Task Delete(Picture picture);
 }

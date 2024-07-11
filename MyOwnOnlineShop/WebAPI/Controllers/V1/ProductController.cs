@@ -41,9 +41,9 @@ public class ProductController : ControllerBase
         var validPaginationFilter = new PaginationFilter(paginationFilter.PageNumber, paginationFilter.PageSize);
         var validSortingFilter = new SortingFilter(sortingFilter.SortField, sortingFilter.Ascending);
 
-        var products = await _productService.GetAllProductsAsync(validPaginationFilter.PageNumber, validPaginationFilter.PageSize,
+        var products = await _productService.GetAllProducts(validPaginationFilter.PageNumber, validPaginationFilter.PageSize,
                                                                  validSortingFilter.SortField, validSortingFilter.Ascending, filterBy);
-        var totalRecords = await _productService.GetAllProductsCountAsync(filterBy);
+        var totalRecords = await _productService.GetAllProductsCount(filterBy);
 
         return Ok(PaginationHelper.CreatePageResponse(products, validPaginationFilter, totalRecords));
     }
@@ -53,7 +53,7 @@ public class ProductController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetPostByID(int id)
     {
-        var product = await _productService.GetProductByIdAsync(id);
+        var product = await _productService.GetProductById(id);
         if (product == null)
         {
             return NotFound(id);
@@ -67,7 +67,7 @@ public class ProductController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(CreateProductDto newProduct)
     {       
-        var product = await _productService.AddNewProductAsync(newProduct, User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var product = await _productService.AddNewProduct(newProduct, User.FindFirstValue(ClaimTypes.NameIdentifier));
         return Created($"api/product/{product.Id}", new Response<ProductDto>(product));
     }
 
@@ -77,13 +77,13 @@ public class ProductController : ControllerBase
     [HttpPut]
     public async Task<IActionResult> Update(UpdateProductDto updateProduct)
     {
-        var userOwnsPost = await _productService.UserOwnsProductAsync(updateProduct.Id, User.FindFirstValue(ClaimTypes.NameIdentifier));
-        if (!userOwnsPost)
+        var userOwnsProduct = await _productService.UserOwnsProduct(updateProduct.Id, User.FindFirstValue(ClaimTypes.NameIdentifier));
+        if (!userOwnsProduct)
         {
             return BadRequest(new Response(false, "You do not own this post."));
         }
 
-        await _productService.UpdateProductAsync(updateProduct);
+        await _productService.UpdateProduct(updateProduct);
         return NoContent();
     }
     [ValidateFilter]
@@ -92,13 +92,13 @@ public class ProductController : ControllerBase
     [HttpDelete("Id")]
     public async Task<IActionResult> Delete(int id)
     {
-        var userOwnsPost = await _productService.UserOwnsProductAsync(id, User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var userOwnsProduct = await _productService.UserOwnsProduct(id, User.FindFirstValue(ClaimTypes.NameIdentifier));
         var isAdmin = User.FindFirstValue(ClaimTypes.Role).Contains(UserRoles.Admin);
-        if (!userOwnsPost && !isAdmin)
+        if (!userOwnsProduct && !isAdmin)
         {
             return BadRequest(new Response(false, "You do not own this post."));
         }
-        await _productService.DeleteProductAsync(id);
+        await _productService.DeleteProduct(id);
         return NoContent();
     }
 }

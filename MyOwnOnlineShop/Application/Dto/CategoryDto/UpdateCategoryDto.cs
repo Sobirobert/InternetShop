@@ -1,7 +1,8 @@
 ﻿using Application.Mappings;
 using AutoMapper;
+using Domain.Entities;
 
-namespace Application.Dto.Category;
+namespace Application.Dto.CategoryDto;
 
 public class UpdateCategoryDto : IMap
 {
@@ -11,6 +12,6 @@ public class UpdateCategoryDto : IMap
 
     public void Mapping(Profile profile)
     {
-        profile.CreateMap<CreateCategoryDto, Domain.Entities.Category>();
+        profile.CreateMap<UpdateCategoryDto, Category>();
     }
 }

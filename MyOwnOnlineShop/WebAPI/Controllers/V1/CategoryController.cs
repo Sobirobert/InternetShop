@@ -1,17 +1,22 @@
 ﻿using Application.Dto;
-using Application.Dto.Category;
+using Application.Dto.CategoryDto;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Win32;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Security.Claims;
+using WebAPI.SwaggerExamples.Responses.CategoryResponses;
+using WebAPI.SwaggerExamples.Responses.IdentityResponses;
 using WebAPI.Wrappers;
 
 namespace WebAPI.Controllers.V1
 {
+    
     [Authorize(Roles = UserRoles.Admin)]
     [Route("api/[controller]")]
     [ApiController]
@@ -26,65 +31,124 @@ namespace WebAPI.Controllers.V1
             _productService = productService;
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> GetAllCategories()
-        //{
-        //    var categories = _categoryService.GetAllCategoriesAsync();
-        //    if (categories == null)
-        //    {
-        //        return BadRequest(new Response(false, "Categories are empty"));
-        //    }
-        //    return Ok(new Response<IEnumerable<CategoryShowAllDto>>(categories));
-        //}
-
-        [HttpGet("{id}")]
-        public IActionResult Details(int id)
+        [SwaggerOperation(Summary = "Show all Categories.")]
+        [HttpGet]
+        public async Task<IActionResult> GetAllCategories()
         {
-            var category = _categoryService.GetCategoryByIdAsync(id);
+            var categories = await _categoryService.GetAllCategories();
+            if (categories == null)
+            {
+                return BadRequest(new Response(false, "Categories are empty"));
+            }
+            
+            return Ok(new Response<IEnumerable<CategoryDto>>(categories));
+        }
+
+        /// <summary>
+        /// Show all specifics from one category by id.
+        /// </summary>
+        [SwaggerOperation(Summary = "Show specific category by id.")]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Details(int id)
+        {
+            var category =  await _categoryService.GetCategoryById(id);
             if (category == null)
             {
                 return NotFound();
             }
-            return NoContent();
+            category.totalRecords = await _categoryService.GetProductsCount(id);
+            return Ok(new Response<CategoryDto>(category));
+        }
+        /// <summary>
+        /// Create new category and complete description.
+        /// </summary>
+        [ProducesResponseType(typeof(CategoryCreateResponseStatus200), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CategoryCreateResponseStatus500), StatusCodes.Status500InternalServerError)]
+        [SwaggerOperation(Summary = "Create the new Category")]
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateCategoryDto category)
+        {
+            var categoryExists = await _categoryService.GetCategoryByName(category.CategoryName);
+            if (categoryExists != null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response
+                {
+                    Succeeded = false,
+                    Message = "Category already exists!"
+                });
+            }
+
+            await _categoryService.CreateCategory(category);
+               
+            return StatusCode(StatusCodes.Status200OK, new Response
+            {
+                Succeeded = true,
+                Message = "Category created!"
+            });
         }
 
-        //[SwaggerOperation(Summary = "Create the new Category")]
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult Create(Category category)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        _categoryService.CreateCategoryAsync(category);
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    return NoContent();
-        //}
-
+        /// <summary>
+        /// Update existed category.
+        /// </summary>
+        [ProducesResponseType(typeof(CategoryResponseStatus200), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CategoryResponseStatus500), StatusCodes.Status500InternalServerError)]
         [HttpPut]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Update(UpdateCategoryDto categoryUpdate)
         {
             var isAdmin = User.FindFirstValue(ClaimTypes.Role).Contains(UserRoles.Admin);
             if (!isAdmin)
             {
-                return BadRequest(new Response(false, "You do not own this post."));
+                return BadRequest(new Response(false, "You can't change category."));
             }
-            await _categoryService.UpdateCategoryAsync(categoryUpdate);
-            return NoContent();
+            else
+            {
+                await _categoryService.GetCategoryById(categoryUpdate.Id);
+                if (categoryUpdate.CategoryName == null)
+                {
+                    return BadRequest(new Response(false, "Category isn't exists!"));
+                }
+
+                await _categoryService.UpdateCategory(categoryUpdate);
+                return StatusCode(StatusCodes.Status200OK, new Response
+                {
+                    Succeeded = true,
+                    Message = "You update category successfully."
+                });
+            }
         }
 
+        /// <summary>
+        /// Delete existed category by id.
+        /// </summary>
+        [ProducesResponseType(typeof(CategoryResponseStatus200), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CategoryResponseStatus500), StatusCodes.Status500InternalServerError)]
         [SwaggerOperation(Summary = "Delete the Category by Id")]
-        [HttpDelete("Id")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var isAdmin = User.FindFirstValue(ClaimTypes.Role).Contains(UserRoles.Admin);
-            if (!isAdmin)
+            if (isAdmin == false)
             {
-                return BadRequest(new Response(false, "You do not own this post."));
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response
+                {
+                    Succeeded = false,
+                    Message = "You aren't Admin! Only Admin can delete Category"
+                });
             }
-            await _categoryService.DeleteCategoryAsync(id);
-            return RedirectToAction(nameof(Index));
+            else
+            {
+                var existCategory = await _categoryService.GetCategoryById(id);
+                if (existCategory == null)
+                {
+                    return BadRequest(new Response(false, "Category isn't exists!"));
+                }
+                await _categoryService.DeleteCategory(id);
+                return StatusCode(StatusCodes.Status200OK, new Response
+                {
+                    Succeeded = true,
+                    Message = "You deleted category."
+                });
+            }
         }
     }
 }

@@ -15,26 +15,26 @@ public class ShoppingCartRepository : IShoppingCartRepository
         _context = context;
     }
 
-    public async Task<List<int>> GetAllShoppingCartAsync()
+    public async Task<List<int>> GetAllShoppingCart()
     {
         var shoppingCartIDs = await _context.ShoppingCartItems
             .Select(o => o.ShoppingCartId).ToListAsync();
         return shoppingCartIDs;
     }
 
-    public async Task<IEnumerable<Product>> GetShoppingCartItemsAsync(int shoppingCartId)
+    public async Task<IEnumerable<Product>> GetShoppingCartItems(int shoppingCartId)
     {
         return await _context.ShoppingCartItems
             .Where(c => c.ShoppingCartId == shoppingCartId)
             .Select(s => s.Product).ToListAsync();
     }
 
-    public async Task<ShoppingCartItem> GetShoppingCartByIdAsync(int id)
+    public async Task<ShoppingCartItem> GetShoppingCartById(int id)
     {
         return await _context.ShoppingCartItems.SingleOrDefaultAsync(x => x.ShoppingCartId == id);
     }
 
-    public async Task AddToCartAsync(Product product, int shoppingCartId)
+    public async Task AddToCart(Product product, int shoppingCartId)
     {
         var shoppingCartItem = await _context.ShoppingCartItems
             .SingleOrDefaultAsync(s => s.ShoppingCartId == shoppingCartId);
@@ -58,14 +58,14 @@ public class ShoppingCartRepository : IShoppingCartRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<double> GetShoppingCartTotalAsync(int shoppingCartId)
+    public async Task<double> GetShoppingCartTotal(int shoppingCartId)
     {
         var total = await _context.ShoppingCartItems.Where(c => c.ShoppingCartId ==  shoppingCartId)
                 .Select(c => c.Product.Price * c.Amount).SumAsync();
         return total;
     }
 
-    public async Task RemoveFromCartAsync(Product product, int shoppingCartId)
+    public async Task RemoveFromCart(Product product, int shoppingCartId)
     {
         var shoppingCartItem =
                   await _context.ShoppingCartItems.SingleOrDefaultAsync(
@@ -94,7 +94,7 @@ public class ShoppingCartRepository : IShoppingCartRepository
 
         await _context.SaveChangesAsync();
     }
-    public async Task ClearCartAsync(int shoppingCartId)
+    public async Task ClearCart(int shoppingCartId)
     {
         var cartItems = _context.ShoppingCartItems
                 .Where(cart => cart.ShoppingCartId == shoppingCartId);

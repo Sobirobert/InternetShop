@@ -29,7 +29,7 @@ public class PictureController : ControllerBase
     [HttpGet("[action]/{productId}")]
     public async Task<IActionResult> GetByPostId(int productId)
     {
-        var pictures = await _pictureSerwice.GetPicturesByProductIdAsync(productId);
+        var pictures = await _pictureSerwice.GetPicturesByProductId(productId);
         return Ok(new Response<IEnumerable<PictureDto>>(pictures));
     }
 
@@ -37,7 +37,7 @@ public class PictureController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(int id)
     {
-        var picture = await _pictureSerwice.GetPictureByIdAsync(id);
+        var picture = await _pictureSerwice.GetPictureById(id);
         if (picture == null)
         {
             return NotFound();
@@ -51,19 +51,19 @@ public class PictureController : ControllerBase
     [HttpPost("{productId}")]
     public async Task<IActionResult> AddToPostAsync(int productId, IFormFile file)
     {
-        var product = await _productService.GetProductByIdAsync(productId);
+        var product = await _productService.GetProductById(productId);
         if (product == null)
         {
             return BadRequest(new Response(false, $"Product with id {productId} does not exist."));
         }
 
-        var userOwner = await _productService.UserOwnsProductAsync(productId, User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var userOwner = await _productService.UserOwnsProduct(productId, User.FindFirstValue(ClaimTypes.NameIdentifier));
         if (!userOwner)
         {
             return BadRequest(new Response(false, "You do not own this product.")); 
         }
 
-        var picture = await _pictureSerwice.AddPictureToProductAsync(productId, file); 
+        var picture = await _pictureSerwice.AddPictureToProduct(productId, file); 
         return Created($"api/pictures/{picture.Id}", new Response<PictureDto>(picture));
     }
 
@@ -71,7 +71,7 @@ public class PictureController : ControllerBase
     [HttpPut("[action]/{productId}/{id}")]
     public async Task<IActionResult> SetMainPicture(int productId, int id)
     {
-        var userOwnsProduct = await _productService.UserOwnsProductAsync(productId, User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var userOwnsProduct = await _productService.UserOwnsProduct(productId, User.FindFirstValue(ClaimTypes.NameIdentifier));
         if (!userOwnsProduct)
         {
             return BadRequest(new Response(false, "You do not own this product."));
@@ -85,13 +85,13 @@ public class PictureController : ControllerBase
     [HttpDelete("{productId}/{id}")]
     public async Task<IActionResult> Delate(int id, int productId)
     {
-        var userOwnsProduct = await _productService.UserOwnsProductAsync(productId, User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var userOwnsProduct = await _productService.UserOwnsProduct(productId, User.FindFirstValue(ClaimTypes.NameIdentifier));
         if (!userOwnsProduct)
         {
             return BadRequest(new Response(false, "You do not own this product."));
         }
 
-        await _pictureSerwice.DeletePictureAsync(id);
+        await _pictureSerwice.DeletePicture(id);
         return NoContent();
     }
 }

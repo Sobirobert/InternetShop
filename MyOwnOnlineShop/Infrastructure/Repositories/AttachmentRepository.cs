@@ -14,24 +14,24 @@ public class AttachmentRepository : IAttachmentRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<Attachment>> GetByProductIdAsync(int productId)
+    public async Task<IEnumerable<Attachment>> GetByProductId(int productId)
     {
         return await _context.Attachments.Include(x => x.Products).Where(x => x.Products.Select(x => x.Id).Contains(productId)).ToListAsync();
     }
 
-    public async Task<Attachment> GetByIdAsync(int id)
+    public async Task<Attachment> GetById(int id)
     {
         return await _context.Attachments.SingleOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task<Attachment> AddAsync(Attachment attachment)
+    public async Task<Attachment> Add(Attachment attachment)
     {
         var createdAttachment = await _context.Attachments.AddAsync(attachment);
         await _context.SaveChangesAsync();
         return createdAttachment.Entity;
     }
 
-    public async Task DeleteAsync(Attachment picture)
+    public async Task Delete(Attachment picture)
     {
         _context.Attachments.Remove(picture);
         await _context.SaveChangesAsync();

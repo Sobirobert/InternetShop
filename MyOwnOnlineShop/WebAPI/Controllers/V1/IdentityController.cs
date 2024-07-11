@@ -10,7 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using WebAPI.Models;
-using WebAPI.SwaggerExamples.Responses;
+using WebAPI.SwaggerExamples.Responses.IdentityResponses;
 using WebAPI.Wrappers;
 
 namespace WebAPI.Controllers.V1;

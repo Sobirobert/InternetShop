@@ -21,15 +21,15 @@ public class AttachmentService : IAttachmentService
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<AttachmentDto>> GetAttachmentsByProductIdAsync(int productId)
+    public async Task<IEnumerable<AttachmentDto>> GetAttachmentsByProductId(int productId)
     {
-        var attachment = await _attachmentRepository.GetByProductIdAsync(productId);
+        var attachment = await _attachmentRepository.GetByProductId(productId);
         return _mapper.Map<IEnumerable<AttachmentDto>>(attachment);
     }
 
-    public async Task<AttachmentDto> AddAttachmentToProductAsync(int productId, IFormFile file)
+    public async Task<AttachmentDto> AddAttachmentToProduct(int productId, IFormFile file)
     {
-        var product = await _productRepository.GetByIdAsync(productId);
+        var product = await _productRepository.GetById(productId);
 
         var attachment = new Attachment()
         {
@@ -38,20 +38,20 @@ public class AttachmentService : IAttachmentService
             Path = file.SaveFile()
         };
 
-        var result = await _attachmentRepository.AddAsync(attachment);
+        var result = await _attachmentRepository.Add(attachment);
         return _mapper.Map<AttachmentDto>(result);
     }
 
-    public async Task DelateAttachmentAsync(int id)
+    public async Task DelateAttachment(int id)
     {
-        var attachment = await _attachmentRepository.GetByIdAsync(id);
-        await _attachmentRepository.DeleteAsync(attachment);
+        var attachment = await _attachmentRepository.GetById(id);
+        await _attachmentRepository.Delete(attachment);
         File.Delete(attachment.Path);
     }
 
-    public async Task<DownloadAttachmentDto> DownloadAttachmentByIdAsync(int id)
+    public async Task<DownloadAttachmentDto> DownloadAttachmentById(int id)
     {
-        var attachment = await _attachmentRepository.GetByIdAsync(id);
+        var attachment = await _attachmentRepository.GetById(id);
 
         return new DownloadAttachmentDto()
         {

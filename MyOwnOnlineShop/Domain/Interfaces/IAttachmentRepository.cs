@@ -4,11 +4,11 @@ namespace Domain.Interfaces;
 
 public interface IAttachmentRepository
 {
-    Task<IEnumerable<Attachment>> GetByProductIdAsync(int productId);
+    Task<IEnumerable<Attachment>> GetByProductId(int productId);
 
-    Task<Attachment> GetByIdAsync(int id);
+    Task<Attachment> GetById(int id);
 
-    Task<Attachment> AddAsync(Attachment attachment);
+    Task<Attachment> Add(Attachment attachment);
 
-    Task DeleteAsync(Attachment attachment);
+    Task Delete(Attachment attachment);
 }

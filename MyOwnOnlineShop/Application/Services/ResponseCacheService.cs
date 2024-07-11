@@ -13,7 +13,7 @@ public class ResponseCacheService : IResponseCacheService
         _distributedCache = distributedCache;
     }
 
-    public async Task CacheResponseAsync(string cacheKey, object response, TimeSpan timeLive)
+    public async Task CacheResponse(string cacheKey, object response, TimeSpan timeLive)
     {
         if (response == null)
         {
@@ -28,7 +28,7 @@ public class ResponseCacheService : IResponseCacheService
         });
     }
 
-    public async Task<string?> GetCachedResponseAsync(string cacheKey)
+    public async Task<string?> GetCachedResponse(string cacheKey)
     {
         var cachedResponse = await _distributedCache.GetStringAsync(cacheKey);
         return string.IsNullOrEmpty(cachedResponse) ? null : cachedResponse;

@@ -17,47 +17,47 @@ public class ProductService : IProductService
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<ProductDto>> GetAllProductsAsync(int pageNumber, int pageSize, string sortField, bool ascending, string filterBy)
+    public async Task<IEnumerable<ProductDto>> GetAllProducts(int pageNumber, int pageSize, string sortField, bool ascending, string filterBy)
     {
-        var products = await _productRepository.GetAllAsync(pageNumber, pageSize, sortField, ascending, filterBy);
+        var products = await _productRepository.GetAll(pageNumber, pageSize, sortField, ascending, filterBy);
         return _mapper.Map<IEnumerable<ProductDto>>(products);
     }
 
-    public async Task<int> GetAllProductsCountAsync(string filterBy)
+    public async Task<int> GetAllProductsCount(string filterBy)
     {
-        return await _productRepository.GetAllCountAsync(filterBy);
+        return await _productRepository.GetAllCount(filterBy);
     }
 
-    public async Task<ProductDto> GetProductByIdAsync(int id)
+    public async Task<ProductDto> GetProductById(int id)
     {
-        var product = await _productRepository.GetByIdAsync(id);
+        var product = await _productRepository.GetById(id);
         return _mapper.Map<ProductDto>(product);
     }
 
-    public async Task<ProductDto> AddNewProductAsync(CreateProductDto newProduct, string userId)
+    public async Task<ProductDto> AddNewProduct(CreateProductDto newProduct, string userId)
     {
         var product = _mapper.Map<Product>(newProduct);
         product.UserId = userId;
-        var result = await _productRepository.AddAsync(product);
+        var result = await _productRepository.Add(product);
         return _mapper.Map<ProductDto>(result);
     }
 
-    public async Task UpdateProductAsync(UpdateProductDto updateProduct)
+    public async Task UpdateProduct(UpdateProductDto updateProduct)
     {
-        var existingProduct = await _productRepository.GetByIdAsync(updateProduct.Id);
+        var existingProduct = await _productRepository.GetById(updateProduct.Id);
         var product = _mapper.Map(updateProduct, existingProduct);
-        await _productRepository.UpdateAsync(product);
+        await _productRepository.Update(product);
     }
 
-    public async Task DeleteProductAsync(int id)
+    public async Task DeleteProduct(int id)
     {
-        var product = await _productRepository.GetByIdAsync(id);
-        await _productRepository.DeleteAsync(product);
+        var product = await _productRepository.GetById(id);
+        await _productRepository.Delete(product);
     }
 
-    public async Task<bool> UserOwnsProductAsync(int productId, string userId)
+    public async Task<bool> UserOwnsProduct(int productId, string userId)
     {
-        var product = await _productRepository.GetByIdAsync(productId);
+        var product = await _productRepository.GetById(productId);
 
         if (product == null)
         {
