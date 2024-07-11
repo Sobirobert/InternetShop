@@ -8,10 +8,13 @@ public class UpdateProductDto : IMap
 {
     public int Id { get; set; }
     public string Title { get; set; }
-    public string DescriptionOfProduct { get; set; }
+    public string ShortDescription { get; set; }
+    public string LongDescription { get; set; }
+    public string Details { get; set; }
     public int YearOfProduction { get; set; }
     public double Price { get; set; }
-    public string UserId { get; set; }
+    public bool IsProductOfTheWeek { get; set; }
+    public Domain.Enums.Type Type { get; set; }
 
     public void Mapping(Profile profile)
     {
