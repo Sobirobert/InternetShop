@@ -3,6 +3,7 @@ using Domain.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.ExtensionMethods;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Infrastructure.Repositories;
 
@@ -18,7 +19,6 @@ public class ProductRepository : IProductRepository
     public async Task<IEnumerable<Product>> GetAll(int pageNumber, int pageSize, string sortField, bool ascending, string filterBy)
     {
         return await _context.Products
-            .Include(c => c.CategoryId)
             .Where(m => m.Title.ToLower().Contains(filterBy.ToLower()) || m.ShortDescription.ToLower().Contains(filterBy.ToLower()))
             .OrderByPropertyName(sortField, ascending)
             .Skip((pageNumber - 1) * pageSize)
@@ -43,7 +43,9 @@ public class ProductRepository : IProductRepository
 
     public async Task<Product> Add(Product product)
     {
+        var productsId = await _context.Products.Select(x => x.Id).ToListAsync();
         product.Created = DateTime.Now;
+       // product.Id = FindFirstAvailableId(productsId);
         await _context.Products.AddAsync(product);
         await _context.SaveChangesAsync();
         return product;
@@ -66,4 +68,22 @@ public class ProductRepository : IProductRepository
     {
         return _context.Products.Include(c => c.CategoryId).Where(p => p.IsProductOfTheWeek);
     }
+    #region SetId
+    public static int FindFirstAvailableId(List<int> ids)
+    {
+        ids.Sort();
+        int expectedId = 1;
+        foreach (int id in ids)
+        {
+            if (id != expectedId)
+            {
+                return expectedId;
+            }
+            expectedId++;
+        }
+
+        return expectedId;
+    }
+    #endregion SetId
 }
+
