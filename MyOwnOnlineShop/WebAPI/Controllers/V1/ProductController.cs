@@ -63,9 +63,9 @@ public class ProductController : ControllerBase
     }
 
     /// <summary>
-    /// Type 0 = New,
-    /// Type 1 = Used,
-    /// Type 2 = Damaged
+    /// Type 1 = New,
+    /// Type 2 = Used,
+    /// Type 3 = Damaged
     /// </summary>
 [ValidateFilter]
     [SwaggerOperation(Summary = "Create a new post")]

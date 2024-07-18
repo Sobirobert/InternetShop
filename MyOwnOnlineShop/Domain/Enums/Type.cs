@@ -2,8 +2,8 @@
 {
     public enum Type
     {
-        New,
-        Used,
-        Damaged
+        New = 1,
+        Used = 2,
+        Damaged = 3
     }
 }

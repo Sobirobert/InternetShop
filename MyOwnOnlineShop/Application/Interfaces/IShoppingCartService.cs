@@ -11,7 +11,7 @@ public interface IShoppingCartService
     Task<List<int>> GetAllShoppingCartId();
     Task<IEnumerable<ProductDto>> GetAllItemsFromShoppingCartById(int shoppingCartId);
     Task<double> GetTotalPriceOfShoppingCart(int shoppingCartId);
-    Task<ShoppingCartDto> AddNewProductToShippingCart(ProductDto product, int shoppingCartId);
-    Task RemoveProductFromShoppingCartById(ProductDto productDto, int shoppingCartId);
+    Task<ShoppingCartDto> AddNewProductToShippingCart(int productId, int shoppingCartId);
+    Task RemoveProductFromShoppingCartById(int productId, int shoppingCartId);
     Task ClearShoppingCart(int shoppingCartId);
 }
