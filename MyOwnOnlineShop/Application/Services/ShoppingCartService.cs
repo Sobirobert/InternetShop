@@ -25,20 +25,10 @@ public class ShoppingCartService : IShoppingCartService
         return _mapper.Map<IEnumerable<ProductDto>>(allProducts);
     }
 
-    public async Task<List<int>> GetAllShoppingCartId()
-    {
-        var allSchoppingCartIds = await _shoppingCartRepository.GetAllShoppingCart();
-        return allSchoppingCartIds;
-    }
-
     public async Task<double> GetTotalPriceOfShoppingCart(int shoppingCartId)
     {
         var totalPrice = await _shoppingCartRepository.GetShoppingCartTotal(shoppingCartId);
         return totalPrice;
-    }
-    public async Task<ShoppingCartDto> AddNewProductToShippingCart(ProductDto product, int shoppingCartId)
-    {
-        throw new NotImplementedException();
     }
 
     public async Task ClearShoppingCart(int shoppingCartId)
@@ -46,9 +36,13 @@ public class ShoppingCartService : IShoppingCartService
         await _shoppingCartRepository.ClearCart( shoppingCartId);
     }
 
-    public async Task RemoveProductFromShoppingCartById(ProductDto productDto, int shoppingCartId)
+    public async Task RemoveProductFromShoppingCartById(int productId, int shoppingCartId)
     {
-        var product = _mapper.Map<Product>(productDto);
-        await _shoppingCartRepository.RemoveFromCart(product, shoppingCartId);
+        await _shoppingCartRepository.RemoveFromCart(productId, shoppingCartId);
+    }
+
+    public Task<ShoppingCartDto> AddNewProductToShippingCart(int productId, int shoppingCartId)
+    {
+        throw new NotImplementedException();
     }
 }

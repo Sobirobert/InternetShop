@@ -2,116 +2,148 @@
 using Domain.Interfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Infrastructure.Repositories;
 
 public class ShoppingCartRepository : IShoppingCartRepository
 {
     private readonly OnlineShopDBContext _context;
-    public List<ShoppingCartItem> ShoppingCartItems { get; set; }
+    private readonly IProductRepository _productRepository;
 
-    public ShoppingCartRepository(OnlineShopDBContext context)
+    public ShoppingCartRepository(OnlineShopDBContext context, IProductRepository productRepository)
     {
         _context = context;
+        _productRepository = productRepository;
     }
 
-    public async Task<List<int>> GetAllShoppingCart()
+    public async Task<IEnumerable<ShoppingCart>> GetAllShoppingCart()
     {
-        var shoppingCartIDs = await _context.ShoppingCartItems
-            .Select(o => o.ShoppingCartId).ToListAsync();
-        return shoppingCartIDs;
+        return await _context.ShoppingCarts
+            .ToListAsync();
     }
 
     public async Task<IEnumerable<Product>> GetShoppingCartProducts(int cartId)
     {
-        var productsId = await _context.ShoppingCartItems
-            .Where(c => c.ShoppingCartId == cartId)
-            .SelectMany(x => x.ProductsId).ToListAsync();
+        var shoppingCart = await _context.ShoppingCarts
+            .SingleOrDefaultAsync(c => c.ShoppingCartId == cartId);
 
-        var productList = new List<Product>();
-            foreach (var product in productsId)
+        var products = shoppingCart.ShoppingCartItems;
+
+        List<Product> productList = new List<Product>();
+        foreach (var product in products)
+        {
+            for (int i = 0; i == product.Amount; i++)
             {
-            var productItem = await _context.Products.FirstOrDefaultAsync(x => x.Id == product);
-            if (productItem!=null)
-            {
-                await productList.Add(productItem);
-            }    
-              
+                var productItem = await _context.Products.SingleOrDefaultAsync(x => x.Id == product.ShoppingCartItemId);
+                if (productItem != null)
+                {
+                    productList.Add(productItem);
+                }
             }
+        }
         return productList;
     }
 
-    public async Task<ShoppingCartItem> GetShoppingCartById(int id)
+    public async Task<ShoppingCart> GetShoppingCartById(int cartId)
     {
-        return await _context.ShoppingCartItems.SingleOrDefaultAsync(x => x.ShoppingCartId == id);
+        return await _context.ShoppingCarts.SingleOrDefaultAsync(x => x.ShoppingCartId == cartId);
     }
 
     public async Task AddToCart(int productId, int cartId)
     {
-        var shoppingCartItem = await _context.ShoppingCartItems
+        var shoppingCart = await _context.ShoppingCarts
             .SingleOrDefaultAsync(s => s.ShoppingCartId == cartId);
+        var productPrice = await _context.Products.SingleOrDefaultAsync(x => x.Id == productId);
 
-        if (shoppingCartItem == null)
+        if (shoppingCart == null)
         {
-            shoppingCartItem = new ShoppingCartItem
+            List<ShoppingCartItem> newList = new List<ShoppingCartItem>();
+            var newShoppingCart = new ShoppingCart
             {
-                ShoppingCartId = id,
-                Product = product,
-                Amount = 1
+                ShoppingCartId = cartId,
+                ShoppingCartItems = newList
             };
-
-            await _context.ShoppingCartItems.AddAsync(shoppingCartItem);
+            var newItem = new ShoppingCartItem
+            {
+                ShoppingCartId = cartId,
+                ShoppingCartItemId = productId,
+                Amount = 1,
+                Price = productPrice.Price
+            };
+            await _context.ShoppingCartsItems.AddAsync(newItem);
         }
         else
         {
-            shoppingCartItem.Amount++;
-            await _context.ShoppingCartItems.AddAsync(shoppingCartItem);
+            var shoppingCartItem = _context.ShoppingCartsItems.FirstOrDefault(x => x.ShoppingCartItemId == productId);
+            if (shoppingCartItem == null)
+            {
+                var Item = new ShoppingCartItem
+                {
+                    ShoppingCartId = cartId,
+                    ShoppingCartItemId = productId,
+                    Amount = 1,
+                    Price = productPrice.Price
+                };
+                shoppingCart.ShoppingCartItems.Add(Item);
+            }
+            else
+            {
+                shoppingCartItem.Amount++;
+                shoppingCartItem.Price = productPrice.Price * shoppingCartItem.Amount;
+            }
         }
         await _context.SaveChangesAsync();
     }
 
-    public async Task<double> GetShoppingCartTotal(int id)
+    public async Task<double> GetShoppingCartTotal(int cartId)
     {
-        var total = await _context.ShoppingCartItems.Where(c => c.ShoppingCartId == id)
-                .Select(c => c.Product.Price * c.Amount).SumAsync();
+        var shoppingCart = await _context.ShoppingCarts
+            .SingleOrDefaultAsync(s => s.ShoppingCartId == cartId);
+        var allItems = shoppingCart.ShoppingCartItems;
+        double total = 0;
+        foreach (var item in allItems)
+        {
+            total = +item.Amount;
+        }
         return total;
     }
 
     public async Task RemoveFromCart(int productId, int carId)
     {
-        var shoppingCartItem =
-                  await _context.ShoppingCartItems.SingleOrDefaultAsync(
-                       s => s.ShoppingCartId == id && s.Product.Id == product.Id);
-
-        var localAmount = 0;
-        if (shoppingCartItem != null)
+        var shoppingCart = await _context.ShoppingCarts.SingleOrDefaultAsync(
+                       s => s.ShoppingCartId == carId);
+        if (shoppingCart == null)
         {
-            if (shoppingCartItem.Amount > 1)
+            throw new Exception("Shopping Cart doesn't exist!");
+        }
+        var product = await _context.ShoppingCartsItems.SingleOrDefaultAsync(s => s.ShoppingCartItemId == productId && s.ShoppingCartId == carId);
+        var localAmount = 0;
+        if (product != null)
+        {
+            if (product.Amount > 1)
             {
-                shoppingCartItem.Amount--;
-                localAmount = shoppingCartItem.Amount;
+                product.Amount--;
+                localAmount = product.Amount;
                 Console.WriteLine($"Your ShoppingCart amount is = {localAmount}");
-                _context.ShoppingCartItems.Remove(shoppingCartItem);
             }
             else
             {
-                _context.ShoppingCartItems.Remove(shoppingCartItem);
-                Console.WriteLine($"Your ShoppingCart amount is = 0 ");
+                _context.ShoppingCartsItems.Remove( product );
+                throw new Exception("There is no such product in the shopping cart");
             }
         }
         else
         {
             Console.WriteLine("Empty Shopping cart");
         }
-
         await _context.SaveChangesAsync();
     }
     public async Task ClearCart(int shoppingCartId)
     {
-        var cartItems = _context.ShoppingCartItems
+        var cartItems = _context.ShoppingCarts
                 .Where(cart => cart.ShoppingCartId == shoppingCartId);
-
-        _context.ShoppingCartItems.RemoveRange(cartItems);
+        _context.ShoppingCarts.RemoveRange(cartItems);
         await _context.SaveChangesAsync();
     }
 }

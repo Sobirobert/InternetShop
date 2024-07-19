@@ -43,9 +43,7 @@ public class ProductRepository : IProductRepository
 
     public async Task<Product> Add(Product product)
     {
-        var productsId = await _context.Products.Select(x => x.Id).ToListAsync();
         product.Created = DateTime.Now;
-       // product.Id = FindFirstAvailableId(productsId);
         await _context.Products.AddAsync(product);
         await _context.SaveChangesAsync();
         return product;
@@ -68,22 +66,5 @@ public class ProductRepository : IProductRepository
     {
         return _context.Products.Include(c => c.CategoryId).Where(p => p.IsProductOfTheWeek);
     }
-    #region SetId
-    public static int FindFirstAvailableId(List<int> ids)
-    {
-        ids.Sort();
-        int expectedId = 1;
-        foreach (int id in ids)
-        {
-            if (id != expectedId)
-            {
-                return expectedId;
-            }
-            expectedId++;
-        }
-
-        return expectedId;
-    }
-    #endregion SetId
 }
 

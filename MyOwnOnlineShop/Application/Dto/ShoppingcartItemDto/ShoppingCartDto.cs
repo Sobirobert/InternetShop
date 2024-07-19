@@ -15,6 +15,6 @@ public class ShoppingCartDto : IMap
     
     public void Mapping(Profile profile)
     {
-        profile.CreateMap<ShoppingCartItem, ShoppingCartDto>();
+        profile.CreateMap<ShoppingCart, ShoppingCartDto>();
     }
 }

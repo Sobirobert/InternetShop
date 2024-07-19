@@ -8,7 +8,6 @@ namespace Application.Interfaces;
 
 public interface IShoppingCartService
 {
-    Task<List<int>> GetAllShoppingCartId();
     Task<IEnumerable<ProductDto>> GetAllItemsFromShoppingCartById(int shoppingCartId);
     Task<double> GetTotalPriceOfShoppingCart(int shoppingCartId);
     Task<ShoppingCartDto> AddNewProductToShippingCart(int productId, int shoppingCartId);
