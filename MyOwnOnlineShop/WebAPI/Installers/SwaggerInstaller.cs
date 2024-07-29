@@ -39,7 +39,7 @@ public class SwaggerInstaller : IInstaller
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
             c.IncludeXmlComments(xmlPath);
         });
-        
+
         services.AddSwaggerExamplesFromAssemblyOf<Program>();
     }
 }

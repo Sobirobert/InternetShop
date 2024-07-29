@@ -1,10 +1,6 @@
-﻿
-
-using Application.Mappings;
+﻿using Application.Mappings;
 using AutoMapper;
 using Domain.Entities;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System.ComponentModel.DataAnnotations;
 
 namespace Application.Dto.Order;
 
@@ -24,9 +20,10 @@ public class OrderDto : IMap
     public string Email { get; set; }
     public double OrderTotal { get; set; }
     public DateTime OrderPlaced { get; set; }
+
     public void Mapping(Profile profile)
     {
         profile.CreateMap<Domain.Entities.Order, OrderDto>()
-            .ForMember(dest => dest.OrderPlaced, opt => opt.MapFrom(src => src.OrderPlaced)); 
+            .ForMember(dest => dest.OrderPlaced, opt => opt.MapFrom(src => src.OrderPlaced));
     }
 }

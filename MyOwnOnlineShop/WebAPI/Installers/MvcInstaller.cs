@@ -38,7 +38,5 @@ public class MvcInstaller : IInstaller
             x.ReportApiVersions = true;
             x.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
         });
-
-        
     }
 }

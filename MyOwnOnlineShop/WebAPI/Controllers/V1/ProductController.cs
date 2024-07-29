@@ -1,7 +1,5 @@
 ﻿using Application.Dto;
 using Application.Interfaces;
-using Application.Validators;
-using FluentValidation;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -47,6 +45,7 @@ public class ProductController : ControllerBase
 
         return Ok(PaginationHelper.CreatePageResponse(products, validPaginationFilter, totalRecords));
     }
+
     [ValidateFilter]
     [SwaggerOperation(Summary = "Find the product by Id")]
     [AllowAnonymous]
@@ -67,12 +66,12 @@ public class ProductController : ControllerBase
     /// Type 2 = Used,
     /// Type 3 = Damaged
     /// </summary>
-[ValidateFilter]
+    [ValidateFilter]
     [SwaggerOperation(Summary = "Create a new post")]
     [Authorize(Roles = UserRoles.Admin)]
     [HttpPost]
     public async Task<IActionResult> Create(CreateProductDto newProduct)
-    {       
+    {
         var product = await _productService.AddNewProduct(newProduct);
         return Created($"api/product/{product.Id}", new Response<ProductDto>(product));
     }
@@ -86,6 +85,7 @@ public class ProductController : ControllerBase
         await _productService.UpdateProduct(updateProduct);
         return NoContent();
     }
+
     [ValidateFilter]
     [SwaggerOperation(Summary = "Delete a specific post")]
     [Authorize(Roles = UserRoles.Admin)]

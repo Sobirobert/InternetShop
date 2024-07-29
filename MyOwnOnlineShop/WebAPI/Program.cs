@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Logging;
 using WebAPI.Installers;
 using WebAPI.MiddelWares;
 
@@ -36,7 +35,7 @@ public class Program
         }
         catch (Exception ex)
         {
-           // logger.Fatal(ex, "Application stopped because of exception");
+            // logger.Fatal(ex, "Application stopped because of exception");
             throw;
         }
         finally
@@ -45,4 +44,3 @@ public class Program
         }
     }
 }
-

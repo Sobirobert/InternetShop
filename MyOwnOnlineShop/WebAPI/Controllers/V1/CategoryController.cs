@@ -1,22 +1,15 @@
-﻿using Application.Dto;
-using Application.Dto.CategoryDto;
+﻿using Application.Dto.CategoryDto;
 using Application.Interfaces;
-using AutoMapper;
-using Domain.Entities;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Win32;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Security.Claims;
 using WebAPI.SwaggerExamples.Responses.CategoryResponses;
-using WebAPI.SwaggerExamples.Responses.IdentityResponses;
 using WebAPI.Wrappers;
 
 namespace WebAPI.Controllers.V1
 {
-    
     [Authorize(Roles = UserRoles.Admin)]
     [Route("api/[controller]")]
     [ApiController]
@@ -40,7 +33,7 @@ namespace WebAPI.Controllers.V1
             {
                 return BadRequest(new Response(false, "Categories are empty"));
             }
-            
+
             return Ok(new Response<IEnumerable<CategoryDto>>(categories));
         }
 
@@ -51,7 +44,7 @@ namespace WebAPI.Controllers.V1
         [HttpGet("{id}")]
         public async Task<IActionResult> Details(int id)
         {
-            var category =  await _categoryService.GetCategoryById(id);
+            var category = await _categoryService.GetCategoryById(id);
             if (category == null)
             {
                 return NotFound();
@@ -59,6 +52,7 @@ namespace WebAPI.Controllers.V1
             category.totalRecords = await _categoryService.GetProductsCount(id);
             return Ok(new Response<CategoryDto>(category));
         }
+
         /// <summary>
         /// Create new category and complete description.
         /// </summary>
@@ -79,7 +73,7 @@ namespace WebAPI.Controllers.V1
             }
 
             await _categoryService.CreateCategory(category);
-               
+
             return StatusCode(StatusCodes.Status200OK, new Response
             {
                 Succeeded = true,

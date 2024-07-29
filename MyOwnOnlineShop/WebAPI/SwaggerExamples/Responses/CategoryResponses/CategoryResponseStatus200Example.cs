@@ -13,7 +13,7 @@ public class CategoryResponseStatus200Example : IExamplesProvider<CategoryRespon
             Message = "Well come Admin!"
         };
     }
-
 }
+
 public class CategoryResponseStatus200 : Response
 { }

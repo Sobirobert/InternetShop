@@ -13,7 +13,7 @@ public class CategoryCreateResponseStatus200Example : IExamplesProvider<Category
             Message = "Category Created successfully! Well done"
         };
     }
-
 }
+
 public class CategoryCreateResponseStatus200 : Response
 { }

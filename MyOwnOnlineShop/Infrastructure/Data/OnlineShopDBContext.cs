@@ -1,7 +1,6 @@
 ﻿using Application.Services;
 using Domain.Common;
 using Domain.Entities;
-using FluentEmail.Core.Models;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

@@ -1,8 +1,6 @@
 ﻿using Application.Mappings;
 using AutoMapper;
 using Domain.Entities;
-using System.ComponentModel.DataAnnotations;
-using System;
 
 namespace Application.Dto;
 

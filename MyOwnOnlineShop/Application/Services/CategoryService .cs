@@ -1,7 +1,6 @@
 ﻿using Application.Dto.CategoryDto;
 using Application.Interfaces;
 using AutoMapper;
-using Azure;
 using Domain.Entities;
 using Domain.Interfaces;
 
@@ -54,7 +53,6 @@ public class CategoryService : ICategoryService
         var existingCategory = await _categoryRepository.GetById(categoryUpdate.Id);
         if (existingCategory != null)
         {
-            
         }
         var category = _mapper.Map(categoryUpdate, existingCategory);
         await _categoryRepository.Update(category);

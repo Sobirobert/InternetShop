@@ -31,7 +31,7 @@ public class PictureService : IPictureService
         {
             Products = new List<Product> { product },
             Name = file.FileName,
-            Image = file.GetBytes(), 
+            Image = file.GetBytes(),
             Main = existingPictures.Count() == 0 ? true : false
         };
 

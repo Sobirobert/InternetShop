@@ -1,5 +1,4 @@
-﻿
-namespace WebAPI.Models;
+﻿namespace WebAPI.Models;
 
 public class RegisterModel
 {

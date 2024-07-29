@@ -4,7 +4,6 @@ using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Security.Claims;
 using WebAPI.Attributes;
 using WebAPI.Wrappers;
 
@@ -56,7 +55,7 @@ public class PictureController : ControllerBase
         {
             return BadRequest(new Response(false, $"Product with id {productId} does not exist."));
         }
-        var picture = await _pictureSerwice.AddPictureToProduct(productId, file); 
+        var picture = await _pictureSerwice.AddPictureToProduct(productId, file);
         return Created($"api/pictures/{picture.Id}", new Response<PictureDto>(picture));
     }
 

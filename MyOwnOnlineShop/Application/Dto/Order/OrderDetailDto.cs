@@ -1,6 +1,4 @@
-﻿
-
-using Application.Mappings;
+﻿using Application.Mappings;
 using AutoMapper;
 using Domain.Entities;
 
@@ -15,6 +13,7 @@ public class OrderDetailDto : IMap
     public double Price { get; set; }
     public Product Product { get; set; }
     public Domain.Entities.Order Order { get; set; }
+
     public void Mapping(Profile profile)
     {
         profile.CreateMap<OrderDetail, OrderDetailDto>();

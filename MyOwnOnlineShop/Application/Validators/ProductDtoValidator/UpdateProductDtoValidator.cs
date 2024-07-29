@@ -1,5 +1,6 @@
 ﻿using Application.Dto;
 using FluentValidation;
+
 namespace Application.Validators.ProductDto;
 
 public class UpdateProductDtoValidator : AbstractValidator<UpdateProductDto>

@@ -3,7 +3,6 @@ using Domain.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.ExtensionMethods;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace Infrastructure.Repositories;
 
@@ -67,4 +66,3 @@ public class ProductRepository : IProductRepository
         return _context.Products.Include(c => c.CategoryId).Where(p => p.IsProductOfTheWeek);
     }
 }
-

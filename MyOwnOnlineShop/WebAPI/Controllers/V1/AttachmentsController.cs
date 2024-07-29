@@ -1,11 +1,9 @@
 ﻿using Application.Dto.AttachmentDto;
 using Application.Interfaces;
-using Domain.Interfaces;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Security.Claims;
 using WebAPI.Attributes;
 using WebAPI.Wrappers;
 

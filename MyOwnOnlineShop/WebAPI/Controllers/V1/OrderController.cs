@@ -1,11 +1,7 @@
-﻿using Domain.Interfaces;
+﻿using AutoMapper;
+using Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Mail;
-using System.Net;
-using System.Text;
-using Domain.Entities;
-using AutoMapper;
 
 namespace WebAPI.Controllers.V1;
 
@@ -13,15 +9,16 @@ namespace WebAPI.Controllers.V1;
 public class OrderController : Controller
 {
     private readonly IOrderRepository _orderRepository;
-    private readonly IShoppingCartRepository _shoppingCartRepository;
+
+    //private readonly IShoppingCartRepository _shoppingCartRepository;
     private readonly IConfiguration _configuration;
+
     private readonly IMapper _mapper;
 
-
-    public OrderController(IOrderRepository orderRepository, IShoppingCartRepository shoppingCartRepository, IConfiguration configuration, IMapper mapper)
+    public OrderController(IOrderRepository orderRepository, /*IShoppingCartRepository shoppingCartRepository,*/ IConfiguration configuration, IMapper mapper)
     {
         _orderRepository = orderRepository;
-        _shoppingCartRepository = shoppingCartRepository;
+        //_shoppingCartRepository = shoppingCartRepository;
         _configuration = configuration;
         _mapper = mapper;
     }

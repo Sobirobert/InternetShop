@@ -1,6 +1,4 @@
-﻿
-
-using Application.Interfaces;
+﻿using Application.Interfaces;
 using Domain.Enums;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;

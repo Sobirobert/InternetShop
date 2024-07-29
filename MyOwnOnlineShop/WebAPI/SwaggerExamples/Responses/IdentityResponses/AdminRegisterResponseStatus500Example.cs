@@ -17,4 +17,3 @@ public class AdminRegisterResponseStatus500Example : IExamplesProvider<AdminRegi
 
 public class AdminRegisterResponseStatus500 : Response
 { }
-

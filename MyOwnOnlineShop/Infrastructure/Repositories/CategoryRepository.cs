@@ -25,6 +25,7 @@ namespace Infrastructure.Repositories
         {
             return await _context.Categories.ToListAsync();
         }
+
         public async Task<Category> GetById(int id)
         {
             return await _context.Categories
@@ -56,6 +57,5 @@ namespace Infrastructure.Repositories
             _context.Categories.Remove(category);
             await _context.SaveChangesAsync();
         }
-
     }
 }

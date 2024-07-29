@@ -27,14 +27,16 @@ public class Product : AuditableEntity
 
     [Required]
     public double Price { get; set; }
+
     [Required]
     public bool IsProductOfTheWeek { get; set; }
+
     [Required]
     public Enums.Type Type { get; set; }
+
     [Required]
     public int CategoryId { get; set; }
 
     public ICollection<Picture> Pictures { get; set; }
     public ICollection<Attachment> Attachments { get; set; }
-
 }
