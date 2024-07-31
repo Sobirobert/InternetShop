@@ -1,11 +1,13 @@
 ﻿using Application.Dto;
 using Application.Dto.ShoppingcartItemDto;
 using Application.Interfaces;
+using Application.Services;
 using Domain.Entities;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Security.Claims;
 using WebAPI.Wrappers;
 
 namespace WebAPI.Controllers.V1;
@@ -15,44 +17,50 @@ namespace WebAPI.Controllers.V1;
 public class ShoppingCartController : ControllerBase
 {
     private readonly IShoppingCartService _shoppingCartService;
+    private readonly IShoppingCartItemService _shoppingCartItemService;
 
-    public ShoppingCartController(IShoppingCartService shoppingCartService)
+    public ShoppingCartController(IShoppingCartService shoppingCartService, IShoppingCartItemService shoppingCartItemService)
     {
         _shoppingCartService = shoppingCartService;
+        _shoppingCartItemService = shoppingCartItemService;
     }
 
     [SwaggerOperation(Summary = "Find the product by Id")]
     [AllowAnonymous]
-    [HttpGet("{id}")]
+    [HttpGet("ShoppingCartItem/{id}")]
+    public async Task<IActionResult> GetShoppingCartItemByID(int id)
+    {
+        var shoppingCart = await _shoppingCartItemService.GetShoppingCartItemById(id);
+        return Ok(new Response<ShoppingCartItemDto>(shoppingCart));
+    }
+
+    [SwaggerOperation(Summary = "Find the product by Id")]
+    [AllowAnonymous]
+    [HttpGet("/ShoppingCart/{id}")]
     public async Task<IActionResult> GetShoppingCartByID(int id)
     {
-        var shoppingCart = await _shoppingCartService.GetShoppingCartByID(id);
-        if (shoppingCart == null)
-        {
-            return NotFound($"ShoppingCart isn't exist");
-        }
-
+        var shoppingCart = await _shoppingCartService.GetShoppingCartById(id);
         return Ok(new Response<ShoppingCartDto>(shoppingCart));
     }
 
     [SwaggerOperation(Summary = "Retrieves all Products from ShoppingCart")]
     [AllowAnonymous]
-    [HttpGet()]
-    public async Task<IActionResult> GetAllProductsFromShoppingCart(int id)
-    {
-        var products = await _shoppingCartService.GetAllItemsFromShoppingCartById(id);
-
-        return Ok(new Response<IEnumerable<ProductDto>>(products));
-    }
-
-    [SwaggerOperation(Summary = "Retrieves all ShoppingCartItems from ShoppingCart")]
-    [AllowAnonymous]
-    [HttpGet("ShoppingCartItems")]
-    public async Task<IActionResult> GetAllShoppingCartItems(int id)
+    [HttpGet("All ShoppingCartItems")]
+    public async Task<IActionResult> GetAllShoppingCartItemsFromShoppingCart(int id)
     {
         var products = await _shoppingCartService.GetAllShoppingCartItems(id);
 
         return Ok(new Response<IEnumerable<ShoppingCartItemDto>>(products));
+    }
+
+    [SwaggerOperation(Summary = "Retrieves all ShoppingCartItems from ShoppingCart")]
+    [AllowAnonymous]
+    [HttpGet("All Products from ShoppingCart")]
+    public async Task<IActionResult> GetAllProductsFromShoppingCart(int id)
+    {
+        var products = await _shoppingCartItemService.GetAllProducts(id);
+
+        return Ok(new Response<IEnumerable<ProductDto>>(products));
     }
 
     [SwaggerOperation(Summary = "Get total price from ShoppingCart.")]
@@ -60,7 +68,7 @@ public class ShoppingCartController : ControllerBase
     [HttpGet("Total Price")]
     public async Task<IActionResult> GetTotalPriceOfShoppingCart(int id)
     {
-        var productsTotalPrice = await _shoppingCartService.GetTotalPriceOfShoppingCart(id);
+        var productsTotalPrice = await _shoppingCartService.GetTotalPriceFromShoppingCart(id);
 
         return StatusCode(StatusCodes.Status200OK, new Response
         {
@@ -69,54 +77,62 @@ public class ShoppingCartController : ControllerBase
         });
     }
 
-    [SwaggerOperation(Summary = "Create new ShoppingCart or add next product to exist ShoppingCart")]
+    [SwaggerOperation(Summary = "Create new ShoppingCart ")]
     [AllowAnonymous]
-    [HttpPost]
-    public async Task<IActionResult> AddNewProductToShippingCart(int productId, int shoppingCart)
+    [HttpPost("ShoppingCart")]
+    public async Task<IActionResult> AddNewShoppingCart()
     {
-        var existShoppingCart = await _shoppingCartService.GetShoppingCartByID(shoppingCart);
-        if (existShoppingCart == null)
-        {
-            existShoppingCart = await _shoppingCartService.CreateNewShoppingCart();
-        }
+        var createShoppingCart = await _shoppingCartService.CreateNewShoppingCart();
+        return Created($"shopingCart Id = {createShoppingCart.ShoppingCartId}", new Response<ShoppingCartDto>(createShoppingCart));
+    }
 
-        var createShoppingCart = await _shoppingCartService.AddNewProductToShippingCart(productId, existShoppingCart.ShoppingCartId);
-        return Created($"shopingCart Id = {createShoppingCart.ShoppingCartId}, product id = {productId}", new Response<ShoppingCartDto>(createShoppingCart));
+    [SwaggerOperation(Summary = "Add next product! ")]
+    [AllowAnonymous]
+    [HttpPut("ProductToShoppingCart")]
+    public async Task<IActionResult> AddShoppingCartItemToShoppingCart(int productId, int shoppingCartId)
+    {
+        var product = await _shoppingCartItemService.GetShoppingCartItemById(productId);
+        var shoppingCart = await _shoppingCartService.GetShoppingCartById(shoppingCartId);
+        var createShoppingCartItem = await _shoppingCartService.AddProductToShoppingCart(product, shoppingCart);
+        return Created($"shopingCart Id = {createShoppingCartItem.ShoppingCartId}", new Response<ShoppingCartDto>(createShoppingCartItem));
+    }
+
+    [SwaggerOperation(Summary = "Create new ShoppingCartItem ")]
+    [AllowAnonymous]
+    [HttpPost("ShoppingCartItem")]
+    public async Task<IActionResult> AddNewShoppingCartItem(int productId)
+    {
+        var createShoppingCartItem = await _shoppingCartItemService.AddNewShoppingCartItem(productId);
+        return Created($"shopingCart Id = {createShoppingCartItem.ShoppingCartId}", new Response<CreateShoppingCartItemDto>(createShoppingCartItem));
+    }
+
+    [SwaggerOperation(Summary = "Delete a ShoppingCart Item")]
+    [AllowAnonymous]
+    [HttpDelete("Id")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        await _shoppingCartItemService.DeleteShioppingCartItem(id);
+        return NoContent();
     }
 
     [SwaggerOperation(Summary = "Remove product from shoppingCart.")]
     [AllowAnonymous]
-    [HttpPut]
+    [HttpPut("RemoveProductFromShoppingCart")]
     public async Task<IActionResult> RemoveProductFromShoppingCartById(int productId, int shoppingCartId)
     {
-        var exitsShoppingCart = await _shoppingCartService.GetShoppingCartByID(shoppingCartId);
-        if (exitsShoppingCart == null)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, new Response
-            {
-                Succeeded = false,
-                Message = "ShoppingCar isn't exists!"
-            });
-        }
-        await _shoppingCartService.RemoveProductFromShoppingCartById(productId, shoppingCartId);
+        var product = await _shoppingCartItemService.GetShoppingCartItemById(productId);
+        var shoppingCart = await _shoppingCartService.GetShoppingCartById(shoppingCartId);
+        await _shoppingCartService.RemoveProductFromShoppingCart(product, shoppingCart);
         return NoContent();
     }
 
     [SwaggerOperation(Summary = "Clear ShoppingCart")]
     [Authorize(Roles = UserRoles.Admin)]
-    [HttpDelete("Id")]
-    public async Task<IActionResult> ClearShoppingCart(int id)
+    [HttpDelete("ClearAll")]
+    public async Task<IActionResult> ClearShoppingCart(ShoppingCartDto shoppingCartDto)
     {
-        var exitsShoppingCart = await _shoppingCartService.GetShoppingCartByID(id);
-        if (exitsShoppingCart == null)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, new Response
-            {
-                Succeeded = false,
-                Message = "ShoppingCar isn't exists!"
-            });
-        }
-        await _shoppingCartService.ClearShoppingCart(id);
+        await _shoppingCartItemService.ClearAllShioppingCartItems(shoppingCartDto);
+        await _shoppingCartService.DeleteShoppingCart(shoppingCartDto);
         return NoContent();
     }
 }

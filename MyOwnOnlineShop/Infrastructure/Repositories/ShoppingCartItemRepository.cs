@@ -62,7 +62,7 @@ public class ShoppingCartItemRepository : IShoppingCartItemRepository
         {
             ShoppingCartItemId = product.Id,
             Amount = 1,
-            ShoppingCart = ,
+            //ShoppingCart = ,
             Price = product.Price,
         };
         return shoppingCartItems;
