@@ -52,7 +52,7 @@ public class ShoppingCartController : ControllerBase
     {
         var products = await _shoppingCartService.GetAllShoppingCartItems(id);
 
-        return Ok(new Response<IEnumerable<ShoppingCartItemsDto>>(products));
+        return Ok(new Response<IEnumerable<ShoppingCartItemDto>>(products));
     }
 
     [SwaggerOperation(Summary = "Get total price from ShoppingCart.")]

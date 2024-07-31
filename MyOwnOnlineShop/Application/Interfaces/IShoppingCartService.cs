@@ -1,23 +1,16 @@
 ﻿using Application.Dto;
 using Application.Dto.ShoppingcartItemDto;
+using Domain.Entities;
 
 namespace Application.Interfaces;
 
 public interface IShoppingCartService
 {
-    Task<ShoppingCartDto> GetShoppingCartByID(int id);
-
-    Task<IEnumerable<ShoppingCartItemsDto>> GetAllShoppingCartItems(int shoppingCartId);
-
-    Task<IEnumerable<ProductDto>> GetAllItemsFromShoppingCartById(int shoppingCartId);
-
-    Task<double> GetTotalPriceOfShoppingCart(int shoppingCartId);
-
+    Task<ShoppingCartDto> GetShoppingCartById(int cartId);
+    Task<IEnumerable<ShoppingCartItemDto>> GetAllShoppingCartItems(int cartId);
+    Task<double> GetTotalPriceFromShoppingCart(int cartId);
+    Task DeleteShoppingCart(ShoppingCartDto shoppingCart);
     Task<ShoppingCartDto> CreateNewShoppingCart();
-
-    Task<ShoppingCartDto> AddNewProductToShippingCart(int productId, int shoppingCart);
-
-    Task RemoveProductFromShoppingCartById(int productId, int shoppingCart);
-
-    Task ClearShoppingCart(int shoppingCart);
+    Task<ShoppingCartDto> AddProductToShoppingCart(ShoppingCartItemDto shoppingCartItem, ShoppingCartDto shoppingCart);
+    Task RemoveProductFromShoppingCart(ShoppingCartItemDto shoppingCartItem, ShoppingCartDto shoppingCart);
 }

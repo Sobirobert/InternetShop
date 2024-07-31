@@ -9,5 +9,5 @@ public class ShoppingCart : AuditableEntity
     public int ShoppingCartId { get; set; }
 
     [Required]
-    public List<ShoppingCartItem> ShoppingCartItems { get; set; }
+    public List<ShoppingCartItem> ShoppingCartItems { get; set; } = new List<ShoppingCartItem>();
 }
