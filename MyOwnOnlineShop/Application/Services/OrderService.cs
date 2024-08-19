@@ -18,11 +18,11 @@ namespace Application.Services
             _orderRepository = orderRepository;
         }
 
-        public async Task<List<ShoppingCartDto>> CreateOrder(OrderDto orderDto, int shoppingCartId)
+        public async Task<List<ShoppingCardDto>> CreateOrder(OrderDto orderDto, int shoppingCartId)
         {
             var order = _mapper.Map<Order>(orderDto);
             var orderList = await _orderRepository.CreateOrder(order, shoppingCartId);
-            return _mapper.Map<List<ShoppingCartDto>>(orderList);
+            return _mapper.Map<List<ShoppingCardDto>>(orderList);
         }
     }
 }

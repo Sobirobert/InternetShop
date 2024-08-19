@@ -13,8 +13,8 @@ public static class DependencyInjection
         services.AddScoped<IPictureRepository, PictureRepository>();
         services.AddScoped<IAttachmentRepository, AttachmentRepository>();
         //services.AddScoped<IOrderRepository, OrderRepository>();
-        services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
-        services.AddScoped<IShoppingCartItemRepository, ShoppingCartItemRepository>();
+        services.AddScoped<IShoppingCardRepository, ShoppingCardRepository>();
+        services.AddScoped<IShoppingCardItemRepository, ShoppingCardItemRepository>();
         return services;
     }
 }

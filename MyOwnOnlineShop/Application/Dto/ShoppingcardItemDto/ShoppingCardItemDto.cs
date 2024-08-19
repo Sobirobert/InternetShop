@@ -4,16 +4,16 @@ using Domain.Entities;
 
 namespace Application.Dto.ShoppingcartItemDto;
 
-public class ShoppingCartItemDto : IMap
+public class ShoppingCardItemDto : IMap
 {
-    public int ShoppingCartItemId { get; set; }
+    public int ShoppingCardItemId { get; set; }
+    public int ProductId { get; set; }
     public int Amount { get; set; }
-    public ShoppingCart ShoppingCart { get; set; }
-    // int ShoppingCartId { get; set; }
+    public int ShoppingCardId { get; set; }
     public double Price { get; set; }
 
     public void Mapping(Profile profile)
     {
-        profile.CreateMap<ShoppingCartItem, ShoppingCartItemDto>();
+        profile.CreateMap<ShoppingCardItem, ShoppingCardItemDto>();
     }
 }

@@ -5,9 +5,9 @@ namespace Infrastructure.Repositories;
 public class OrderRepository  /*: IOrderRepository */
 {
     private readonly OnlineShopDBContext _context;
-    private readonly ShoppingCartRepository _shoppingCart;
+    private readonly ShoppingCardRepository _shoppingCart;
 
-    public OrderRepository(OnlineShopDBContext context, ShoppingCartRepository shoppingCart)
+    public OrderRepository(OnlineShopDBContext context, ShoppingCardRepository shoppingCart)
     {
         _context = context;
         _shoppingCart = shoppingCart;
