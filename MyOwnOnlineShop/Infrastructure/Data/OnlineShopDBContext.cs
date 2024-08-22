@@ -24,7 +24,7 @@ public class OnlineShopDBContext : IdentityDbContext<ApplicationUser>
     public DbSet<OrderUserDetails> OrderUsersDetails { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<ShoppingCard> ShoppingCards { get; set; }
-    public DbSet<ShoppingCardItem> ShoppingCardItems { get; set; }
+    public DbSet<OrderItem> ShoppingCardItems { get; set; }
 
     public async Task<int> SaveChangesAsync()
     {
