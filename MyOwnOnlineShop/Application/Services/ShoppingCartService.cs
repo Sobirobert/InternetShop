@@ -43,9 +43,8 @@ public async Task<ShoppingCardDto> GetShoppingCardById(int cartId)
     public async Task<ShoppingCardDto> CreateNewShoppingCard(CreateShoppingCardDto createShoppingCardDto)
     {
         var shoppingCard = _mapper.Map<ShoppingCard>(createShoppingCardDto);
-        var shoppingCardDto = _mapper.Map<ShoppingCardDto>(createShoppingCardDto);
         await _shoppingCartRepository.Add(shoppingCard);
-        return shoppingCardDto;
+        return _mapper.Map<ShoppingCardDto>(createShoppingCardDto);
     }
 
     public async Task UpdateShoppingCard(UpdateProductDto updateShoppingCard)

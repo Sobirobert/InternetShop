@@ -7,7 +7,7 @@ using Domain.Interfaces;
 
 namespace Application.Services
 {
-    public class OrderService : IOrderService
+    public class OrderService  //IOrderService
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IMapper _mapper;
@@ -18,11 +18,11 @@ namespace Application.Services
             _orderRepository = orderRepository;
         }
 
-        public async Task<List<ShoppingCardDto>> CreateOrder(OrderDto orderDto, int shoppingCartId)
-        {
-            var order = _mapper.Map<Order>(orderDto);
-            var orderList = await _orderRepository.CreateOrder(order, shoppingCartId);
-            return _mapper.Map<List<ShoppingCardDto>>(orderList);
-        }
+        //public async Task<List<ShoppingCardDto>> CreateOrder(OrderDto orderDto, int shoppingCartId)
+        //{
+        //    var order = _mapper.Map<OrderUserDetails>(orderDto);
+        //    var orderList = await _orderRepository.CreateOrder(order, shoppingCartId);
+        //    return _mapper.Map<List<ShoppingCardDto>>(orderList);
+        //}
     }
 }

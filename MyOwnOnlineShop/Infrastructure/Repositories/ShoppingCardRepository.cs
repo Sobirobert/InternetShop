@@ -58,8 +58,7 @@ public class ShoppingCardRepository : IShoppingCardRepository
         {
             throw new Exception("Shopping Card is null!");
         }
-        await _context.ShoppingCards
-                .AddAsync(shoppingCard);
+        await _context.ShoppingCards.AddAsync(shoppingCard);
         await _context.SaveChangesAsync();
         return shoppingCard;
     }

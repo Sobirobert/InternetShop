@@ -57,7 +57,7 @@ public class ShoppingCartItemService : IShoppingCardItemService
 
     public async Task UpdateShoppingCardItem(UpdateShoppingCardItemDto shoppingCartItem)
     {
-        var existingProduct = await _shoppingCartItemRepository.GetById(shoppingCartItem.ShoppingCardItemId);
+        var existingProduct = await _shoppingCartItemRepository.GetById(shoppingCartItem.Id);
         var product = _mapper.Map(shoppingCartItem, existingProduct);
         await _shoppingCartItemRepository.Update(product);
     }

@@ -20,6 +20,9 @@ public class Product : AuditableEntity
     public string LongDescription { get; set; }
 
     [Required]
+    public int Amount { get; set; }
+
+    [Required]
     public string Details { get; set; }
 
     [Required]

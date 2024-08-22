@@ -6,6 +6,7 @@ namespace Application.Dto.ShoppingcartItemDto;
 
 public class CreateShoppingCardItemDto : IMap
 {
+    public string ItemName { get; set; }
     public int Amount { get; set; }
     public int ProductId { get; set; }
     public int ShoppingCardId { get; set; }

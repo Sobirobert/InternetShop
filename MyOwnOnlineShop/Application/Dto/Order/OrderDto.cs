@@ -7,7 +7,7 @@ namespace Application.Dto.Order;
 public class OrderDto : IMap
 {
     public int OrderId { get; set; }
-    public List<OrderDetail> OrderDetails { get; set; }
+    public List<Domain.Entities.Order> OrderDetails { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string AddressLine1 { get; set; }
@@ -23,7 +23,7 @@ public class OrderDto : IMap
 
     public void Mapping(Profile profile)
     {
-        profile.CreateMap<Domain.Entities.Order, OrderDto>()
+        profile.CreateMap<Domain.Entities.OrderUserDetails, OrderDto>()
             .ForMember(dest => dest.OrderPlaced, opt => opt.MapFrom(src => src.OrderPlaced));
     }
 }
