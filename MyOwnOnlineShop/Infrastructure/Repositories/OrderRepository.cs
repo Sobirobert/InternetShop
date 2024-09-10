@@ -14,25 +14,71 @@ public class OrderRepository : IOrderRepository
     {
         _context = context;
     }
+    public async Task CreateOrder(Order order)
+    {
+        order.OrderPlaced = DateTime.Now;
+        order.ShippingStatus = 0;
+        order.PaymentStatus = 0;
+        order.OrderTotal = 0;
+
+        await _context.Orders.AddAsync(order);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task AddToOrder(int orderId, int amount, int productId)
+    {
+        var order = await _context.Orders
+            .SingleOrDefaultAsync(s => s.OrderId == orderId);
+        if (order == null)
+        {
+            throw new ArgumentException("Order isn't exist!");
+        }
+
+        var product = await _context.Products
+            .SingleOrDefaultAsync(s => s.Id == productId);
+        if (product == null)
+        {
+            throw new ArgumentException("Product isn't exist!");
+        }
+
+        var orderItem = new OrderItem
+        {
+            ItemName = product.Title,
+            ProductId = productId,
+            OrderId = orderId,
+            Amount = amount,
+            Price = product.Price,
+        };
+
+        order.ShoppingCardsItems.Add(orderItem);
+        await _context.SaveChangesAsync();
+    }
 
     public async Task<IEnumerable<Order>> GetAll(int pageNumber, int pageSize, string sortField, bool ascending, string filterBy)
     {
         return await _context.Orders
-            .Where(m => m.OrderUserDetails.Email.ToLower().Contains(filterBy.ToLower()) 
-            || m.OrderUserDetails.FirstName.ToLower().Contains(filterBy.ToLower()) 
-            || m.OrderUserDetails.LastName.ToLower().Contains(filterBy.ToLower())
-            || m.OrderUserDetails.AddressLine1.ToLower().Contains(filterBy.ToLower())
-            || m.OrderUserDetails.AddressLine2.ToLower().Contains(filterBy.ToLower())
-            || m.OrderUserDetails.City.ToLower().Contains(filterBy.ToLower())
-            || m.OrderUserDetails.Country.ToLower().Contains(filterBy.ToLower())
-            || m.OrderUserDetails.PhoneNumber.ToLower().Contains(filterBy.ToLower())
+            .Where(m => m.Email.ToLower().Contains(filterBy.ToLower())
+            || m.FirstName.ToLower().Contains(filterBy.ToLower())
+            || m.LastName.ToLower().Contains(filterBy.ToLower())
+            || m.AddressLine1.ToLower().Contains(filterBy.ToLower())
+            || m.AddressLine2.ToLower().Contains(filterBy.ToLower())
+            || m.City.ToLower().Contains(filterBy.ToLower())
+            || m.Country.ToLower().Contains(filterBy.ToLower())
+            || m.PhoneNumber.ToLower().Contains(filterBy.ToLower())
             )
             .OrderByPropertyName(sortField, ascending)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
     }
-
+    public async Task<double> GetShoppingCartTotal(int orderId)
+    {
+        var total = await _context.Orders
+            .Where(c => c.OrderId == orderId)
+            .SelectMany(c => c.ShoppingCardsItems)
+            .SumAsync(p => p.Price * p.Amount);
+        return total;
+    }
     public async Task<Order> GetById(int id)
     {
         var order = await _context.Orders
@@ -41,18 +87,6 @@ public class OrderRepository : IOrderRepository
         {
             throw new Exception("Shopping Card Items aren't exist!");
         }
-        return order;
-    }
-
-    public async Task<Order> Add(Order order)
-    {
-        if (order == null)
-        {
-            throw new Exception("Shopping Card Items aren't exist!");
-        }
-        order.Created = DateTime.Now;
-        await _context.Orders.AddAsync(order);
-        await _context.SaveChangesAsync();
         return order;
     }
 
@@ -77,30 +111,4 @@ public class OrderRepository : IOrderRepository
         _context.Orders.Remove(order);
         await _context.SaveChangesAsync();
     }
-
-    //public async Task<IEnumerable<ShoppingCartItem>> CreateOrder(OrderUserDetails order, int shoppingCartID)
-    //{
-    //    order.OrderPlaced = DateTime.Now;
-    //    var shoppingCartItems = _shoppingCart.ShoppingCartItems;
-    //    order.OrderTotal = await _shoppingCart.GetShoppingCartTotalAsync(shoppingCartID);
-    //    order.OrderDetails = new List<Order>();
-
-    //    foreach (var shoppingCartItem in shoppingCartItems)
-    //    {
-    //        var orderDetail = new Order
-    //        {
-    //            Amount = shoppingCartItem.Amount,
-    //            ProductId = shoppingCartItem.Product.Id,
-    //            Price = shoppingCartItem.Product.Price
-    //        };
-
-    //        order.OrderDetails.Add(orderDetail);
-    //    }
-
-    //    await _context.Orders.AddAsync(order);
-
-    //    await _context.SaveChangesAsync();
-    //    var orderList = await _shoppingCart.GetShoppingCartItemsAsync(shoppingCartID);
-    //    return orderList;
-    //}
 }

@@ -21,10 +21,8 @@ public class OnlineShopDBContext : IdentityDbContext<ApplicationUser>
     public DbSet<Picture> Pictures { get; set; }
     public DbSet<Domain.Entities.Attachment> Attachments { get; set; }
     public DbSet<Category> Categories { get; set; }
-    public DbSet<OrderUserDetails> OrderUsersDetails { get; set; }
     public DbSet<Order> Orders { get; set; }
-    public DbSet<ShoppingCard> ShoppingCards { get; set; }
-    public DbSet<OrderItem> ShoppingCardItems { get; set; }
+    public DbSet<OrderItem> OrderItems { get; set; }
 
     public async Task<int> SaveChangesAsync()
     {
