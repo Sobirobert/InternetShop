@@ -14,15 +14,19 @@ public class OrderRepository : IOrderRepository
     {
         _context = context;
     }
-    public async Task CreateOrder(Order order)
+    public async Task<Order> CreateOrder(Order order)
     {
         order.OrderPlaced = DateTime.Now;
         order.ShippingStatus = 0;
         order.PaymentStatus = 0;
         order.OrderTotal = 0;
-
+        order.TotalPrice = 0;
+        order.CreatedBy = $"{order.FirstName} {order.LastName}";
+        order.LastModified = DateTime.Now;
+        order.ShoppingCardsItems = new List<OrderItem>();
         await _context.Orders.AddAsync(order);
         await _context.SaveChangesAsync();
+        return order;
     }
 
     public async Task AddToOrder(int orderId, int amount, int productId)
@@ -71,7 +75,16 @@ public class OrderRepository : IOrderRepository
             .Take(pageSize)
             .ToListAsync();
     }
-    public async Task<double> GetShoppingCartTotal(int orderId)
+    public async Task<int> GetAllCount(string filterBy)
+    {
+        return await _context.Products
+            .Where(m => m.Title.ToLower()
+            .Contains(filterBy.ToLower()) || m.ShortDescription.ToLower()
+            .Contains(filterBy.ToLower()))
+            .CountAsync();
+    }
+
+    public async Task<double> GetOrdersTotal(int orderId)
     {
         var total = await _context.Orders
             .Where(c => c.OrderId == orderId)

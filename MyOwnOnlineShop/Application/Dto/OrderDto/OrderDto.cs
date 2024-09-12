@@ -3,7 +3,7 @@ using AutoMapper;
 using Domain.Entities;
 using Domain.Enums;
 
-namespace Application.Dto.Order;
+namespace Application.Dto.OrderDto;
 
 public class OrderDto : IMap
 {

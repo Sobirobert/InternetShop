@@ -1,117 +1,107 @@
-﻿using AutoMapper;
-using Domain.Interfaces;
+﻿
+using Application.Dto.OrderDto;
+using Application.Interfaces;
+using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
+using System.Security.Claims;
+using WebAPI.Attributes;
+using WebAPI.Filters;
+using WebAPI.Helpers;
+using WebAPI.Wrappers;
 
 namespace WebAPI.Controllers.V1;
 
 [Authorize]
 public class OrderController : Controller
 {
-    private readonly IOrderRepository _orderRepository;
+    private readonly IOrderService _orderService;
 
-    //private readonly IShoppingCartRepository _shoppingCartRepository;
-    private readonly IConfiguration _configuration;
-
-    private readonly IMapper _mapper;
-
-    public OrderController(IOrderRepository orderRepository, /*IShoppingCartRepository shoppingCartRepository,*/ IConfiguration configuration, IMapper mapper)
+    public OrderController(IOrderService orderService)
     {
-        _orderRepository = orderRepository;
-        //_shoppingCartRepository = shoppingCartRepository;
-        _configuration = configuration;
-        _mapper = mapper;
+        _orderService = orderService;
     }
 
-    //// GET: /<controller>/
-    //public IActionResult Checkout()
-    //{
-    //    return View();
-    //}
+    [SwaggerOperation(Summary = "Retrieves sort fields")]
+    [HttpGet("[action]")]
+    public IActionResult GetSortFields()
+    {
+        return Ok(SortingHelper.GetSortFields().Select(x => x.Key));
+    }
 
-    //[HttpPost]
-    //public IActionResult Checkout(Order order)
-    //{
-    //    var items = _shoppingCartRepository.GetShoppingCartItemsAsync();
+    [SwaggerOperation(Summary = "Retrieves all Orders")]
+    [AllowAnonymous]
+    [HttpGet("Orders")]
+    public async Task<IActionResult> GetAllOrders([FromQuery] PaginationFilter paginationFilter, [FromQuery] SortingFilter sortingFilter, [FromQuery] string filterBy = "")
+    {
+        var validPaginationFilter = new PaginationFilter(paginationFilter.PageNumber, paginationFilter.PageSize);
+        var validSortingFilter = new SortingFilter(sortingFilter.SortField, sortingFilter.Ascending);
 
-    //    if (items == null)
-    //    {
-    //        ModelState.AddModelError("", "Twój koszyk jest pusty. Dodaj pierwszy produkt");
-    //    }
+        var products = await _orderService.GetAllOrders(validPaginationFilter.PageNumber, validPaginationFilter.PageSize,
+                                                                 validSortingFilter.SortField, validSortingFilter.Ascending, filterBy);
+        var totalRecords = await _orderService.GetAllOrdersCount(filterBy);
 
-    //    if (ModelState.IsValid)
-    //    {
-    //        _orderRepository.CreateOrder(order);
-    //        SendEmail(order);
-    //        _shoppingCartRepository.ClearCartAsync();
-    //        return RedirectToAction("CheckoutComplete");
-    //    }
-    //    return View(order);
-    //}
+        return Ok(PaginationHelper.CreatePageResponse(products, validPaginationFilter, totalRecords));
+    }
 
-    //private void SendEmail(Order order)
-    //{
-    //    if (string.IsNullOrWhiteSpace(_configuration.GetSection("Emails").GetValue<string>("UserName"))
-    //    || string.IsNullOrWhiteSpace(_configuration.GetSection("Emails").GetValue<string>("Password"))
-    //    || string.IsNullOrWhiteSpace(_configuration.GetSection("Emails").GetValue<string>("FromEmail")))
-    //    {
-    //        return;
-    //    }
+    [ValidateFilter]
+    [SwaggerOperation(Summary = "Find the order by Id")]
+    [AllowAnonymous]
+    [HttpGet("OrderById/{id}")]
+    public async Task<IActionResult> GetOrderByID(int id)
+    {
+        var order = await _orderService.GetOrderById(id);
+        if (order == null)
+        {
+            return NotFound(id);
+        }
 
-    //    var smtpClient = new SmtpClient(_configuration.GetSection("Emails").GetValue<string>("SmtpServer"))
-    //    {
-    //        Port = _configuration.GetSection("Emails").GetValue<int>("Port"),
-    //        Credentials = new NetworkCredential(
-    //            _configuration.GetSection("Emails").GetValue<string>("UserName"),
-    //            _configuration.GetSection("Emails").GetValue<string>("Password")),
-    //        EnableSsl = _configuration.GetSection("Emails").GetValue<bool>("EnableSsl"),
-    //    };
+        return Ok(new Response<OrderDto>(order));
+    }
 
-    //    smtpClient.Send(
-    //        _configuration.GetSection("Emails").GetValue<string>("FromEmail"),
-    //        _configuration.GetSection("Emails").GetValue<string>("FromEmail"),
-    //        $"Nowe Zamówienie nr #{order.OrderId}",
-    //        CreateEmailBody(order));
-    //}
+    [ValidateFilter]
+    [SwaggerOperation(Summary = "Find the order by Id")]
+    [AllowAnonymous]
+    [HttpPost("OrderItem/Add")]
+    public async Task<IActionResult> AddNewOrderItem(int orderId, int amount, int productId)
+    {
+        await _orderService.AddToOrder(orderId, amount, productId);
+        return Ok();
+    }
 
-    //private static string CreateEmailBody(Order order)
-    //{
-    //    var stringBuilder = new StringBuilder($"Nowe Zamówienie nr #{order.OrderId}{Environment.NewLine + Environment.NewLine}");
-    //    foreach (var orderDetail in order.OrderDetails)
-    //    {
-    //        stringBuilder.Append($"-> {orderDetail.Product.Title}: {orderDetail.Amount}x{orderDetail.Product.Price:#.##}{Environment.NewLine}");
-    //    }
+    [ValidateFilter]
+    [SwaggerOperation(Summary = "Create a new order")]
+    [AllowAnonymous]
+    [HttpPost("Order/Create")]
+    public async Task<IActionResult> CreateNewOrder(CreateOrderDto newOrder)
+    {
+        var order = await _orderService.CreateOrder(newOrder);
+        return Created($"api/product/{order.OrderId}", new Response<OrderDto>(order));
+    }
 
-    //    stringBuilder.Append(Environment.NewLine);
-    //    stringBuilder.Append($"SUMA: {order.OrderTotal:#.##}");
-    //    stringBuilder.Append(Environment.NewLine);
-    //    stringBuilder.Append(Environment.NewLine);
-    //    stringBuilder.Append($"Zamawiający:");
-    //    stringBuilder.Append(Environment.NewLine);
-    //    stringBuilder.Append($"{order.FirstName} {order.LastName}");
-    //    stringBuilder.Append(Environment.NewLine);
-    //    stringBuilder.Append(order.Email);
-    //    stringBuilder.Append(Environment.NewLine);
-    //    stringBuilder.Append(order.PhoneNumber);
-    //    stringBuilder.Append(Environment.NewLine);
-    //    stringBuilder.Append(order.AddressLine1);
-    //    stringBuilder.Append(Environment.NewLine);
-    //    stringBuilder.Append(order.AddressLine2);
-    //    stringBuilder.Append(Environment.NewLine);
-    //    stringBuilder.Append($"{order.ZipCode} {order.City}");
-    //    stringBuilder.Append(Environment.NewLine);
-    //    stringBuilder.Append(order.Country);
-    //    stringBuilder.Append(Environment.NewLine);
-    //    stringBuilder.Append(order.State);
+    [ValidateFilter]
+    [SwaggerOperation(Summary = "Update a existing Order")]
+    [Authorize(Roles = UserRoles.Admin)]
+    [HttpPut("Order/Update")]
+    public async Task<IActionResult> Update(UpdateOrderDto updateOrder)
+    {
+        await _orderService.UpdateOrder(updateOrder);
+        return NoContent();
+    }
 
-    //    stringBuilder.Append(Environment.NewLine);
-    //    stringBuilder.Append(Environment.NewLine);
-    //    return stringBuilder.ToString();
-    //}
-
-    //public IActionResult CheckoutComplete()
-    //{
-    //    ViewBag.CheckoutCompleteMessage = "Dziękujemy za zamówienie";
-    //    return View();
-    //}
+    [ValidateFilter]
+    [SwaggerOperation(Summary = "Delete a specific order")]
+    [Authorize(Roles = UserRoles.Admin)]
+    [HttpDelete("Order/Delete/Id")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var isAdmin = User.FindFirstValue(ClaimTypes.Role).Contains(UserRoles.Admin);
+        if (!isAdmin)
+        {
+            return BadRequest(new Response(false, "You do not own this post."));
+        }
+        await _orderService.DeleteOrder(id);
+        return NoContent();
+    }
 }

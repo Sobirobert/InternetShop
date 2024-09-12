@@ -2,7 +2,7 @@
 using AutoMapper;
 using Domain.Entities;
 
-namespace Application.Dto.Order;
+namespace Application.Dto.OrderDto;
 
 public class UpdateOrderItemDto : IMap
 {
@@ -11,7 +11,6 @@ public class UpdateOrderItemDto : IMap
     public int Amount { get; set; }
     public double Price { get; set; }
     public DateTime ModifcateDate { get; set; }
-
 
     public void Mapping(Profile profile)
     {

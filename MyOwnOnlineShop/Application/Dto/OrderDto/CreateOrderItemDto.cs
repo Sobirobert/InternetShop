@@ -1,9 +1,8 @@
-﻿
-using Application.Mappings;
+﻿using Application.Mappings;
 using AutoMapper;
 using Domain.Entities;
 
-namespace Application.Dto.Order;
+namespace Application.Dto.OrderDto;
 
 public class CreateOrderItemDto : IMap
 {
@@ -13,7 +12,6 @@ public class CreateOrderItemDto : IMap
     public int Amount { get; set; }
     public double Price { get; set; }
     public DateTime CreatedDate { get; set; }
-
 
     public void Mapping(Profile profile)
     {

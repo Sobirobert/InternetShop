@@ -1,9 +1,8 @@
-﻿
-using Application.Mappings;
+﻿using Application.Mappings;
 using AutoMapper;
 using Domain.Entities;
 
-namespace Application.Dto.Order;
+namespace Application.Dto.OrderDto;
 
 public class CreateOrderDto : IMap
 {
@@ -21,6 +20,6 @@ public class CreateOrderDto : IMap
 
     public void Mapping(Profile profile)
     {
-        profile.CreateMap<CreateOrderDto, Domain.Entities.Order>();
+        profile.CreateMap<CreateOrderDto, Order>();
     }
 }
