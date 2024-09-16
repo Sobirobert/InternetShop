@@ -9,6 +9,8 @@ public interface IOrderRepository
     Task<IEnumerable<Order>> GetAll(int pageNumber, int pageSize, string sortField, bool ascending, string filterBy);
     Task<int> GetAllCount(string filterBy);
     Task<Order> GetById(int id);
+    Task<OrderItem> GetItemById(int id);
     Task Update(Order order);
+    Task Update(OrderItem orderItem);
     Task Delete(int id);
 }

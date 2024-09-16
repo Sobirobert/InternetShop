@@ -12,5 +12,6 @@ public interface IOrderService
     Task<IEnumerable<OrderDto>> GetAllOrders(int pageNumber, int pageSize, string sortField, bool ascending, string filterBy);
     Task<OrderDto> GetOrderById(int id);
     Task UpdateOrder(UpdateOrderDto order);
+    Task UpdateOrderItem(UpdateOrderItemDto orderItemDto);
     Task DeleteOrder(int id);
 }

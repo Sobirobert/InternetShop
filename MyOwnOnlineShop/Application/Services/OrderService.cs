@@ -63,5 +63,12 @@ namespace Application.Services
             var order = _mapper.Map(orderDto, existingOrder);
             await _orderRepository.Update(order);
         }
+
+        public async Task UpdateOrderItem(UpdateOrderItemDto orderItemDto)
+        {
+            var existingOrdeItem = await _orderRepository.GetItemById(orderItemDto.OrderItemId);
+            var orderItem = _mapper.Map(orderItemDto, existingOrdeItem);
+            await _orderRepository.Update(orderItem);
+        }
     }
 }

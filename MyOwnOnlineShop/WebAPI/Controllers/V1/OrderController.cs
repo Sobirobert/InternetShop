@@ -82,11 +82,21 @@ public class OrderController : Controller
 
     [ValidateFilter]
     [SwaggerOperation(Summary = "Update a existing Order")]
-    [Authorize(Roles = UserRoles.Admin)]
+    [AllowAnonymous]
     [HttpPut("Order/Update")]
     public async Task<IActionResult> Update(UpdateOrderDto updateOrder)
     {
         await _orderService.UpdateOrder(updateOrder);
+        return NoContent();
+    }
+
+    [ValidateFilter]
+    [SwaggerOperation(Summary = "Update a existing OrderItem")]
+    [AllowAnonymous]
+    [HttpPut("OrderItem/Update")]
+    public async Task<IActionResult> UpdateItem(UpdateOrderItemDto updateOrderItem)
+    {
+        await _orderService.UpdateOrderItem(updateOrderItem);
         return NoContent();
     }
 

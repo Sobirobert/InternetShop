@@ -23,7 +23,6 @@ public class OrderRepository : IOrderRepository
         order.TotalPrice = 0;
         order.CreatedBy = $"{order.FirstName} {order.LastName}";
         order.LastModified = DateTime.Now;
-        order.ShoppingCardsItems = new List<OrderItem>();
         await _context.Orders.AddAsync(order);
         await _context.SaveChangesAsync();
         return order;
@@ -37,25 +36,35 @@ public class OrderRepository : IOrderRepository
         {
             throw new ArgumentException("Order isn't exist!");
         }
-
+        order.ShoppingCardsItems = new List<OrderItem>();
         var product = await _context.Products
             .SingleOrDefaultAsync(s => s.Id == productId);
         if (product == null)
         {
             throw new ArgumentException("Product isn't exist!");
         }
-
-        var orderItem = new OrderItem
+        var orderItemExist = await _context.OrderItems.SingleOrDefaultAsync(x => x.OrderId == orderId && x.ProductId == productId);
+        if (orderItemExist == null)
         {
-            ItemName = product.Title,
-            ProductId = productId,
-            OrderId = orderId,
-            Amount = amount,
-            Price = product.Price,
-        };
-
-        order.ShoppingCardsItems.Add(orderItem);
-        await _context.SaveChangesAsync();
+            var orderItem = new OrderItem
+            {
+                ItemName = product.Title,
+                ProductId = productId,
+                OrderId = orderId,
+                Amount = amount,
+                Price = product.Price * amount,
+            };
+            order.ShoppingCardsItems.Add(orderItem);
+            order.TotalPrice = await GetOrdersTotal(orderId);
+            await _context.SaveChangesAsync();
+        }
+        else
+        {
+            orderItemExist.Amount =+ amount;
+            orderItemExist.Price = product.Price + orderItemExist.Amount;
+            order.TotalPrice = await GetOrdersTotal(orderId);
+            await _context.SaveChangesAsync();
+        }
     }
 
     public async Task<IEnumerable<Order>> GetAll(int pageNumber, int pageSize, string sortField, bool ascending, string filterBy)
@@ -103,6 +112,17 @@ public class OrderRepository : IOrderRepository
         return order;
     }
 
+    public async Task<OrderItem> GetItemById(int id)
+    {
+        var orderItem = await _context.OrderItems
+            .SingleOrDefaultAsync(x => x.OrderItemId == id);
+        if (orderItem == null)
+        {
+            throw new Exception("Shopping Card Items aren't exist!");
+        }
+        return orderItem;
+    }
+
     public async Task Update(Order order)
     {
         if (order == null)
@@ -114,9 +134,20 @@ public class OrderRepository : IOrderRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task Update(OrderItem orderItem)
+    {
+        if (orderItem == null)
+        {
+            throw new Exception("Shopping Card Items aren't exist!");
+        }
+        orderItem.LastModified = DateTime.Now;
+        _context.OrderItems.Update(orderItem);
+        await _context.SaveChangesAsync();
+    }
+
     public async Task Delete(int id)
     {
-        var order = _context.Orders.FirstOrDefault(x => x.OrderId == id);
+        var order = await _context.Orders.FirstOrDefaultAsync(x => x.OrderId == id);
         if (order == null)
         {
             throw new Exception("Shopping Card Items aren't exist!");

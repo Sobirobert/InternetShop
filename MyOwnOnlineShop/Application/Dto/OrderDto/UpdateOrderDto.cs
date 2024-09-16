@@ -11,10 +11,9 @@ public class UpdateOrderDto : IMap
     public List<OrderItem> OrderItems { get; set; }
     public ShippingStatus ShippingStatus { get; set; }
     public PaymentStatus PaymentStatus { get; set; }
-    public double OrderTotal { get; set; }
 
     public void Mapping(Profile profile)
     {
-        profile.CreateMap<UpdateOrderDto, Domain.Entities.Order>();
+        profile.CreateMap<UpdateOrderDto, Order>();
     }
 }
