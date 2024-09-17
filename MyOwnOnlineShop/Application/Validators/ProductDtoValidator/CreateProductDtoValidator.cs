@@ -16,10 +16,17 @@ public class CreateProductDtoValidator : AbstractValidator<CreateProductDto>
 
         #region DescriptionOfProduct
 
-        //RuleFor(x => x.DescriptionOfProduct).NotEmpty().WithMessage("Product can not have an empty Description.");
-        //RuleFor(x => x.DescriptionOfProduct).Length(3, 2500).WithMessage("The description must be between 3 and 2500 characters long");
+        RuleFor(x => x.ShortDescription).NotEmpty().WithMessage("Product can not have an empty Description.");
+        RuleFor(x => x.ShortDescription).Length(3, 1500).WithMessage("The description must be between 3 and 2500 characters long");
 
         #endregion DescriptionOfProduct
+
+        #region LongDescriptionOfProduct
+
+        RuleFor(x => x.LongDescription).NotEmpty().WithMessage("Product can not have an empty Description.");
+        RuleFor(x => x.LongDescription).Length(3, 5000).WithMessage("The description must be between 3 and 2500 characters long");
+
+        #endregion LongDescriptionOfProduct
 
         #region Price
 
@@ -32,5 +39,17 @@ public class CreateProductDtoValidator : AbstractValidator<CreateProductDto>
         RuleFor(x => x.Type).NotEmpty().WithMessage("Product can not have an empty Type.");
 
         #endregion Type
+
+        #region Amount
+
+        RuleFor(x => x.Amount).NotEmpty().WithMessage("Product can not have an empty Type.");
+
+        #endregion Amount
+
+        #region CategoryId
+
+        RuleFor(x => x.CategoryId).NotEmpty().WithMessage("Product can not have an empty Type.");
+
+        #endregion CategoryId
     }
 }
