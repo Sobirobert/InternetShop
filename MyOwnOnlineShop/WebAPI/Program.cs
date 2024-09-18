@@ -1,3 +1,5 @@
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using WebAPI.Installers;
 using WebAPI.MiddelWares;
 
@@ -27,6 +29,13 @@ public class Program
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
+        app.MapHealthChecks("/health", new HealthCheckOptions()
+        {
+            Predicate = _ => true,
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
+        app.MapHealthChecksUI();
+        //app.UseHealthChecks("/health");
 
         try
         {

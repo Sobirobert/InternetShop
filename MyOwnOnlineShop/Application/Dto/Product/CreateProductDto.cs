@@ -1,6 +1,7 @@
 ﻿using Application.Mappings;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Enums;
 
 namespace Application.Dto;
 
@@ -14,7 +15,7 @@ public class CreateProductDto : IMap
     public int Amount { get; set; }
     public double Price { get; set; }
     public bool IsProductOfTheWeek { get; set; }
-    public Domain.Enums.Type Type { get; set; }
+    public TypeProduct Type { get; set; }
     public int CategoryId { get; set; }
 
     public void Mapping(Profile profile)

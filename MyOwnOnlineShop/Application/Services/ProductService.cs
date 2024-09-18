@@ -3,6 +3,7 @@ using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Services;
 
@@ -10,15 +11,19 @@ public class ProductService : IProductService
 {
     private readonly IProductRepository _productRepository;
     private readonly IMapper _mapper;
+    private readonly ILogger _logger;
 
-    public ProductService(IProductRepository productRepository, IMapper mapper)
+    public ProductService(IProductRepository productRepository, IMapper mapper, ILogger<ProductService> logger)
     {
         _productRepository = productRepository;
         _mapper = mapper;
+        _logger = logger;
     }
 
     public async Task<IEnumerable<ProductDto>> GetAllProducts(int pageNumber, int pageSize, string sortField, bool ascending, string filterBy)
     {
+        _logger.LogDebug("Fetching products");
+        _logger.LogInformation($"pageNumber: {pageNumber} | pageSize: {pageSize}");
         var products = await _productRepository.GetAll(pageNumber, pageSize, sortField, ascending, filterBy);
         return _mapper.Map<IEnumerable<ProductDto>>(products);
     }

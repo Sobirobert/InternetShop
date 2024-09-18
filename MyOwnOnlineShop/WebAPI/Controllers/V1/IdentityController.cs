@@ -92,6 +92,8 @@ public class IdentityController : ControllerBase
     /// <summary>
     /// Registers the Admin in the system
     /// </summary>
+    /// <response code="200">Registers created successfully!</response>
+    /// <response code="500">Registers already exists!</response>
     [ProducesResponseType(typeof(AdminRegisterResponseStatus200), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(AdminRegisterResponseStatus500), StatusCodes.Status500InternalServerError)]
     [HttpPost]
@@ -147,6 +149,8 @@ public class IdentityController : ControllerBase
     /// <summary>
     /// Logs the user into system
     /// </summary>
+    /// <response code="200">Logs successfully!</response>
+    /// <response code="500">Something wrong!</response>
     [HttpPost]
     [Route("Login")]
     public async Task<IActionResult> Login(LoginModel login)

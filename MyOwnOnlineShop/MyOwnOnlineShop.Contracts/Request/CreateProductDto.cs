@@ -1,13 +1,9 @@
-﻿using Application.Mappings;
-using AutoMapper;
-using Domain.Entities;
-using Domain.Enums;
+﻿using MyOwnOnlineShop.Contracts.Enums;
 
-namespace Application.Dto;
+namespace MyOwnOnlineShop.Contracts.Request;
 
-public class ProductDto : IMap
+public class CreateProductDto
 {
-    public int Id { get; set; }
     public string Title { get; set; }
     public string ShortDescription { get; set; }
     public string LongDescription { get; set; }
@@ -18,11 +14,4 @@ public class ProductDto : IMap
     public bool IsProductOfTheWeek { get; set; }
     public TypeProduct Type { get; set; }
     public int CategoryId { get; set; }
-    public DateTime CreationDate { get; set; }
-
-    public void Mapping(Profile profile)
-    {
-        profile.CreateMap<Product, ProductDto>()
-            .ForMember(dest => dest.CreationDate, opt => opt.MapFrom(src => src.Created));
-    }
 }

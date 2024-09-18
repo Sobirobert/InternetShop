@@ -1,4 +1,5 @@
 ﻿using Domain.Common;
+using Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -35,7 +36,7 @@ public class Product : AuditableEntity
     public bool IsProductOfTheWeek { get; set; }
 
     [Required]
-    public Enums.Type Type { get; set; }
+    public TypeProduct Type { get; set; }
 
     [Required]
     public int CategoryId { get; set; }

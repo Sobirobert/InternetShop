@@ -1,11 +1,8 @@
-﻿using Application.Mappings;
-using AutoMapper;
-using Domain.Entities;
-using Domain.Enums;
+﻿using MyOwnOnlineShop.Contracts.Enums;
 
-namespace Application.Dto;
+namespace MyOwnOnlineShop.Contracts.Request;
 
-public class UpdateProductDto : IMap
+public class UpdateProductDto
 {
     public int Id { get; set; }
     public string Title { get; set; }
@@ -17,9 +14,4 @@ public class UpdateProductDto : IMap
     public int Amount { get; set; }
     public bool IsProductOfTheWeek { get; set; }
     public TypeProduct Type { get; set; }
-
-    public void Mapping(Profile profile)
-    {
-        profile.CreateMap<UpdateProductDto, Product>();
-    }
 }

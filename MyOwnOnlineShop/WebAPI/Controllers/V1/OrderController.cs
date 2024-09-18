@@ -9,6 +9,7 @@ using System.Security.Claims;
 using WebAPI.Attributes;
 using WebAPI.Filters;
 using WebAPI.Helpers;
+using WebAPI.Models;
 using WebAPI.Wrappers;
 
 namespace WebAPI.Controllers.V1;
@@ -77,6 +78,29 @@ public class OrderController : Controller
     public async Task<IActionResult> CreateNewOrder(CreateOrderDto newOrder)
     {
         var order = await _orderService.CreateOrder(newOrder);
+        return Created($"api/product/{order.OrderId}", new Response<OrderDto>(order));
+    }
+
+    [ValidateFilter]
+    [SwaggerOperation(Summary = "Create a new order")]
+    [AllowAnonymous]
+    [HttpPost("OrderModel/Create")]
+    public async Task<IActionResult> CreateNewOrderWithModel(OrderModel orderModel)
+    {
+        CreateOrderDto createOrderDto = new CreateOrderDto()
+        {
+            FirstName = orderModel.FirstName,
+            LastName = orderModel.LastName,
+            AddressLine1 = orderModel.AddressLine1,
+            AddressLine2 = orderModel.AddressLine2,
+            ZipCode = orderModel.ZipCode,
+            City = orderModel.City,
+            State = orderModel.State,
+            Country = orderModel.Country,
+            PhoneNumber = orderModel.PhoneNumber,
+            Email = orderModel.Email,
+        };
+        var order = await _orderService.CreateOrder(createOrderDto);
         return Created($"api/product/{order.OrderId}", new Response<OrderDto>(order));
     }
 

@@ -1,6 +1,6 @@
 ﻿namespace Domain.Enums
 {
-    public enum Type
+    public enum TypeProduct
     {
         New = 1,
         Used = 2,
