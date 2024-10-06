@@ -1,6 +1,7 @@
 ﻿
 using Application.Dto.OrderDto;
 using Application.Interfaces;
+using Domain.Enums;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ using WebAPI.Attributes;
 using WebAPI.Filters;
 using WebAPI.Helpers;
 using WebAPI.Models;
+using WebAPI.SwaggerExamples.Requests;
 using WebAPI.Wrappers;
 
 namespace WebAPI.Controllers.V1;
@@ -65,28 +67,19 @@ public class OrderController : Controller
     [SwaggerOperation(Summary = "Find the order by Id")]
     [AllowAnonymous]
     [HttpPost("OrderItem/Add")]
-    public async Task<IActionResult> AddNewOrderItem(int orderId, int amount, int productId)
+    public async Task<IActionResult> AddNewOrderItem([FromBody] OrderItemModel orderItemModel)
     {
-        await _orderService.AddToOrder(orderId, amount, productId);
+        await _orderService.AddToOrder(orderItemModel.orderId, orderItemModel.amount, orderItemModel.productId);
         return Ok();
     }
-
-    [ValidateFilter]
-    [SwaggerOperation(Summary = "Create a new order")]
-    [AllowAnonymous]
-    [HttpPost("Order/Create")]
-    public async Task<IActionResult> CreateNewOrder(CreateOrderDto newOrder)
-    {
-        var order = await _orderService.CreateOrder(newOrder);
-        return Created($"api/product/{order.OrderId}", new Response<OrderDto>(order));
-    }
-
+   
     [ValidateFilter]
     [SwaggerOperation(Summary = "Create a new order")]
     [AllowAnonymous]
     [HttpPost("OrderModel/Create")]
-    public async Task<IActionResult> CreateNewOrderWithModel(OrderModel orderModel)
+    public async Task<IActionResult> CreateNewOrderWithModel([FromBody] OrderModel orderModel)
     {
+        
         CreateOrderDto createOrderDto = new CreateOrderDto()
         {
             FirstName = orderModel.FirstName,
@@ -108,8 +101,14 @@ public class OrderController : Controller
     [SwaggerOperation(Summary = "Update a existing Order")]
     [AllowAnonymous]
     [HttpPut("Order/Update")]
-    public async Task<IActionResult> Update(UpdateOrderDto updateOrder)
+    public async Task<IActionResult> Update([FromBody] UpdateOrderModel updateOrderModel)
     {
+        UpdateOrderDto updateOrder = new UpdateOrderDto()
+        {
+            OrderId = updateOrderModel.OrderId,
+            ShippingStatus = (ShippingStatus)updateOrderModel.ShippingStatus,
+            PaymentStatus = (PaymentStatus)updateOrderModel.PaymentStatus
+        };
         await _orderService.UpdateOrder(updateOrder);
         return NoContent();
     }
@@ -118,8 +117,15 @@ public class OrderController : Controller
     [SwaggerOperation(Summary = "Update a existing OrderItem")]
     [AllowAnonymous]
     [HttpPut("OrderItem/Update")]
-    public async Task<IActionResult> UpdateItem(UpdateOrderItemDto updateOrderItem)
+    public async Task<IActionResult> UpdateItem([FromBody] UpdateOrderItemModel updateOrderItemModel )
     {
+        UpdateOrderItemDto updateOrderItem = new UpdateOrderItemDto()
+        {
+            OrderItemId = updateOrderItemModel.OrderItemId,
+            OrderId = updateOrderItemModel.OrderId,
+            Amount = updateOrderItemModel.Amount,
+            Price = updateOrderItemModel.Price
+        };
         await _orderService.UpdateOrderItem(updateOrderItem);
         return NoContent();
     }

@@ -23,9 +23,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SDK", "SDK", "{F017C0AF-D95
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyOwnOnlineShop.Contracts", "MyOwnOnlineShop.Contracts\MyOwnOnlineShop.Contracts.csproj", "{EC4E29F6-B332-4EB1-A17C-703A059ADB7D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyOwnOnlineShop.Sdk.Sample", "MyOwnOnlineShop.Sdk.Sample2\MyOwnOnlineShop.Sdk.Sample.csproj", "{B13C2E7F-A34A-41D5-B064-473EDCD80445}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyOwnOnlineShop.Sdk.Sample", "MyOwnOnlineShop.Sdk.Sample2\MyOwnOnlineShop.Sdk.Sample.csproj", "{B13C2E7F-A34A-41D5-B064-473EDCD80445}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyOwnOnlineShop.Sdk", "MyOwnOnlineShop.Sdk\MyOwnOnlineShop.Sdk.csproj", "{8551A2AD-9F18-43BB-A82D-E4C4C0CB91E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyOwnOnlineShop.Sdk", "MyOwnOnlineShop.Sdk\MyOwnOnlineShop.Sdk.csproj", "{8551A2AD-9F18-43BB-A82D-E4C4C0CB91E9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

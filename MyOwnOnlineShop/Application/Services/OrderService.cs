@@ -1,9 +1,10 @@
-﻿using Application.Dto;
+﻿
 using Application.Dto.OrderDto;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Services
 {
@@ -11,15 +12,19 @@ namespace Application.Services
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger _logger;
 
-        public OrderService(IOrderRepository orderRepository, IMapper mapper)
+        public OrderService(IOrderRepository orderRepository, IMapper mapper, ILogger<OrderService> logger)
         {
             _mapper = mapper;
             _orderRepository = orderRepository;
+            _logger = logger;
         }
 
         public async Task<IEnumerable<OrderDto>> GetAllOrders(int pageNumber, int pageSize, string sortField, bool ascending, string filterBy)
         {
+            _logger.LogDebug("Fetching Orders");
+            _logger.LogInformation($"pageNumber: {pageNumber} | pageSize: {pageSize}");
             var orders = await _orderRepository.GetAll(pageNumber, pageSize, sortField, ascending, filterBy);
             return _mapper.Map<IEnumerable<OrderDto>>(orders);
         }

@@ -2,7 +2,7 @@
 
 public enum ShippingStatus
 {
-    NotSent = 0,
-    Sent = 1,
-    Returned = 2
+    NotSent = 1,
+    Sent = 2,
+    Returned = 3
 }

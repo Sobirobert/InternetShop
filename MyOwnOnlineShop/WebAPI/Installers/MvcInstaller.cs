@@ -26,7 +26,7 @@ public class MvcInstaller : IInstaller
             })
             .AddXmlSerializerFormatters();
         services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
-
+        services.AddMemoryCache();
         services.AddAuthorization();
         services.AddTransient<UserResolverService>();
         services.AddScoped<ErrorHandlingMiddelware>();

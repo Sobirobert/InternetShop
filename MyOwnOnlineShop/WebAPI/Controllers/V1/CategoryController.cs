@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Security.Claims;
+using WebAPI.Models;
 using WebAPI.SwaggerExamples.Responses.CategoryResponses;
 using WebAPI.Wrappers;
 
@@ -16,12 +17,10 @@ namespace WebAPI.Controllers.V1
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
-        private readonly IProductService _productService;
 
-        public CategoryController(ICategoryService categoryService, IProductService productService)
+        public CategoryController(ICategoryService categoryService)
         {
             _categoryService = categoryService;
-            _productService = productService;
         }
 
         [SwaggerOperation(Summary = "Show all Categories.")]
@@ -60,9 +59,16 @@ namespace WebAPI.Controllers.V1
         [ProducesResponseType(typeof(CategoryCreateResponseStatus500), StatusCodes.Status500InternalServerError)]
         [SwaggerOperation(Summary = "Create the new Category")]
         [HttpPost]
-        public async Task<IActionResult> Create(CreateCategoryDto category)
+        public async Task<IActionResult> Create([FromBody] CreateCategoryDto categoryModelDto)
         {
-            var categoryExists = await _categoryService.GetCategoryByName(category.CategoryName);
+            CreateCategoryDto createCategoryDto = new CreateCategoryDto()
+            {
+                CategoryName = categoryModelDto.CategoryName,
+                Description = categoryModelDto.Description,
+            };
+
+
+            var categoryExists = await _categoryService.GetCategoryByName(createCategoryDto.CategoryName);
             if (categoryExists != null)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response
@@ -72,7 +78,7 @@ namespace WebAPI.Controllers.V1
                 });
             }
 
-            await _categoryService.CreateCategory(category);
+            await _categoryService.CreateCategory(createCategoryDto);
 
             return StatusCode(StatusCodes.Status200OK, new Response
             {
@@ -87,7 +93,7 @@ namespace WebAPI.Controllers.V1
         [ProducesResponseType(typeof(CategoryResponseStatus200), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(CategoryResponseStatus500), StatusCodes.Status500InternalServerError)]
         [HttpPut]
-        public async Task<IActionResult> Update(UpdateCategoryDto categoryUpdate)
+        public async Task<IActionResult> Update([FromBody] UpdateCategoryModel categoryUpdateModel)
         {
             var isAdmin = User.FindFirstValue(ClaimTypes.Role).Contains(UserRoles.Admin);
             if (!isAdmin)
@@ -96,13 +102,20 @@ namespace WebAPI.Controllers.V1
             }
             else
             {
-                await _categoryService.GetCategoryById(categoryUpdate.Id);
-                if (categoryUpdate.CategoryName == null)
+                UpdateCategoryDto updateCategoryDto = new UpdateCategoryDto()
+                {
+                    Id = categoryUpdateModel.Id,
+                    CategoryName = categoryUpdateModel.CategoryName,
+                    Description = categoryUpdateModel.Description
+                };
+
+                await _categoryService.GetCategoryById(updateCategoryDto.Id);
+                if (updateCategoryDto.CategoryName == null)
                 {
                     return BadRequest(new Response(false, "Category isn't exists!"));
                 }
 
-                await _categoryService.UpdateCategory(categoryUpdate);
+                await _categoryService.UpdateCategory(updateCategoryDto);
                 return StatusCode(StatusCodes.Status200OK, new Response
                 {
                     Succeeded = true,

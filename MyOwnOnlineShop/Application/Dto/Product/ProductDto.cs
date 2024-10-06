@@ -8,6 +8,7 @@ namespace Application.Dto;
 public class ProductDto : IMap
 {
     public int Id { get; set; }
+    [DisplayProperty("Title of Product")]
     public string Title { get; set; }
     public string ShortDescription { get; set; }
     public string LongDescription { get; set; }

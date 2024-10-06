@@ -1,5 +1,6 @@
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using NLog.Web;
 using WebAPI.Installers;
 using WebAPI.MiddelWares;
 
@@ -14,6 +15,7 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
 
         builder.Services.AddSwaggerGen();
+        builder.Host.UseNLog();
 
         var app = builder.Build();
 
@@ -36,20 +38,20 @@ public class Program
         });
         app.MapHealthChecksUI();
         //app.UseHealthChecks("/health");
+        var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
 
         try
         {
-            // throw new Exception("Fatal error!");
             app.Run();
         }
         catch (Exception ex)
         {
-            // logger.Fatal(ex, "Application stopped because of exception");
+            logger.Fatal(ex, "Application stopped because of exception");
             throw;
         }
         finally
         {
-            //LogManager.Shutdown();
+            NLog.LogManager.Shutdown();
         }
     }
 }

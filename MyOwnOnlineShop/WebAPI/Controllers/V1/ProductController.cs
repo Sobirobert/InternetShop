@@ -3,6 +3,7 @@ using Application.Interfaces;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Security.Claims;
 using WebAPI.Attributes;
@@ -15,15 +16,8 @@ namespace WebAPI.Controllers.V1;
 [Route("api/[controller]")]
 [ApiVersion("1.0")]
 [ApiController]
-public class ProductController : ControllerBase
+public class ProductController(IProductService _productService, IMemoryCache _memoryCache, ILogger _logger) : ControllerBase
 {
-    private readonly IProductService _productService;
-
-    public ProductController(IProductService productService)
-    {
-        _productService = productService;
-    }
-
     [SwaggerOperation(Summary = "Retrieves sort fields")]
     [HttpGet("[action]")]
     public IActionResult GetSortFields()
@@ -39,8 +33,19 @@ public class ProductController : ControllerBase
         var validPaginationFilter = new PaginationFilter(paginationFilter.PageNumber, paginationFilter.PageSize);
         var validSortingFilter = new SortingFilter(sortingFilter.SortField, sortingFilter.Ascending);
 
-        var products = await _productService.GetAllProducts(validPaginationFilter.PageNumber, validPaginationFilter.PageSize,
+        var products = _memoryCache.Get<IEnumerable<ProductDto>>("Product");
+        if (products == null)
+        {
+            _logger.LogInformation("Fetching from server");
+            products = await _productService.GetAllProducts(validPaginationFilter.PageNumber, validPaginationFilter.PageSize,
                                                                  validSortingFilter.SortField, validSortingFilter.Ascending, filterBy);
+            _memoryCache.Set("product", products, TimeSpan.FromMinutes(1));
+        }
+        else
+        {
+            _logger.LogInformation("Fetching from cache");
+        }
+
         var totalRecords = await _productService.GetAllProductsCount(filterBy);
 
         return Ok(PaginationHelper.CreatePageResponse(products, validPaginationFilter, totalRecords));

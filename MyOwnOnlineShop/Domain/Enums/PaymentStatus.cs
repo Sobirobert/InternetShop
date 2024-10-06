@@ -3,8 +3,8 @@ namespace Domain.Enums;
 
 public enum PaymentStatus
 {
-    Unpaid = 0,
-    Paid = 1,
-    CashOnDelivery = 2,
-    InInstallments = 3
+    Unpaid = 1,
+    Paid = 2,
+    CashOnDelivery = 3,
+    InInstallments = 4
 }
