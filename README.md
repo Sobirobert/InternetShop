@@ -68,7 +68,7 @@ This project uses several NuGet packages to provide its functionality. Below is 
 - Refit (Refit) Simplifies the creation of REST API clients by turning interfaces into live HTTP services. Version: 6.0.94
 - HealthChecks ((AspNetCore.HealthChecks.UI, AspNetCore.HealthChecks.UI.Client, AspNetCore.HealthChecks.UI.InMemory.Storage, Microsoft.Extensions.Diagnostics.HealthChecks, Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore) Provides health check endpoints and a UI for monitoring the health of your application and its dependencies. Version: 8.0.1
 - NLog (NLog.Web.AspNetCore) A logging platform for .NET with rich log routing and management capabilities. Version: 5.3.11
- 
+                 
 Adding a New Feature
 To add a new feature, start by defining any necessary domain entities and interfaces in the Application and Domain projects. Implement the interfaces in the Infrastructure project. Finally, expose the functionality through controllers in the WebAPI project.
 
