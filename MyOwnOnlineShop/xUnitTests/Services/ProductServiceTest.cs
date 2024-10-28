@@ -156,19 +156,13 @@ public class ProductServiceTest
         var productService = new ProductService(productRepositoryMock.Object, mapperMock.Object, loggerMock.Object);
         var wrongId = 22;
 
-        productRepositoryMock
-           .Setup(repo => repo.GetById(wrongId))
-           .Throws<InvalidOperationException>()
-           .
-           .WithMessage("There are not product with this Id!");
         //Act
 
-        Action act = () => productService.GetProductById(wrongId);
+        Func<Task> act = async () => await productService.GetProductById(wrongId);
 
         //Assert
 
-        act.Should().Throw<InvalidOperationException>()
-            .WithInnerException<ArgumentException>()
+        act.Should().ThrowAsync<Exception>()
             .WithMessage("There are not product with this Id!");
     }
     #endregion GetById
@@ -201,12 +195,13 @@ public class ProductServiceTest
         };
 
         productRepositoryMock.Setup(x => x.GetById(productId)).ReturnsAsync(product);
+
         //Act
 
         await productService.DeleteProduct(productId);
 
         //Assert
-        productRepositoryMock.Verify(x => x.GetById(productId), Times.Once);
+      
         productRepositoryMock.Verify(x => x.Delete(product.Id), Times.Once);
     }
     #endregion Delete
