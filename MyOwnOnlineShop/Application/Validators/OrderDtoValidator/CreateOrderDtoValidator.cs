@@ -52,7 +52,7 @@ namespace Application.Validators.OrderDtoValidator
 
             #region Email
             RuleFor(x => x.Email).NotEmpty().WithMessage("Order can not have an empty Name.");
-            RuleFor(x => x.Email).Length(3, 12).WithMessage("The Name must be between 3 and 100 characters long");
+            RuleFor(x => x.Email).Length(3, 22).WithMessage("The Name must be between 3 and 100 characters long");
             #endregion Email
         }
     }

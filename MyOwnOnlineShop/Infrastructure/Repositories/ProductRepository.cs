@@ -27,8 +27,13 @@ public class ProductRepository : IProductRepository
 
     public async Task<Product> GetById(int id)
     {
-        return await _context.Products
+        var product = await _context.Products
             .SingleOrDefaultAsync(x => x.Id == id);
+        if (product == null)
+        {
+            throw new Exception("There are not product with this Id!");
+        }
+        return product;
     }
 
     public async Task<int> GetAllCount(string filterBy)
@@ -55,8 +60,13 @@ public class ProductRepository : IProductRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task Delete(Product product)
+    public async Task Delete(int id)
     {
+        var product = await GetById(id);
+        if (product == null)
+        {
+            throw new Exception("The Product with this id does not exist");
+        }
         _context.Products.Remove(product);
         await _context.SaveChangesAsync();
     }

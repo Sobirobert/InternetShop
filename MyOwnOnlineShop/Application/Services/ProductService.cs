@@ -49,13 +49,20 @@ public class ProductService : IProductService
     public async Task UpdateProduct(UpdateProductDto updateProduct)
     {
         var existingProduct = await _productRepository.GetById(updateProduct.Id);
+        if (existingProduct == null)
+        {
+            throw new Exception("The product with this id does not exist");
+        }
         var product = _mapper.Map(updateProduct, existingProduct);
         await _productRepository.Update(product);
     }
 
     public async Task DeleteProduct(int id)
     {
-        var product = await _productRepository.GetById(id);
-        await _productRepository.Delete(product);
+        if (id == null)
+        {
+            throw new Exception("The id couldn't be empty");
+        }
+        await _productRepository.Delete(id);
     }
 }

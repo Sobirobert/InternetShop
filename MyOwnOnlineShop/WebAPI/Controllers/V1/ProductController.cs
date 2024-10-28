@@ -7,6 +7,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Security.Claims;
 using WebAPI.Attributes;
+using WebAPI.Cache;
 using WebAPI.Filters;
 using WebAPI.Helpers;
 using WebAPI.Wrappers;
@@ -24,7 +25,7 @@ public class ProductController(IProductService _productService, IMemoryCache _me
     {
         return Ok(SortingHelper.GetSortFields().Select(x => x.Key));
     }
-
+    [Cached(600)]
     [SwaggerOperation(Summary = "Retrieves all Products")]
     [AllowAnonymous]
     [HttpGet]
