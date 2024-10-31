@@ -1,5 +1,4 @@
 ﻿using Application.Dto;
-using Application.Interfaces;
 using Application.Services;
 using AutoMapper;
 using Domain.Entities;
@@ -8,9 +7,8 @@ using Domain.Interfaces;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NUnit.Framework;
+using System.Collections.Generic;
 using Xunit;
-using Xunit.Sdk;
 
 namespace xUnitTests.Services;
 
@@ -78,6 +76,128 @@ public class ProductServiceTest
         productDto.CategoryId.Should().BeOneOf(1, 2, 3);
     }
     #endregion Add
+
+    #region GetAllProducts
+    [Fact]
+    public async Task WhenInvokingGetAllProductsItShouldReturnListOfProducts()
+    {
+        //Arrange
+
+        var productRepositoryMock = new Mock<IProductRepository>();
+        var mapperMock = new Mock<IMapper>();
+        var loggerMock = new Mock<ILogger<ProductService>>();
+        var productService = new ProductService(productRepositoryMock.Object, mapperMock.Object, loggerMock.Object);
+        int pageNumber = 1;
+        int pageSize = 1;
+        string sortField = null;
+        bool ascending = true;
+        string filterBy = null;
+        List<Product> productList = new List<Product>
+        {
+            new Product()
+            {
+                Id = 1,
+                Title = "SomeTitile",
+                ShortDescription = "Short text",
+                LongDescription = "Long text",
+                Details = "Some details",
+                YearOfProduction = 2003,
+                Amount = 1,
+                Price = 23.23,
+                IsProductOfTheWeek = false,
+                Type = (TypeProduct)1,
+                CategoryId = 1
+            },
+            new Product()
+    {
+                Id = 2,
+                Title = "SomeTitile2",
+                ShortDescription = "Short text 2",
+                LongDescription = "Long text 2",
+                Details = "Some details 2",
+                YearOfProduction = 2004,
+                Amount = 2,
+                Price = 24,
+                IsProductOfTheWeek = false,
+                Type = (TypeProduct)1,
+                CategoryId = 2
+            },
+            new Product()
+            {
+                Id = 3,
+                Title = "Some Titile 3",
+                ShortDescription = "Short text 3",
+                LongDescription = "Long text 3",
+                Details = "Some details 3",
+                YearOfProduction = 2005,
+                Amount = 3,
+                Price = 26,
+                IsProductOfTheWeek = false,
+                Type = (TypeProduct)1,
+                CategoryId = 1
+            }
+        };
+
+        List<ProductDto> productDtoList = new List<ProductDto>
+        {
+            new ProductDto()
+            {
+                Id = 1,
+                Title = "SomeTitile",
+                ShortDescription = "Short text",
+                LongDescription = "Long text",
+                Details = "Some details",
+                YearOfProduction = 2003,
+                Amount = 1,
+                Price = 23.23,
+                IsProductOfTheWeek = false,
+                Type = (TypeProduct)1,
+                CategoryId = 1
+            },
+            new ProductDto()
+    {
+                Id = 2,
+                Title = "SomeTitile2",
+                ShortDescription = "Short text 2",
+                LongDescription = "Long text 2",
+                Details = "Some details 2",
+                YearOfProduction = 2004,
+                Amount = 2,
+                Price = 24,
+                IsProductOfTheWeek = false,
+                Type = (TypeProduct)1,
+                CategoryId = 2
+            },
+            new ProductDto()
+            {
+                Id = 3,
+                Title = "Some Titile 3",
+                ShortDescription = "Short text 3",
+                LongDescription = "Long text 3",
+                Details = "Some details 3",
+                YearOfProduction = 2005,
+                Amount = 3,
+                Price = 26,
+                IsProductOfTheWeek = false,
+                Type = (TypeProduct)1,
+                CategoryId = 1
+            }
+        };
+
+        mapperMock.Setup(x => x.Map<IEnumerable<Product>>(productDtoList)).Returns(productList);
+        productRepositoryMock.Setup(x => x.GetAll(pageNumber, pageSize,sortField, ascending, filterBy)).ReturnsAsync(productList);
+
+
+        //Act
+
+        var existingProduct = await productService.GetAllProducts(pageNumber, pageSize, sortField, ascending, filterBy);
+
+        //Assert
+
+        productRepositoryMock.Verify(x => x.GetAll(pageNumber, pageSize, sortField, ascending, filterBy), Times.Once);
+        existingProduct.Should().NotBeNull(); 
+    }
+    #endregion GetAllProducts
 
     #region GetById
     [Fact]
@@ -201,8 +321,75 @@ public class ProductServiceTest
         await productService.DeleteProduct(productId);
 
         //Assert
-      
+
         productRepositoryMock.Verify(x => x.Delete(product.Id), Times.Once);
     }
     #endregion Delete
+
+    #region Update 
+
+    [Fact]
+    public async Task UpdateProductShouldUpdateExisitProduct()
+    {
+        //Arrange
+
+        var productRepositoryMock = new Mock<IProductRepository>();
+        var mapperMock = new Mock<IMapper>();
+        var loggerMock = new Mock<ILogger<ProductService>>();
+
+        var productService = new ProductService(productRepositoryMock.Object, mapperMock.Object, loggerMock.Object);
+
+        var product = new Product()
+        {
+            Id = 1,
+            Title = "SomeTitile",
+            ShortDescription = "Short text",
+            LongDescription = "Long text",
+            Details = "Some details",
+            YearOfProduction = 2003,
+            Amount = 1,
+            Price = 23.23,
+            IsProductOfTheWeek = false,
+            Type = (TypeProduct)1,
+            CategoryId = 1
+        };
+
+        var productDto = new UpdateProductDto()
+        {
+            Id = 1,
+            Title = "SomeTitile Update test",
+            ShortDescription = "Short text Update",
+            LongDescription = "Long text Update",
+            Details = "Some details Update",
+            YearOfProduction = 2004,
+            Amount = 5,
+            Price = 35,
+            IsProductOfTheWeek = true,
+            Type = (TypeProduct)1,
+        };
+
+        mapperMock.Setup(x => x.Map(productDto, product)).Returns(new Product()
+        {
+            Title = productDto.Title,
+            ShortDescription = productDto.ShortDescription,
+            LongDescription = productDto.LongDescription,
+            Details = productDto.Details,
+            YearOfProduction = productDto.YearOfProduction,
+            Amount = productDto.Amount,
+            Price = productDto.Price,
+            IsProductOfTheWeek = productDto.IsProductOfTheWeek,
+            Type = productDto.Type,
+        });
+
+        productRepositoryMock.Setup(x => x.GetById(productDto.Id)).ReturnsAsync(product);
+
+        //Act
+
+        await productService.UpdateProduct(productDto);
+
+        //Assert
+
+        productRepositoryMock.Verify(x => x.Update(It.IsAny<Product>()), Times.Once);
+    }
+    #endregion Update
 }
