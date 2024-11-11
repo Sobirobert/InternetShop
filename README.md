@@ -1,16 +1,16 @@
-Online Shop
-Description
+# Online Shop
+## Description
 The application is designed to manage a small online store for a small business. It allows users to add products along with attachments and photos. In the online store, custom categories can be created with descriptions. Customers can register and then place their orders by providing their home address and other contact details.
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-Requirements:
+## Requirements:
 
 - .NET 8 SDK
 - SQL Server
 - An IDE such as Visual Studio 2022 or Visual Studio Code
 
-Installation
+## Installation
 To run the application, follow these steps:
 
  Clone the repository to your local machine.
@@ -34,19 +34,19 @@ Features
 - Data Caching: Ensuring greater application fluidity.
 - SDK: The online store SDK provides a comprehensive interface for integration with the store platform, allowing developers to easily implement user authentication, product management, and image uploading in their applications.
 
-Planned Features
+## Planned Features
 To further improve and make the online store useful, I plan to introduce the following features:
 - integrate payments to orders,
 - build an order invoicing system,
 - introduce a newsletter to advertise products,
 
-Development
+## Development
 This solution is based on the principles of clean architecture, dividing the concerns into different projects: Application: contains the basic application logic and interfaces.
 Domain: includes domain entities and enums.
 Infrastructure: handles data access and external services.
 WebAPI: application entry point, hosting the Web API.
 
-Dependencies
+## Dependencies
 
 This project uses several NuGet packages to provide its functionality. Below is a list of key packages and their versions:
 - AutoMapper (AutoMapper, AutoMapper.Extensions.Microsoft.DependencyInjection): A convention-based object-object mapper. Version: 13.0.1
@@ -69,7 +69,7 @@ This project uses several NuGet packages to provide its functionality. Below is 
 - HealthChecks ((AspNetCore.HealthChecks.UI, AspNetCore.HealthChecks.UI.Client, AspNetCore.HealthChecks.UI.InMemory.Storage, Microsoft.Extensions.Diagnostics.HealthChecks, Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore) Provides health check endpoints and a UI for monitoring the health of your application and its dependencies. Version: 8.0.1
 - NLog (NLog.Web.AspNetCore) A logging platform for .NET with rich log routing and management capabilities. Version: 5.3.11
                  
-Adding a New Feature
+## Adding a New Feature
 To add a new feature, start by defining any necessary domain entities and interfaces in the Application and Domain projects. Implement the interfaces in the Infrastructure project. Finally, expose the functionality through controllers in the WebAPI project.
 
 Visit the local server (default address http://localhost:5000 or specified in the console output) in your browser to use the application.
