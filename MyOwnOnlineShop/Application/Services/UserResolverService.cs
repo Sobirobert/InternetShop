@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
 namespace Application.Services;
-
 public class UserResolverService
 {
     private readonly IHttpContextAccessor _context;

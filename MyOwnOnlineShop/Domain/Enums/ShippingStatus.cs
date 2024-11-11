@@ -1,5 +1,4 @@
 ﻿namespace Domain.Enums;
-
 public enum ShippingStatus
 {
     NotSent = 1,

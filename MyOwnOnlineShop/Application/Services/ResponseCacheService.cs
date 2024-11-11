@@ -3,7 +3,6 @@ using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
 
 namespace Application.Services;
-
 public class ResponseCacheService : IResponseCacheService
 {
     private readonly IDistributedCache _distributedCache;

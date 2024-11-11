@@ -6,7 +6,6 @@ using Domain.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Services;
-
 public class ProductService : IProductService
 {
     private readonly IProductRepository _productRepository;

@@ -1,5 +1,4 @@
 ﻿namespace Infrastructure.Identity;
-
 public static class UserRoles
 {
     public const string Admin = "Admin";

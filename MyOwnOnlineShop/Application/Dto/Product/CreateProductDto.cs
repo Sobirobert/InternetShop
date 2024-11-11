@@ -4,7 +4,6 @@ using Domain.Entities;
 using Domain.Enums;
 
 namespace Application.Dto;
-
 public class CreateProductDto : IMap
 {
     public string Title { get; set; }

@@ -4,7 +4,6 @@ using Domain.Entities;
 using Domain.Enums;
 
 namespace Application.Dto;
-
 public class UpdateProductDto : IMap
 {
     public int Id { get; set; }

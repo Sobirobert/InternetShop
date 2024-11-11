@@ -1,5 +1,4 @@
 ﻿namespace WebAPI.Wrappers;
-
 public class PagedResponse<T> : Response<T>
 {
     public int PageNumber { get; set; }

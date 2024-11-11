@@ -1,5 +1,4 @@
 ﻿namespace WebAPI.Models;
-
 public class RegisterModel
 {
     public string NameUser { get; set; }

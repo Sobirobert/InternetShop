@@ -1,5 +1,4 @@
 ﻿namespace WebAPI.Wrappers;
-
 public class AuthSuccessResponse
 {
     public string Token { get; set; }

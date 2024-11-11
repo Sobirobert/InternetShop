@@ -3,7 +3,6 @@ using AutoMapper;
 using Domain.Entities;
 
 namespace Application.Dto.CategoryDto;
-
 public class UpdateCategoryDto : IMap
 {
     public int Id { get; set; }

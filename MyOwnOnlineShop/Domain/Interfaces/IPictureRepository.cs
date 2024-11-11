@@ -1,7 +1,6 @@
 ﻿using Domain.Entities;
 
 namespace Domain.Interfaces;
-
 public interface IPictureRepository
 {
     Task<IEnumerable<Picture>> GetByProductId(int postId);

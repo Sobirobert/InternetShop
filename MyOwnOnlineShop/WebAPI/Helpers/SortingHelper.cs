@@ -1,5 +1,4 @@
 ﻿namespace WebAPI.Helpers;
-
 public class SortingHelper
 {
     public static KeyValuePair<string, string>[] GetSortFields()

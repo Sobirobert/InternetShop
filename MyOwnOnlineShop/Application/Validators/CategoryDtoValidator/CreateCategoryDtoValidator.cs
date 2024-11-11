@@ -1,30 +1,23 @@
 ﻿using Application.Dto.CategoryDto;
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Application.Validators.CategoryDtoValidator
+namespace Application.Validators.CategoryDtoValidator;
+public class CreateCategoryDtoValidator : AbstractValidator<CreateCategoryDto>
 {
-    public class CreateCategoryDtoValidator : AbstractValidator<CreateCategoryDto>
+    public CreateCategoryDtoValidator()
     {
-        public CreateCategoryDtoValidator()
-        {
-            #region CategoryName
+        #region CategoryName
 
-            RuleFor(x => x.CategoryName).NotEmpty().WithMessage("Category name can not have an empty title.");
-            RuleFor(x => x.CategoryName).Length(3, 100).WithMessage("The Category name must be between 3 and 100 characters long");
+        RuleFor(x => x.CategoryName).NotEmpty().WithMessage("The Category name cannot be empty.");
+        RuleFor(x => x.CategoryName).Length(3, 100).WithMessage("The Category name must be between 3 and 100 characters long.");
 
-            #endregion CategoryName
+        #endregion CategoryName
 
-            #region Description
+        #region Description
 
-            RuleFor(x => x.Description).NotEmpty().WithMessage("The Description of a Category can not have an empty title.");
-            RuleFor(x => x.Description).Length(3, 300).WithMessage("The Description of a Category name must be between 3 and 100 characters long");
+        RuleFor(x => x.Description).NotEmpty().WithMessage("The Description of a Category name cannot be empty.");
+        RuleFor(x => x.Description).Length(3, 300).WithMessage("The category description must be between 3 and 100 characters long.");
 
-            #endregion Description
-        }
+        #endregion Description
     }
 }

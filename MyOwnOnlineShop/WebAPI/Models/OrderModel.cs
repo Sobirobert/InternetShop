@@ -1,6 +1,4 @@
-﻿
-namespace WebAPI.Models;
-
+﻿namespace WebAPI.Models;
 public class OrderModel
 {
     public string FirstName { get; set; }

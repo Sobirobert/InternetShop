@@ -3,7 +3,6 @@ using AutoMapper;
 using Domain.Entities;
 
 namespace Application.Dto.OrderDto;
-
 public class OrderItemDto : IMap
 {
     public int OrderItemId { get; set; }

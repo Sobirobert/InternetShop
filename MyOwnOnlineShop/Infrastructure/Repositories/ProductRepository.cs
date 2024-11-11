@@ -5,7 +5,6 @@ using Infrastructure.ExtensionMethods;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
-
 public class ProductRepository : IProductRepository
 {
     private readonly OnlineShopDBContext _context;

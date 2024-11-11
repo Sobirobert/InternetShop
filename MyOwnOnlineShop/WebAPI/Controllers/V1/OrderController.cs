@@ -1,5 +1,4 @@
-﻿
-using Application.Dto.OrderDto;
+﻿using Application.Dto.OrderDto;
 using Application.Interfaces;
 using Domain.Enums;
 using Infrastructure.Identity;
@@ -11,7 +10,6 @@ using WebAPI.Attributes;
 using WebAPI.Filters;
 using WebAPI.Helpers;
 using WebAPI.Models;
-using WebAPI.SwaggerExamples.Requests;
 using WebAPI.Wrappers;
 
 namespace WebAPI.Controllers.V1;

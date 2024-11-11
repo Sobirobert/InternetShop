@@ -1,7 +1,6 @@
 ﻿using System.Linq.Expressions;
 
 namespace Infrastructure.ExtensionMethods;
-
 public static class ExtensionMethods
 {
     public static IQueryable<T> OrderByPropertyName<T>(this IQueryable<T> q, string SortField, bool Ascending)

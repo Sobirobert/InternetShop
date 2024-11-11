@@ -2,7 +2,6 @@
 using WebAPI.Wrappers;
 
 namespace WebAPI.SwaggerExamples.Responses.IdentityResponses;
-
 public class RegisterResponseStatus500Example : IExamplesProvider<RegisterResponseStatus500>
 {
     public RegisterResponseStatus500 GetExamples()

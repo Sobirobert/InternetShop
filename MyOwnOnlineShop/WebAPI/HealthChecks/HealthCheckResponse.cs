@@ -1,5 +1,4 @@
 ﻿namespace WebAPI.HealthChecks;
-
 public class HealthCheckResponse
 {
     public string Status { get; set; }

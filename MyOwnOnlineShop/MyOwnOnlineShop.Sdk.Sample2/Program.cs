@@ -1,6 +1,5 @@
 ﻿using MyOwnOnlineShop.Contracts.Enums;
 using MyOwnOnlineShop.Contracts.Request;
-using MyOwnOnlineShop.Contracts.Responses;
 using Refit;
 
 namespace MyOwnOnlineShop.Sdk.Sample;
@@ -15,7 +14,6 @@ public class Program
         var onlineShopApi = RestService.For<IMyOwnOnlineShopApi>("https://localhost:44307/", new RefitSettings
         {
             AuthorizationHeaderValueGetter = (request, cancellationToken) => Task.FromResult(cachedToken)
-            //AuthorizationHeaderValueGetter = () => Task.FromResult(cachedToken)
         });
 
         var register = await identityApi.RegisterAdminAsync(new RegisterModel()
@@ -43,11 +41,9 @@ public class Program
             Amount = 1,
             Price = 20,
             IsProductOfTheWeek = false,
-            Type = (TypeProduct)2,
+            TypeProduct = (TypeProduct)2,
             CategoryId = 1,
         });
-
-
 
         var retrievedProduct = await onlineShopApi.GetProductAsync(createdProduct.Content.Data.Id);
 
@@ -62,7 +58,7 @@ public class Program
             Amount = 1,
             Price = 20,
             IsProductOfTheWeek = true,
-            Type = (TypeProduct)2,
+            TypeProduct = (TypeProduct)2,
         });
 
         await onlineShopApi.DeleteProductAsync(retrievedProduct.Content.Data.Id);

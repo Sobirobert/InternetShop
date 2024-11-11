@@ -1,5 +1,4 @@
 ﻿namespace WebAPI.Wrappers;
-
 public class Response<T> : Response
 {
     public T Data { get; set; }

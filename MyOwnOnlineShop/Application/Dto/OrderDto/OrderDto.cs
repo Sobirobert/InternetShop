@@ -4,7 +4,6 @@ using Domain.Entities;
 using Domain.Enums;
 
 namespace Application.Dto.OrderDto;
-
 public class OrderDto : IMap
 {
     public int OrderId { get; set; }

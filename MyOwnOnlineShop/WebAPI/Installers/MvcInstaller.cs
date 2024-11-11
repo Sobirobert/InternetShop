@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using WebAPI.MiddelWares;
 
 namespace WebAPI.Installers;
-
 public class MvcInstaller : IInstaller
 {
     public void InstallServices(IServiceCollection services, IConfiguration Configuration)

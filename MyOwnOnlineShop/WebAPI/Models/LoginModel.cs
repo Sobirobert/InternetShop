@@ -1,5 +1,4 @@
 ﻿namespace WebAPI.Models;
-
 public class LoginModel
 {
     public string UserNick { get; set; }

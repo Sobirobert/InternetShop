@@ -1,5 +1,4 @@
 ﻿namespace WebAPI.Filters;
-
 public class PaginationFilter
 {
     private const int maxPageSize = 10;

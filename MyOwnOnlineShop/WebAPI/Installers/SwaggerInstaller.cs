@@ -4,7 +4,6 @@ using Swashbuckle.AspNetCore.Filters;
 using System.Reflection;
 
 namespace WebAPI.Installers;
-
 public class SwaggerInstaller : IInstaller
 {
     public void InstallServices(IServiceCollection services, IConfiguration Configuration)

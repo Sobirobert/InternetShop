@@ -1,8 +1,6 @@
-﻿using Application.Dto;
-using Application.Dto.OrderDto;
+﻿using Application.Dto.OrderDto;
 
 namespace Application.Interfaces;
-
 public interface IOrderService
 {
     Task<OrderDto> CreateOrder(CreateOrderDto order);

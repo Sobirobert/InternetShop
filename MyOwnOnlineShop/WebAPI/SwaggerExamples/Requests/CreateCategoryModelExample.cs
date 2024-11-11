@@ -1,17 +1,15 @@
 ﻿using Swashbuckle.AspNetCore.Filters;
 using WebAPI.Models;
 
-namespace WebAPI.SwaggerExamples.Requests
+namespace WebAPI.SwaggerExamples.Requests;
+public class CreateCategoryModelExample : IExamplesProvider<CreateCategoryModel>
 {
-    public class CreateCategoryModelExample : IExamplesProvider<CreateCategoryModel>
+    public CreateCategoryModel GetExamples()
     {
-        public CreateCategoryModel GetExamples()
+        return new CreateCategoryModel
         {
-            return new CreateCategoryModel
-            {
-                CategoryName = "AGD",
-                Description = "Urządzenia AGD róznych Firm. Wejdź sprawdż ! NISKA CENA !!"
-            };
-        }
+            CategoryName = "AGD",
+            Description = "Urządzenia AGD róznych Firm. Wejdź sprawdż ! NISKA CENA !!"
+        };
     }
 }

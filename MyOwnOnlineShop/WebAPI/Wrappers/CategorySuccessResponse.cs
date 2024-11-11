@@ -1,6 +1,4 @@
-﻿namespace WebAPI.Wrappers
+﻿namespace WebAPI.Wrappers;
+public class CategorySuccessResponse
 {
-    public class CategorySuccessResponse
-    {
-    }
 }

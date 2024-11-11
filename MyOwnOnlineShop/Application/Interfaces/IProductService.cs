@@ -1,7 +1,6 @@
 ﻿using Application.Dto;
 
 namespace Application.Interfaces;
-
 public interface IProductService
 {
     Task<IEnumerable<ProductDto>> GetAllProducts(int pageNumber, int pageSize, string sortField, bool ascending, string filterBy);

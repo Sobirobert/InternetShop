@@ -282,7 +282,7 @@ public class ProductServiceTest
 
         //Assert
 
-        act.Should().ThrowAsync<Exception>()
+        act.Should().ThrowAsync<ArgumentException>()
             .WithMessage("There are not product with this Id!");
     }
     #endregion GetById

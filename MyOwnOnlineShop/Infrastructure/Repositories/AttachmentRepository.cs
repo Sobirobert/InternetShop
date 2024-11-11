@@ -4,7 +4,6 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
-
 public class AttachmentRepository : IAttachmentRepository
 {
     private readonly OnlineShopDBContext _context;

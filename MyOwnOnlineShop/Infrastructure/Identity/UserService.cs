@@ -1,5 +1,4 @@
 ﻿namespace Infrastructure.Identity;
-
 public class UserService
 {
     public bool IsUserEmailConfirmed(ApplicationUser applicationUser)

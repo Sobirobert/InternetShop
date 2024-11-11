@@ -1,7 +1,6 @@
 ﻿using WebAPI.Wrappers;
 
 namespace WebAPI.MiddelWares;
-
 public class ErrorHandlingMiddelware : IMiddleware
 {
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)

@@ -49,7 +49,7 @@ public class CategoryController : ControllerBase
         {
             return NotFound();
         }
-        category.totalRecords = await _categoryService.GetProductsCount(id);
+        category.TotalRecords = await _categoryService.GetProductsCount(id);
         return Ok(new Response<CategoryDto>(category));
     }
 

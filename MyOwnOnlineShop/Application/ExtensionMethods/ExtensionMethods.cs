@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
 namespace Application.ExtensionMethods;
-
 public static class ExtensionMethods
 {
     public static byte[] GetBytes(this IFormFile formFile)

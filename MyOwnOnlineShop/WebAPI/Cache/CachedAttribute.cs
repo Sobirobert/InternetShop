@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using System.Text;
 
 namespace WebAPI.Cache;
-
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class CachedAttribute : Attribute, IAsyncActionFilter
 {
@@ -14,6 +13,7 @@ public class CachedAttribute : Attribute, IAsyncActionFilter
     {
         _timeToLiveSeconds = timeToLiveSeconds;
     }
+
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
         var cacheSettings = context.HttpContext.RequestServices.GetRequiredService<RedisCacheSettings>();

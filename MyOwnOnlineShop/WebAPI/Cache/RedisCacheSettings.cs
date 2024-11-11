@@ -1,8 +1,6 @@
-﻿namespace WebAPI.Cache
+﻿namespace WebAPI.Cache;
+public class RedisCacheSettings
 {
-    public class RedisCacheSettings
-    {
-        public bool Enabled { get; set; }
-        public string? ConnectionString { get; set; }
-    }
+    public bool Enabled { get; set; }
+    public string? ConnectionString { get; set; }
 }

@@ -2,7 +2,6 @@
 using WebAPI.Wrappers;
 
 namespace WebAPI.Helpers;
-
 public class PaginationHelper
 {
     public static PagedResponse<IEnumerable<T>> CreatePageResponse<T>(IEnumerable<T> pagedData, PaginationFilter validPaginationFilter, int totalRecords)

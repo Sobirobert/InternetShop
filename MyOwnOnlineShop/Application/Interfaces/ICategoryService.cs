@@ -1,7 +1,6 @@
 ﻿using Application.Dto.CategoryDto;
 
 namespace Application.Interfaces;
-
 public interface ICategoryService
 {
     Task<int> GetProductsCount(int id);

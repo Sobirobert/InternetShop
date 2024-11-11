@@ -1,9 +1,7 @@
-﻿
-using Infrastructure.Data;
+﻿using Infrastructure.Data;
 using WebAPI.HealthChecks;
 
 namespace WebAPI.Installers;
-
 public class HealthChecksInstaller : IInstaller
 {
     public void InstallServices(IServiceCollection services, IConfiguration Configuration)

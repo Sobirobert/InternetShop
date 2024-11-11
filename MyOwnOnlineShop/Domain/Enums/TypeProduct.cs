@@ -1,9 +1,7 @@
-﻿namespace Domain.Enums
+﻿namespace Domain.Enums;
+public enum TypeProduct
 {
-    public enum TypeProduct
-    {
-        New = 1,
-        Used = 2,
-        Damaged = 3
-    }
+    New = 1,
+    Used = 2,
+    Damaged = 3
 }

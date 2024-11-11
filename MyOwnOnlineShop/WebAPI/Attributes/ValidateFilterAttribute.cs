@@ -5,7 +5,6 @@ using System.Reflection;
 using WebAPI.Wrappers;
 
 namespace WebAPI.Attributes;
-
 public class ValidateFilterAttribute : ResultFilterAttribute
 {
     public override void OnResultExecuting(ResultExecutingContext context)

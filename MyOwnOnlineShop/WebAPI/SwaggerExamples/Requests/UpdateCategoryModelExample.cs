@@ -1,18 +1,16 @@
 ﻿using Swashbuckle.AspNetCore.Filters;
 using WebAPI.Models;
 
-namespace WebAPI.SwaggerExamples.Requests
+namespace WebAPI.SwaggerExamples.Requests;
+public class UpdateCategoryModelExample : IExamplesProvider<UpdateCategoryModel>
 {
-    public class UpdateCategoryModelExample : IExamplesProvider<UpdateCategoryModel>
+    public UpdateCategoryModel GetExamples()
     {
-        public UpdateCategoryModel GetExamples()
+        return new UpdateCategoryModel
         {
-            return new UpdateCategoryModel
-            {
-                Id = 1,
-                CategoryName = "AGD",
-                Description = "Nowy Opis"
-            };
-        }
+            Id = 1,
+            CategoryName = "AGD",
+            Description = "Nowy Opis"
+        };
     }
 }

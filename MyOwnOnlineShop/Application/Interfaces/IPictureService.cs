@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 
 namespace Application.Interfaces;
-
 public interface IPictureService
 {
     Task<PictureDto> AddPictureToProduct(int productId, IFormFile file);

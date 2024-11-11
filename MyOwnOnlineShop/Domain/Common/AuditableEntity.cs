@@ -1,5 +1,4 @@
 ﻿namespace Domain.Common;
-
 public abstract class AuditableEntity
 {
     public DateTime Created { get; set; }

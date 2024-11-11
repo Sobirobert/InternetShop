@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data;
-
 public class OnlineShopDBContext : IdentityDbContext<ApplicationUser>
 {
     private readonly UserResolverService _userResolverService;
@@ -19,7 +18,7 @@ public class OnlineShopDBContext : IdentityDbContext<ApplicationUser>
 
     public DbSet<Product> Products { get; set; }
     public DbSet<Picture> Pictures { get; set; }
-    public DbSet<Domain.Entities.Attachment> Attachments { get; set; }
+    public DbSet<Attachment> Attachments { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }

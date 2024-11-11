@@ -2,7 +2,6 @@
 using WebAPI.Wrappers;
 
 namespace WebAPI.SwaggerExamples.Responses.CategoryResponses;
-
 public class CategoryCreateResponseStatus200Example : IExamplesProvider<CategoryCreateResponseStatus200>
 {
     public CategoryCreateResponseStatus200 GetExamples()

@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Http;
 using System.Text;
 
 namespace Application.Services;
-
 public class PictureService : IPictureService
 {
     private readonly IPictureRepository _pictureRepository;

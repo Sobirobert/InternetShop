@@ -2,7 +2,6 @@
 using Application.Services.Emails;
 
 namespace WebAPI.Installers;
-
 public class FluentEmailInstaller : IInstaller
 {
     public void InstallServices(IServiceCollection services, IConfiguration Configuration)

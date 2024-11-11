@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace WebAPI.HealthChecks;
-
 public class ResponsTimeHealthCheck : IHealthCheck
 {
     private Random rnd = new Random();

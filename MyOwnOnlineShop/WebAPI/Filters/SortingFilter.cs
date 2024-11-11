@@ -1,7 +1,6 @@
 ﻿using WebAPI.Helpers;
 
 namespace WebAPI.Filters;
-
 public class SortingFilter
 {
     public string SortField { get; set; }

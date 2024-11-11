@@ -2,7 +2,6 @@
 using WebAPI.Models;
 
 namespace WebAPI.SwaggerExamples.Requests;
-
 public class RegisterModelExample : IExamplesProvider<RegisterModel>
 {
     public RegisterModel GetExamples()

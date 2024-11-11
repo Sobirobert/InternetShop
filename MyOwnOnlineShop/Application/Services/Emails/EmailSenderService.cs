@@ -7,12 +7,11 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 
 namespace Application.Services.Emails;
-
 public class EmailSenderService : IEmailSenderService
 {
     private readonly IFluentEmail _email;
     private readonly ILogger _logger;
-    private const string TemplatePath = "Application.Services.Emails.Templates.{0}.cshtml";
+    private const string templatePath = "Application.Services.Emails.Templates.{0}.cshtml";
 
     public EmailSenderService(IFluentEmail email, ILogger<EmailSenderService> logger)
     {
@@ -24,7 +23,7 @@ public class EmailSenderService : IEmailSenderService
     {
         var result = await _email.To(to)
             .Subject(subject)
-            .UsingTemplateFromEmbedded(string.Format(TemplatePath, template), ToExpando(model), GetType().Assembly)
+            .UsingTemplateFromEmbedded(string.Format(templatePath, template), ToExpando(model), GetType().Assembly)
             .SendAsync();
 
         if (!result.Successful)

@@ -13,5 +13,5 @@ public class UpdateProductDto
     public double Price { get; set; }
     public int Amount { get; set; }
     public bool IsProductOfTheWeek { get; set; }
-    public TypeProduct Type { get; set; }
+    public TypeProduct TypeProduct { get; set; }
 }

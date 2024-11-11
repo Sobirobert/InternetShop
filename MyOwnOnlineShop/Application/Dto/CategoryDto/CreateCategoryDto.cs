@@ -1,8 +1,8 @@
 ﻿using Application.Mappings;
 using AutoMapper;
+using Domain.Entities;
 
 namespace Application.Dto.CategoryDto;
-
 public class CreateCategoryDto : IMap
 {
     public string CategoryName { get; set; }
@@ -10,6 +10,6 @@ public class CreateCategoryDto : IMap
 
     public void Mapping(Profile profile)
     {
-        profile.CreateMap<CreateCategoryDto, Domain.Entities.Category>();
+        profile.CreateMap<CreateCategoryDto, Category>();
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Domain.Entities;
 
 namespace Domain.Interfaces;
-
 public interface IProductRepository
 {
     Task<IEnumerable<Product>> GetAll(int pageNumber, int pageSize, string sortField, bool ascending, string filterBy);

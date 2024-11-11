@@ -3,7 +3,6 @@ using Application.Services;
 using WebAPI.Cache;
 
 namespace WebAPI.Installers;
-
 public class CacheInstaller : IInstaller
 {
     public void InstallServices(IServiceCollection services, IConfiguration configuration)

@@ -6,7 +6,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 namespace WebAPI.Installers;
-
 public class IdentityInstaller : IInstaller
 {
     public void InstallServices(IServiceCollection services, IConfiguration Configuration)

@@ -1,7 +1,6 @@
 ﻿using Domain.Entities;
 
 namespace Domain.Interfaces;
-
 public interface IAttachmentRepository
 {
     Task<IEnumerable<Attachment>> GetByProductId(int productId);

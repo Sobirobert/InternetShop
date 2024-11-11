@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities;
-
 [Table("Category")]
 public class Category : AuditableEntity
 {
@@ -18,5 +17,5 @@ public class Category : AuditableEntity
     [Required]
     public string Description { get; set; }
 
-    public int totalRecords { get; set; }
+    public int TotalRecords { get; set; }
 }

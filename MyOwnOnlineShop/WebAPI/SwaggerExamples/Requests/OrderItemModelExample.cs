@@ -1,18 +1,16 @@
 ﻿using Swashbuckle.AspNetCore.Filters;
 using WebAPI.Models;
 
-namespace WebAPI.SwaggerExamples.Requests
+namespace WebAPI.SwaggerExamples.Requests;
+public class OrderItemModelExample : IExamplesProvider<OrderItemModel>
 {
-    public class OrderItemModelExample : IExamplesProvider<OrderItemModel>
+    public OrderItemModel GetExamples()
     {
-        public OrderItemModel GetExamples()
+        return new OrderItemModel
         {
-            return new OrderItemModel
-            {
-                orderId = 1,
-                productId = 1,
-                amount = 3,
-            };
-        }
+            orderId = 1,
+            productId = 1,
+            amount = 3,
+        };
     }
 }

@@ -1,5 +1,4 @@
 ﻿namespace WebAPI.Installers;
-
 public static class InstallerExtensions
 {
     public static void InstallServicesInAssembly(this IServiceCollection services, IConfiguration configuration)
