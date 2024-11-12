@@ -69,7 +69,36 @@ This project uses several NuGet packages to provide its functionality. Below is 
 - HealthChecks ((AspNetCore.HealthChecks.UI, AspNetCore.HealthChecks.UI.Client, AspNetCore.HealthChecks.UI.InMemory.Storage, Microsoft.Extensions.Diagnostics.HealthChecks, Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore) Provides health check endpoints and a UI for monitoring the health of your application and its dependencies. Version: 8.0.1
 - NLog (NLog.Web.AspNetCore) A logging platform for .NET with rich log routing and management capabilities. Version: 5.3.11
                  
-## Adding a New Feature
-To add a new feature, start by defining any necessary domain entities and interfaces in the Application and Domain projects. Implement the interfaces in the Infrastructure project. Finally, expose the functionality through controllers in the WebAPI project.
+## Key Features and Functionality
+1. Product Management
+
+    Add, Remove, Retrieve Products: The backend allows the addition, deletion, and retrieval of product objects from an SQL server. Each product entry can include details like name, description, price, stock quantity, and SKU.
+    Image Management: For each product, users can upload, remove, and manage images stored as byte files. These images are linked to the product record in the database, enabling a seamless visual representation of the inventory.
+    Attachments: Products can have additional files or documents attached, such as product manuals or datasheets, which are managed alongside product images.
+
+2. Category Management
+
+    Create and Manage Categories: The system allows the creation of product categories, enabling an organized structure within the database. Categories can be added or removed, and each product can be associated with one or more categories.
+    Hierarchical Support: Categories can be nested to form a hierarchy, allowing for sub-categories and facilitating a more organized product catalog structure.
+
+3. Order Processing
+
+    Order Creation: Orders are created based on cart items selected by users and include detailed order information, such as product IDs, quantities, prices, and any applicable discounts.
+    Shipping Information: Each order record includes necessary shipping details, such as the recipient’s name, address, contact information, and chosen delivery method.
+    Order Status Management: The system tracks the status of each order (e.g., pending, processed, shipped, delivered) to provide real-time updates for users and administrators.
+
+4. User Management
+
+    User Registration and Accounts: The backend supports user account creation, allowing customers to register and store their information securely.
+    Authentication and Authorization: User roles and permissions can be managed within the system, ensuring secure access to restricted features (e.g., admin rights for product management).
+    Account Management: Users can update their profile information, such as contact details and password, directly through the platform.
+
+5. Database and Server-Side Logic
+
+    SQL Database Integration: All data, including products, categories, orders, and users, are stored and managed in an SQL database, ensuring efficient data retrieval and transactional integrity.
+    API Endpoints: The backend exposes a set of RESTful API endpoints to interact with the frontend, covering all functionalities like adding/removing products, managing images, creating orders, and user registration.
+    Data Validation and Error Handling: Input data is validated before committing to the database, with error handling in place to manage invalid inputs and server issues.
+
+This backend structure offers a comprehensive solution for managing an e-commerce platform’s essential data operations and functionalities. It is designed to be scalable and secure, providing a solid foundation for online retail businesses.
 
 Visit the local server (default address http://localhost:5000 or specified in the console output) in your browser to use the application.
