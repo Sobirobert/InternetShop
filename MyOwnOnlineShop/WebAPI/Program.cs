@@ -16,12 +16,14 @@ public class Program
 
         builder.Services.AddSwaggerGen();
         builder.Host.UseNLog();
-
+        builder.Configuration
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddEnvironmentVariables()
+            .AddCommandLine(args);
         var app = builder.Build();
 
         if (app.Environment.IsDevelopment())
         {
-            //app.UseDeveloperExceptionPage();
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI v1"));
         }
@@ -37,7 +39,6 @@ public class Program
             ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
         });
         app.MapHealthChecksUI();
-        //app.UseHealthChecks("/health");
         var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
 
         try

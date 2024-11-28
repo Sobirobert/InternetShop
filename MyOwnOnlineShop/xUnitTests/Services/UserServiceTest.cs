@@ -2,11 +2,10 @@
 using Xunit;
 
 namespace xUnitTests.Services;
-
 public class UserServiceTest
 {
     [Fact]
-    public void IsUserConfimedShouldReturnTrueWhenInputIsTrue()
+    public void IsUserConfirmedShouldReturnTrueWhenInputIsTrue()
     {
 
         //Arrange
@@ -26,7 +25,7 @@ public class UserServiceTest
     }
 
     [Fact]
-    public void IsUserConfimedShouldReturnFalseWhenInputIsFalse()
+    public void IsUserConfirmedShouldReturnFalseWhenInputIsFalse()
     {
 
         //Arrange

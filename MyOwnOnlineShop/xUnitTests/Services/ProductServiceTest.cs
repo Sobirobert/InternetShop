@@ -7,11 +7,9 @@ using Domain.Interfaces;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System.Collections.Generic;
 using Xunit;
 
 namespace xUnitTests.Services;
-
 public class ProductServiceTest
 {
     #region Add
@@ -79,7 +77,7 @@ public class ProductServiceTest
 
     #region GetAllProducts
     [Fact]
-    public async Task WhenInvokingGetAllProductsItShouldReturnListOfProducts()
+    public async Task WhenInvokingGetAllProducts_ItShouldReturnListOfProducts()
     {
         //Arrange
 
@@ -201,7 +199,7 @@ public class ProductServiceTest
 
     #region GetById
     [Fact]
-    public async Task WhenInvokingGetProductByIdItShouldInvokeGetOnProductRepository()
+    public async Task WhenInvokingGetProductById_ItShouldReturnProduct()
     {
         //Arrange
 
@@ -266,7 +264,7 @@ public class ProductServiceTest
     }
 
     [Fact]
-    public async Task GetProductByIdShouldThrowExceptionWhenProductDoesNotExist()
+    public async Task GetProductById_ShouldThrowException_WhenProductDoesNotExist()
     {
         //Arrange
 
@@ -329,7 +327,7 @@ public class ProductServiceTest
     #region Update 
 
     [Fact]
-    public async Task UpdateProductShouldUpdateExisitProduct()
+    public async Task UpdateProduct_ShouldUpdateExistingProduct()
     {
         //Arrange
 
