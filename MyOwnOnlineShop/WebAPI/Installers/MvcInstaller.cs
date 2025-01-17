@@ -3,8 +3,10 @@ using Application.Services;
 using Application.Validators.ProductDto;
 using FluentValidation.AspNetCore;
 using Infrastructure;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using System.Net.NetworkInformation;
 using WebAPI.MiddelWares;
 
 namespace WebAPI.Installers;
@@ -30,6 +32,7 @@ public class MvcInstaller : IInstaller
         services.AddTransient<UserResolverService>();
         services.AddScoped<ErrorHandlingMiddelware>();
         services.AddRazorPages();
+        services.AddMediatR(typeof(MvcInstaller));
         services.AddApiVersioning(x =>
         {
             x.DefaultApiVersion = new ApiVersion(1, 0);

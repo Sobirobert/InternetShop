@@ -1,10 +1,12 @@
 ﻿using Application.Dto;
-using Application.Interfaces;
 using Infrastructure.Identity;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using WebAPI.Attributes;
+using WebAPI.Commands.Picture;
+using WebAPI.Queries.Picture;
 using WebAPI.Wrappers;
 
 namespace WebAPI.Controllers.V1;
@@ -15,55 +17,48 @@ namespace WebAPI.Controllers.V1;
 [ApiController]
 public class PictureController : ControllerBase
 {
-    private readonly IPictureService _pictureSerwice;
-    private readonly IProductService _productService;
+    private readonly IMediator _mediator;
 
-    public PictureController(IPictureService pictureService, IProductService productService)
+    public PictureController(IMediator mediator)
     {
-        _pictureSerwice = pictureService;
-        _productService = productService;
+        _mediator = mediator;
     }
 
     [SwaggerOperation(Summary = "Retrieves all picture by unique product id")]
     [HttpGet("[action]/{productId}")]
-    public async Task<IActionResult> GetByPostId(int productId)
+    public async Task<IActionResult> GetPicrtureByProductId(int productId)
     {
-        var pictures = await _pictureSerwice.GetPicturesByProductId(productId);
-        return Ok(new Response<IEnumerable<PictureDto>>(pictures));
+        var query =  new GetPicrtureByProductIdQuery(productId);
+        var result = await _mediator.Send(query);
+        return Ok(new Response<IEnumerable<PictureDto>>(result));
+        
     }
 
     [SwaggerOperation(Summary = "Retrieves a specific picture by unique id")]
     [HttpGet("{id}")]
-    public async Task<IActionResult> Get(int id)
+    public async Task<IActionResult> GetPictureById(int id)
     {
-        var picture = await _pictureSerwice.GetPictureById(id);
-        if (picture == null)
-        {
-            return NotFound();
-        }
-
-        return Ok(new Response<PictureDto>(picture));
+        var query = new GetPictureByIdQuery(id);
+        var result = await _mediator.Send(query);
+        return Ok(new Response<PictureDto>(result));
     }
 
     [ValidateFilter]
     [SwaggerOperation(Summary = "Add a new picture to product")]
     [HttpPost("{productId}")]
-    public async Task<IActionResult> AddToPostAsync(int productId, IFormFile file)
+    public async Task<IActionResult> AddToProductAsync(int productId, IFormFile file)
     {
-        var product = await _productService.GetProductById(productId);
-        if (product == null)
-        {
-            return BadRequest(new Response(false, $"Product with id {productId} does not exist."));
-        }
-        var picture = await _pictureSerwice.AddPictureToProduct(productId, file);
-        return Created($"api/pictures/{picture.Id}", new Response<PictureDto>(picture));
+        var command = new AddToProductAsyncCommand(productId, file);
+        var result = await _mediator.Send(command);
+        return Created($"api/pictures/{result.Id}", new Response<PictureDto>(result));
     }
 
     [SwaggerOperation(Summary = "Sets the main picture of the product")]
     [HttpPut("[action]/{productId}/{id}")]
     public async Task<IActionResult> SetMainPicture(int productId, int id)
     {
-        await _pictureSerwice.SetMainPicture(productId, id);
+        var command = new SetMainPictureCommand(productId, id);
+        var result = await _mediator.Send(command);
         return NoContent();
     }
 
@@ -71,13 +66,8 @@ public class PictureController : ControllerBase
     [HttpDelete("{productId}/{id}")]
     public async Task<IActionResult> Delate(int id)
     {
-        var userOwnsProduct = await _productService.GetProductById(id);
-        if (userOwnsProduct == null)
-        {
-            return BadRequest(new Response(false, "Product isn't exist"));
-        }
-
-        await _pictureSerwice.DeletePicture(id);
+        var command = new DelateCommand(id);
+        var resoult = await _mediator.Send(command);
         return NoContent();
     }
 }
