@@ -56,7 +56,7 @@ public class ProductController(IProductService _productService, IMemoryCache _me
     [SwaggerOperation(Summary = "Find the product by Id")]
     [AllowAnonymous]
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetPostByID(int id)
+    public async Task<IActionResult> GetProductById(int id)
     {
         var product = await _productService.GetProductById(id);
         if (product == null)
@@ -73,7 +73,7 @@ public class ProductController(IProductService _productService, IMemoryCache _me
     /// Type 3 = Damaged
     /// </summary>
     [ValidateFilter]
-    [SwaggerOperation(Summary = "Create a new post")]
+    [SwaggerOperation(Summary = "Create a new Product")]
     [Authorize(Roles = UserRoles.Admin)]
     [HttpPost]
     public async Task<IActionResult> Create(CreateProductDto newProduct)
@@ -93,7 +93,7 @@ public class ProductController(IProductService _productService, IMemoryCache _me
     }
 
     [ValidateFilter]
-    [SwaggerOperation(Summary = "Delete a specific post")]
+    [SwaggerOperation(Summary = "Delete a specific Product")]
     [Authorize(Roles = UserRoles.Admin)]
     [HttpDelete("Id")]
     public async Task<IActionResult> Delete(int id)
@@ -101,7 +101,7 @@ public class ProductController(IProductService _productService, IMemoryCache _me
         var isAdmin = User.FindFirstValue(ClaimTypes.Role).Contains(UserRoles.Admin);
         if (!isAdmin)
         {
-            return BadRequest(new Response(false, "You do not own this post."));
+            return BadRequest(new Response(false, "You do not own this product."));
         }
         await _productService.DeleteProduct(id);
         return NoContent();

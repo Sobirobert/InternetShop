@@ -53,7 +53,7 @@ public class AttachmentsController : ControllerBase
 
     [ValidateFilter]
     [SwaggerOperation(Summary = "Add a new attachment to post")]
-    [HttpPost("{postId}")]
+    [HttpPost("{productId}")]
     public async Task<IActionResult> AddToPostAsync(int productId, IFormFile file)
     {
         var product = await _productService.GetProductById(productId);
@@ -67,7 +67,7 @@ public class AttachmentsController : ControllerBase
     }
 
     [SwaggerOperation(Summary = "Delete a specific attachment")]
-    [HttpDelete("{postId}/{id}")]
+    [HttpDelete("{productId}/{id}")]
     public async Task<IActionResult> DeleteAsync(int attachmentsId, int productId)
     {
         var product = await _productService.GetProductById(productId);
