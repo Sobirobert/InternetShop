@@ -1,7 +1,7 @@
 ﻿using Application.Dto;
 using MediatR;
 
-namespace WebAPI.Queries.Picture;
+namespace WebAPI.Functions.Queries.Picture;
 
 public class GetPicrtureByProductIdQuery : IRequest<IEnumerable<PictureDto>>
 {

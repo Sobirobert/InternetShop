@@ -1,9 +1,8 @@
 ﻿using Application.Dto;
 using Application.Interfaces;
 using MediatR;
-using WebAPI.Commands.Picture;
 
-namespace WebAPI.Handlers.Picture;
+namespace WebAPI.Functions.Commands.Picture;
 
 public class AddToProductAsyncHandler : IRequestHandler<AddToProductAsyncCommand, PictureDto>
 {

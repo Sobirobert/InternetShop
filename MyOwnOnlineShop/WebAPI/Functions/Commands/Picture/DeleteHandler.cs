@@ -1,8 +1,8 @@
 ﻿using Application.Interfaces;
 using MediatR;
-using WebAPI.Commands.Picture;
+using WebAPI.Functions.Commands.Picture;
 
-namespace WebAPI.Handlers.Picture;
+namespace WebAPI.Functions.Handlers.Picture;
 
 public class DeleteHandler : IRequestHandler<DelateCommand, Unit>
 {
@@ -10,7 +10,7 @@ public class DeleteHandler : IRequestHandler<DelateCommand, Unit>
     public DeleteHandler(IPictureService pictureService)
     {
         _pictureService = pictureService;
-}
+    }
     public async Task<Unit> Handle(DelateCommand request, CancellationToken cancellationToken)
     {
         await _pictureService.DeletePicture(request.PictureId);

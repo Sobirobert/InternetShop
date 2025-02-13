@@ -1,7 +1,7 @@
 ﻿using Application.Dto;
 using MediatR;
 
-namespace WebAPI.Commands.Picture;
+namespace WebAPI.Functions.Commands.Picture;
 
 public class AddToProductAsyncCommand : IRequest<PictureDto>
 {

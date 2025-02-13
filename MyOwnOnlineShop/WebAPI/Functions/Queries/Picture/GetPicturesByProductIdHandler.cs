@@ -1,9 +1,8 @@
 ﻿using Application.Dto;
 using Application.Interfaces;
 using MediatR;
-using WebAPI.Queries.Picture;
 
-namespace WebAPI.Handlers.Picture;
+namespace WebAPI.Functions.Queries.Picture;
 
 public class GetProductByIdHandler : IRequestHandler<GetPicrtureByProductIdQuery, IEnumerable<PictureDto>>
 {
