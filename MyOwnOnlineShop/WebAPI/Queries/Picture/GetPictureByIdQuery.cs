@@ -10,3 +10,4 @@ public class GetPictureByIdQuery : IRequest<PictureDto>
     {
         PictureId = pictureId;
     }
+}

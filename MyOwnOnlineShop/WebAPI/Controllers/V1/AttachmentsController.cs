@@ -24,7 +24,7 @@ public class AttachmentsController : ControllerBase
         _productService = productService;
     }
 
-    [SwaggerOperation(Summary = "Retrieves a attachments by unique post id")]
+    [SwaggerOperation(Summary = "Retrieves a attachments by unique Product id")]
     [HttpGet("[action]/{productId}")]
     public async Task<IActionResult> GetByProductIdAsync(int productId)
     {
@@ -40,7 +40,7 @@ public class AttachmentsController : ControllerBase
         var product = await _productService.GetProductById(productId);
         if (product == null)
         {
-            return BadRequest(new Response(false, $"Post with id {productId} does not exist."));
+            return BadRequest(new Response(false, $"Product with id {productId} does not exist."));
         }
 
         var attachment = await _attachmentService.DownloadAttachmentById(id);
@@ -52,14 +52,14 @@ public class AttachmentsController : ControllerBase
     }
 
     [ValidateFilter]
-    [SwaggerOperation(Summary = "Add a new attachment to post")]
+    [SwaggerOperation(Summary = "Add a new attachment to Product")]
     [HttpPost("{productId}")]
     public async Task<IActionResult> AddToPostAsync(int productId, IFormFile file)
     {
         var product = await _productService.GetProductById(productId);
         if (product == null)
         {
-            return BadRequest(new Response(false, $"Post with id {productId} does not exist."));
+            return BadRequest(new Response(false, $"Product with id {productId} does not exist."));
         }
 
         var attachment = await _attachmentService.AddAttachmentToProduct(productId, file);
@@ -73,7 +73,7 @@ public class AttachmentsController : ControllerBase
         var product = await _productService.GetProductById(productId);
         if (product == null)
         {
-            return BadRequest(new Response(false, $"Post with id {productId} does not exist."));
+            return BadRequest(new Response(false, $"Product with id {productId} does not exist."));
         }
         await _attachmentService.DelateAttachment(attachmentsId);
         return NoContent();

@@ -1,6 +1,8 @@
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.OpenApi.Models;
 using NLog.Web;
+using System.Reflection;
 using WebAPI.Installers;
 using WebAPI.MiddelWares;
 
@@ -10,6 +12,7 @@ public class Program
 {
     public static void Main(string[] args)
     {
+        
         var builder = WebApplication.CreateBuilder(args);
         builder.Services.InstallServicesInAssembly(builder.Configuration);
         builder.Services.AddEndpointsApiExplorer();
@@ -25,7 +28,10 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI v1"));
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI v1");
+            });
         }
         app.UseMiddleware<ErrorHandlingMiddelware>();
         app.UseHttpsRedirection();

@@ -27,7 +27,7 @@ public class ProductRepository : IProductRepository
     public async Task<Product> GetById(int id)
     {
         var product = await _context.Products
-            .SingleOrDefaultAsync(x => x.Id == id);
+            .FirstOrDefaultAsync(x => x.Id == id);
         if (product == null)
         {
             throw new Exception("There are not product with this Id!");
