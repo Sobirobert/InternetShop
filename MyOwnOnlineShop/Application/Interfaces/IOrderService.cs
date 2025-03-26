@@ -1,4 +1,4 @@
-﻿using Application.Dto.OrderDto;
+﻿using Application.Dto.OrdersDto;
 
 namespace Application.Interfaces;
 public interface IOrderService

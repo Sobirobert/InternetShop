@@ -2,14 +2,26 @@
 using FluentValidation;
 
 namespace Application.Validators.OrderDtoValidator;
-public class CreateOrderDtoValidator : AbstractValidator<CreateOrderDto>
+
+public class OrderDtoValidator : AbstractValidator<OrderDto>
 {
-    public CreateOrderDtoValidator()
+    public OrderDtoValidator()
     {
+        RuleFor(o => o.OrderId)
+            .NotEmpty().WithMessage("Order ID is required");
+
         RuleFor(o => o.OrderItems)
             .NotEmpty().WithMessage("Order must contain at least one item")
             .Must(items => items != null && items.Count > 0)
             .WithMessage("Order must contain at least one item");
+
+        RuleFor(o => o.ShippingStatus)
+            .IsInEnum().WithMessage("Invalid shipping status")
+            .NotEmpty().WithMessage("Shipping status is required");
+
+        RuleFor(o => o.PaymentStatus)
+            .IsInEnum().WithMessage("Invalid payment status")
+            .NotEmpty().WithMessage("Payment status is required");
 
         RuleFor(o => o.FirstName)
             .NotEmpty().WithMessage("First name is required")
@@ -51,5 +63,9 @@ public class CreateOrderDtoValidator : AbstractValidator<CreateOrderDto>
             .EmailAddress().WithMessage("Email is in incorrect format")
             .Matches(@"(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|""(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*"")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])")
             .WithMessage("Email is in incorrect format");
+
+        RuleFor(o => o.OrderTotal)
+            .NotEmpty().WithMessage("Order total is required")
+            .GreaterThan(0).WithMessage("Order total must be greater than 0");
     }
 }

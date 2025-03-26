@@ -2,10 +2,9 @@
 using FluentValidation;
 
 namespace Application.Validators.CategoryDtoValidator;
-
-public class CreateCategoryDtoValidator : AbstractValidator<CreateCategoryDto>
+public class CategoryDtoValidator : AbstractValidator<CategoryDto>
 {
-    public CreateCategoryDtoValidator()
+    public CategoryDtoValidator()
     {
         RuleFor(c => c.CategoryName)
             .NotEmpty().WithMessage("Category name is required")

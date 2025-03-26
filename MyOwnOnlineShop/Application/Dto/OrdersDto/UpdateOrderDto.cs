@@ -3,7 +3,7 @@ using AutoMapper;
 using Domain.Entities;
 using Domain.Enums;
 
-namespace Application.Dto.OrderDto;
+namespace Application.Dto.OrdersDto;
 public class UpdateOrderDto : IMap
 {
     public int OrderId { get; set; }

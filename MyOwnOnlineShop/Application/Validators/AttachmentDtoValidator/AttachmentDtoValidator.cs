@@ -1,11 +1,10 @@
-﻿using Domain.Entities;
+﻿using Application.Dto.AttachmentDto;
 using FluentValidation;
 
-namespace Domain.Validation;
-
-public class AttachmentValidator : AbstractValidator<Attachment>
+namespace Application.Validators.AttachmentDtoValidator;
+public class AttachmentDtoValidator : AbstractValidator<AttachmentDto>
 {
-    public AttachmentValidator()
+    public AttachmentDtoValidator()
     {
         RuleFor(a => a.Id)
             .NotEmpty().WithMessage("Attachment ID is required");
@@ -13,10 +12,6 @@ public class AttachmentValidator : AbstractValidator<Attachment>
         RuleFor(a => a.Name)
             .NotEmpty().WithMessage("Attachment name is required")
             .MaximumLength(100).WithMessage("Attachment name cannot exceed 100 characters");
-
-        RuleFor(a => a.Path)
-            .NotEmpty().WithMessage("Attachment path is required")
-            .MaximumLength(200).WithMessage("Attachment path cannot exceed 200 characters");
 
         RuleFor(a => a.UserId)
             .NotEmpty().WithMessage("User ID is required")

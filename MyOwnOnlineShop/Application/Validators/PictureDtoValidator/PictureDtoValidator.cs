@@ -6,17 +6,20 @@ public class PictureDtoValidator : AbstractValidator<PictureDto>
 {
     public PictureDtoValidator()
     {
-        #region Name
+        RuleFor(p => p.Id)
+            .NotEmpty().WithMessage("Picture ID is required");
 
-        RuleFor(x => x.Name).NotEmpty().WithMessage("Picture field cannot be empty.");
-        RuleFor(x => x.Name).Length(3, 100).WithMessage("Picture name must be between 3 and 100 characters long");
+        RuleFor(p => p.Name)
+            .NotEmpty().WithMessage("Picture name is required")
+            .MaximumLength(100).WithMessage("Picture name cannot exceed 100 characters");
 
-        #endregion Name
+        RuleFor(p => p.Image)
+            .NotEmpty().WithMessage("Picture image is required")
+            .Must(image => image != null && image.Length > 0)
+            .WithMessage("Picture image cannot be empty");
 
-        #region Image
-
-        RuleFor(x => x.Image).NotEmpty().WithMessage("Image field can not have an empty Image.");
-
-        #endregion Image
+        RuleFor(p => p.Main)
+            .NotNull().WithMessage("Main flag must be specified");
     }
+
 }

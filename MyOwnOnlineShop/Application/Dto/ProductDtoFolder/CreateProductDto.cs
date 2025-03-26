@@ -3,7 +3,7 @@ using AutoMapper;
 using Domain.Entities;
 using Domain.Enums;
 
-namespace Application.Dto;
+namespace Application.Dto.ProductDtoFolder;
 public class CreateProductDto : IMap
 {
     public string Title { get; set; }

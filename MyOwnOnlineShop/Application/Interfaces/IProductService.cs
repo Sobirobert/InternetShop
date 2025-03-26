@@ -1,4 +1,4 @@
-﻿using Application.Dto;
+﻿using Application.Dto.ProductDtoFolder;
 
 namespace Application.Interfaces;
 public interface IProductService

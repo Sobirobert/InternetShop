@@ -2,10 +2,14 @@
 using FluentValidation;
 
 namespace Application.Validators.ProductDtoValidator;
-public class CreateProductDtoValidator : AbstractValidator<CreateProductDto>
+
+public class ProductDtoValidator : AbstractValidator<ProductDto>
 {
-    public CreateProductDtoValidator()
+    public ProductDtoValidator()
     {
+        RuleFor(p => p.Id)
+            .NotEmpty().WithMessage("Product ID is required");
+
         RuleFor(p => p.Title)
             .NotEmpty().WithMessage("Product title is required")
             .MaximumLength(100).WithMessage("Product title cannot exceed 100 characters");

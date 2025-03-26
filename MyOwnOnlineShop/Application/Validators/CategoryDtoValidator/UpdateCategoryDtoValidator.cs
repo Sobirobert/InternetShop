@@ -3,10 +3,13 @@ using FluentValidation;
 
 namespace Application.Validators.CategoryDtoValidator;
 
-public class CreateCategoryDtoValidator : AbstractValidator<CreateCategoryDto>
+public class UpdateCategoryDtoValidator : AbstractValidator<UpdateCategoryDto>
 {
-    public CreateCategoryDtoValidator()
+    public UpdateCategoryDtoValidator()
     {
+        RuleFor(c => c.Id)
+            .NotEmpty().WithMessage("Category ID is required");
+
         RuleFor(c => c.CategoryName)
             .NotEmpty().WithMessage("Category name is required")
             .MaximumLength(100).WithMessage("Category name cannot exceed 100 characters");

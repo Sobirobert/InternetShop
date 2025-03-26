@@ -2,7 +2,7 @@
 using AutoMapper;
 using Domain.Entities;
 
-namespace Application.Dto.OrderDto;
+namespace Application.Dto.OrdersDto;
 public class CreateOrderItemDto : IMap
 {
     public string ItemName { get; set; }
