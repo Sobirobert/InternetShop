@@ -1,4 +1,5 @@
 using HealthChecks.UI.Client;
+using InternetShop.WebAPI.GlobalExceptionHandling;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
 using NLog.Web;
@@ -35,6 +36,7 @@ public class Program
         }
         app.UseMiddleware<ErrorHandlingMiddelware>();
         app.UseHttpsRedirection();
+        app.UseGlobalExceptionHandler();
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();

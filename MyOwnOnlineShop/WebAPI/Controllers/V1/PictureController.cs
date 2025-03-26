@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using WebAPI.Attributes;
-using WebAPI.Commands.Picture;
-using WebAPI.Queries.Picture;
+using WebAPI.Functions.Commands.Picture;
+using WebAPI.Functions.Queries.Picture;
 using WebAPI.Wrappers;
 
 namespace WebAPI.Controllers.V1;
