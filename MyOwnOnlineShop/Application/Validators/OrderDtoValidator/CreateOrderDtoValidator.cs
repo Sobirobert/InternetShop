@@ -7,10 +7,8 @@ public class CreateOrderDtoValidator : AbstractValidator<OrderDto>
     public CreateOrderDtoValidator()
     {
         #region FirstName
-
         RuleFor(x => x.FirstName).NotEmpty().WithMessage("The first name field cannot be empty.");
         RuleFor(x => x.FirstName).Length(3, 100).WithMessage("The first name must be between 3 and 100 characters long.");
-
         #endregion FirstName
 
         #region LastName
