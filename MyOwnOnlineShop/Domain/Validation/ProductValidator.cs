@@ -1,76 +1,61 @@
 ﻿using Domain.Entities;
-using Domain.Enums;
-using Domain.Interfaces;
+using FluentValidation;
 
 namespace Domain.Validation;
 
-public class ProductValidator : IDomainValidator<Product>
+public class ProductValidator : AbstractValidator<Product>
 {
-    public ValidationResult Validate(Product product)
+    public ProductValidator()
     {
+        RuleFor(p => p.Title)
+            .NotEmpty().WithMessage("Product title is required")
+            .Length(2, 100).WithMessage("Product title must be between 2 and 100 characters");
+
+        RuleFor(p => p.ShortDescription)
+            .NotEmpty().WithMessage("Short description is required")
+            .MaximumLength(250).WithMessage("Short description cannot exceed 250 characters");
+
+        RuleFor(p => p.LongDescription)
+            .NotEmpty().WithMessage("Long description is required")
+            .MaximumLength(4000).WithMessage("Long description cannot exceed 4000 characters");
+
+        RuleFor(p => p.Amount)
+            .GreaterThanOrEqualTo(0).WithMessage("Amount cannot be negative");
+
+        RuleFor(p => p.Details)
+            .NotEmpty().WithMessage("Product details are required")
+            .MaximumLength(2000).WithMessage("Product details cannot exceed 2000 characters");
+
+        RuleFor(p => p.YearOfProduction)
+            .NotEmpty().WithMessage("Year of production is required")
+            .GreaterThan(1900).WithMessage("Year of production must be greater than 1900")
+            .LessThanOrEqualTo(DateTime.Now.Year).WithMessage($"Year of production cannot be later than the current year ({DateTime.Now.Year})");
+
+        RuleFor(p => p.Price)
+            .NotEmpty().WithMessage("Price is required")
+            .GreaterThan(0).WithMessage("Price must be greater than 0")
+            .LessThan(1000000).WithMessage("Price cannot exceed 1,000,000");
+
+        RuleFor(p => p.Type)
+            .IsInEnum().WithMessage("Invalid product type");
+
+        RuleFor(p => p.CategoryId)
+            .NotEmpty().WithMessage("Category is required")
+            .GreaterThan(0).WithMessage("Category ID must be greater than 0");
+
+        RuleFor(p => p)
+            .Must(p => !(p.Price > 10000 && p.Amount > 50))
+            .WithMessage("For products priced above 10,000, the maximum available quantity is 50 units")
+            .When(p => p.Price > 0 && p.Amount > 0);
+
+        When(p => p.IsProductOfTheWeek, () =>
         {
-            var result = new ValidationResult();
+            RuleFor(p => p.Price)
+                .LessThan(5000).WithMessage("Products of the week cannot cost more than 5,000");
 
-            if (string.IsNullOrWhiteSpace(product.Title))
-                result.AddError("Product title is required");
-
-            if (product.Title?.Length > 100)
-                result.AddError("Product title cannot exceed 100 characters");
-
-            if (string.IsNullOrWhiteSpace(product.ShortDescription))
-                result.AddError("Short description is required");
-
-            if (product.ShortDescription?.Length > 250)
-                result.AddError("Short description cannot exceed 250 characters");
-
-            if (string.IsNullOrWhiteSpace(product.LongDescription))
-                result.AddError("Long description is required");
-
-            if (product.LongDescription?.Length > 4000)
-                result.AddError("Long description cannot exceed 4000 characters");
-
-            if (product.Amount < 0)
-                result.AddError("Amount cannot be negative");
-
-            if (string.IsNullOrWhiteSpace(product.Details))
-                result.AddError("Product details are required");
-
-            if (product.Details?.Length > 2000)
-                result.AddError("Product details cannot exceed 2000 characters");
-
-            if (product.YearOfProduction < 1900)
-                result.AddError("Year of production must be greater than 1900");
-
-            if (product.YearOfProduction > DateTime.Now.Year)
-                result.AddError($"Year of production cannot be later than the current year ({DateTime.Now.Year})");
-
-            if (product.Price <= 0)
-                result.AddError("Price must be greater than 0");
-
-            if (product.Price >= 1000000)
-                result.AddError("Price cannot exceed 1,000,000");
-
-            if (!Enum.IsDefined(typeof(TypeProduct), product.Type))
-                result.AddError("Invalid product type");
-
-            if (product.CategoryId <= 0)
-                result.AddError("Category ID must be greater than 0");
-
-            if (product.Price > 10000 && product.Amount > 50)
-                result.AddError("For products priced above 10,000, the maximum available quantity is 50 units");
-
-            if (product.IsProductOfTheWeek)
-            {
-                if (product.Price >= 5000)
-                    result.AddError("Products of the week cannot cost more than 5,000");
-
-                if (product.Amount <= 5)
-                    result.AddError("Product of the week must be available in quantities greater than 5 units");
-            }
-
-            return result;
-        }
+            RuleFor(p => p.Amount)
+                .GreaterThan(5).WithMessage("Product of the week must be available in quantities greater than 5 units");
+        });
     }
 }
-
 
