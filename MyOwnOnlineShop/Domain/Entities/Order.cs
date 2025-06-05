@@ -1,59 +1,18 @@
 ﻿using Domain.Common;
 using Domain.Enums;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities;
 [Table("Order")]
-public class Order : AuditableEntity
+public record Order(int OrderId, Guid PublicId, ShippingStatus ShippingStatus, PaymentStatus PaymentStatu, DateTime Created, string? CreatedBy, DateTime? LastModified, 
+    string? LastModifiedBy, double TotalPrice, ICollection<Product> ShoppingCardsItems, double OrderTotal, DateTime OrderPlaced) 
+    : AuditableEntity(Created, CreatedBy, LastModified, LastModifiedBy)
 {
-    [Key]
-    public int OrderId { get; set; }
-    [Required]
-    public ShippingStatus ShippingStatus { get; set; }
-    [Required]
-    public PaymentStatus PaymentStatus { get; set; }
-    [Required]
-    public double TotalPrice { get; set; }
-    [Required]
-    public List<OrderItem> ShoppingCardsItems { get; set; }
+    public record Adress(string AddressLine1, string AddressLine2, string ZipCode, string City, string State, string Country);
 
-    [Required]
-    public string FirstName { get; set; }
+    public record Contact(string PhoneNumber, string Email);
 
-    [Required]
-    public string LastName { get; set; }
-
-    [Required]
-    public string AddressLine1 { get; set; }
-
-    [Required]
-    public string AddressLine2 { get; set; }
-
-    [Required]
-    public string ZipCode { get; set; }
-
-    [Required]
-    public string City { get; set; }
-
-    [Required]
-    public string State { get; set; }
-
-    [Required]
-    public string Country { get; set; }
-
-    [Required]
-    public string PhoneNumber { get; set; }
-
-    [Required]
-    public string Email { get; set; }
-
-    [BindNever]
-    [ScaffoldColumn(false)]
-    public double OrderTotal { get; set; }
-
-    [BindNever]
-    [ScaffoldColumn(false)]
-    public DateTime OrderPlaced { get; set; }
+    public record PersonalInfo(string FirstName, string LastName);
 }
+
+

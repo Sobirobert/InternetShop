@@ -1,25 +1,30 @@
-﻿using Application.Mappings;
+﻿using Application.Dto.AttachmentsDto;
+using Application.Dto.OrdersDto;
+using Application.Mappings;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Enums;
 
 namespace Application.Dto.ProductDtoFolder;
-public class ProductDto : IMap
+public record ProductDto(
+    int Id,
+    string Title,
+    string ShortDescription,
+    string LongDescription,
+    int Amount, string Details,
+    int YearOfProduction,
+    double Price,
+    bool IsProductOfTheWeek,
+    TypeProduct Type,
+    Category Category,
+    int CategoryId,
+    ICollection<OrderDto> OrderItems,
+    ICollection<PictureDto> Pictures,
+    ICollection<AttachmentDto> Attachments,
+    DateTime CreationDate
+) 
+    : IMap
 {
-    public int Id { get; set; }
-    [DisplayProperty("Title of Product")]
-    public string Title { get; set; }
-    public string ShortDescription { get; set; }
-    public string LongDescription { get; set; }
-    public string Details { get; set; }
-    public int YearOfProduction { get; set; }
-    public int Amount { get; set; }
-    public double Price { get; set; }
-    public bool IsProductOfTheWeek { get; set; }
-    public TypeProduct Type { get; set; }
-    public int CategoryId { get; set; }
-    public DateTime CreationDate { get; set; }
-
     public void Mapping(Profile profile)
     {
         profile.CreateMap<Product, ProductDto>()

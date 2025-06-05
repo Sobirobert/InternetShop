@@ -3,19 +3,13 @@ using AutoMapper;
 using Domain.Entities;
 
 namespace Application.Dto.OrdersDto;
-public class CreateOrderDto : IMap
+public record CreateOrderDto( List<OrderItemDto> OrderItems) : IMap
 {
-    public List<OrderItemDto> OrderItems { get; set; }
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public string AddressLine1 { get; set; }
-    public string AddressLine2 { get; set; }
-    public string ZipCode { get; set; }
-    public string City { get; set; }
-    public string State { get; set; }
-    public string Country { get; set; }
-    public string PhoneNumber { get; set; }
-    public string Email { get; set; }
+    public record AdressDto(string AddressLine1, string AddressLine2, string ZipCode, string City, string State, string Country);
+
+    public record ContactDto(string PhoneNumber, string Email);
+
+    public record PersonalInfoDto(string FirstName, string LastName);
 
     public void Mapping(Profile profile)
     {

@@ -1,27 +1,17 @@
-﻿using Application.Mappings;
+﻿using Application.Dto.ProductDtoFolder;
+using Application.Mappings;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Enums;
 
 namespace Application.Dto.OrdersDto;
-public class OrderDto : IMap
+public record OrderDto(int OrderId, Guid PublicId, List<ProductDto> OrderItems, ShippingStatus ShippingStatus, PaymentStatus PaymentStatus, double OrderTotal, DateTime OrderPlaced) : IMap
 {
-    public int OrderId { get; set; }
-    public List<OrderItem> OrderItems { get; set; }
-    public ShippingStatus ShippingStatus { get; set; }
-    public PaymentStatus PaymentStatus { get; set; }
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public string AddressLine1 { get; set; }
-    public string AddressLine2 { get; set; }
-    public string ZipCode { get; set; }
-    public string City { get; set; }
-    public string State { get; set; }
-    public string Country { get; set; }
-    public string PhoneNumber { get; set; }
-    public string Email { get; set; }
-    public double OrderTotal { get; set; }
-    public DateTime OrderPlaced { get; set; }
+    public record AdressDto(string AddressLine1, string AddressLine2, string ZipCode, string City, string State, string Country);
+
+    public record ContactDto(string PhoneNumber, string Email);
+
+    public record PersonalInfoDto(string FirstName, string LastName);
 
     public void Mapping(Profile profile)
     {

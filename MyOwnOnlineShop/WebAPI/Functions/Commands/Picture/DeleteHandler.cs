@@ -4,7 +4,7 @@ using WebAPI.Functions.Commands.Picture;
 
 namespace WebAPI.Functions.Handlers.Picture;
 
-public class DeleteHandler : IRequestHandler<DelateCommand, Unit>
+public class DeleteHandler : IRequestHandler<DelateCommand>
 {
     private readonly IPictureService _pictureService;
     public DeleteHandler(IPictureService pictureService)

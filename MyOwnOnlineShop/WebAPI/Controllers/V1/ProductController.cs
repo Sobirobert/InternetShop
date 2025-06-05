@@ -1,4 +1,4 @@
-﻿using Application.Dto;
+﻿using Application.Dto.ProductDtoFolder;
 using Application.Interfaces;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;

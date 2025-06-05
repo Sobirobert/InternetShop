@@ -5,41 +5,23 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities;
 [Table("Products")]
-public class Product : AuditableEntity
-{
-    [Key]
-    public int Id { get; set; }
-
-    [Required]
-    public string Title { get; set; }
-
-    [Required]
-    public string ShortDescription { get; set; }
-
-    [Required]
-    public string LongDescription { get; set; }
-
-    [Required]
-    public int Amount { get; set; }
-
-    [Required]
-    public string Details { get; set; }
-
-    [Required]
-    public int YearOfProduction { get; set; }
-
-    [Required]
-    public double Price { get; set; }
-
-    [Required]
-    public bool IsProductOfTheWeek { get; set; }
-
-    [Required]
-    public TypeProduct Type { get; set; }
-
-    [Required]
-    public int CategoryId { get; set; }
-
-    public ICollection<Picture> Pictures { get; set; }
-    public ICollection<Attachment> Attachments { get; set; }
-}
+public record Product(
+    DateTime Created, 
+    string? CreatedBy, 
+    DateTime? LastModified, 
+    string? LastModifiedBy,  
+    int Id, 
+    string Title, 
+    string ShortDescription, 
+    string LongDescription,
+    int Amount, string Details, 
+    int YearOfProduction, 
+    double Price, 
+    bool IsProductOfTheWeek, 
+    TypeProduct Type, 
+    Category Category, 
+    int CategoryId, 
+    ICollection<Order> OrderItems,
+    ICollection<Picture> Pictures, 
+    ICollection<Attachment> Attachments) 
+    : AuditableEntity(Created, CreatedBy, LastModified, LastModifiedBy);

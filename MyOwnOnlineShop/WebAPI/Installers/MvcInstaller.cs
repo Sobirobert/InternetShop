@@ -1,12 +1,11 @@
 ﻿using Application;
 using Application.Services;
-using Application.Validators.ProductDto;
+using Application.Validators.ProductDtoValidator;
 using FluentValidation.AspNetCore;
 using Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
-using System.Net.NetworkInformation;
 using WebAPI.MiddelWares;
 
 namespace WebAPI.Installers;

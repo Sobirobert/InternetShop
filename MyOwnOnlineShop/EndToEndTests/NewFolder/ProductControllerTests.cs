@@ -1,4 +1,4 @@
-﻿using Application.Dto;
+﻿using Application.Dto.ProductDtoFolder;
 using FluentAssertions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
