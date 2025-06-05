@@ -1,15 +1,13 @@
 ﻿using Application.Dto.OrdersDto;
+using static Application.Dto.OrdersDto.CreateOrderDto;
 
 namespace Application.Interfaces;
 public interface IOrderService
 {
-    Task<OrderDto> CreateOrder(CreateOrderDto order);
-    Task AddToOrder(int orderId, int amount, int productId);
+    Task<OrderDto> CreateOrder(CreateOrderDto order, AdressDto adress, ContactDto contact, PersonalInfoDto info);
     Task<int> GetAllOrdersCount(string filterBy);
-    Task<double> GetOrdersTotal(int orderId);
     Task<IEnumerable<OrderDto>> GetAllOrders(int pageNumber, int pageSize, string sortField, bool ascending, string filterBy);
     Task<OrderDto> GetOrderById(int id);
     Task UpdateOrder(UpdateOrderDto order);
-    Task UpdateOrderItem(UpdateOrderItemDto orderItemDto);
     Task DeleteOrder(int id);
 }

@@ -1,5 +1,6 @@
-﻿using Application.Dto.AttachmentDto;
+﻿using Application.Dto.AttachmentsDto;
 using FluentValidation;
+using static Application.Dto.AttachmentsDto.AttachmentDto;
 
 namespace Application.Validators.AttachmentDtoValidator;
 
@@ -7,7 +8,6 @@ public class DownloadAttachmentDtoValidator : AbstractValidator<DownloadAttachme
 {
     public DownloadAttachmentDtoValidator()
     {
-        Include(new AttachmentDtoValidator());
 
         RuleFor(d => d.Content)
             .NotEmpty().WithMessage("Attachment content is required")

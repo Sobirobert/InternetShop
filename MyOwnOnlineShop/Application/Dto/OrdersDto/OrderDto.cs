@@ -1,8 +1,8 @@
 ﻿using Application.Dto.ProductDtoFolder;
 using Application.Mappings;
 using AutoMapper;
-using Domain.Entities;
 using Domain.Enums;
+using static Domain.Entities.Order;
 
 namespace Application.Dto.OrdersDto;
 public record OrderDto(int OrderId, Guid PublicId, List<ProductDto> OrderItems, ShippingStatus ShippingStatus, PaymentStatus PaymentStatus, double OrderTotal, DateTime OrderPlaced) : IMap
@@ -17,5 +17,7 @@ public record OrderDto(int OrderId, Guid PublicId, List<ProductDto> OrderItems, 
     {
         profile.CreateMap<Domain.Entities.Order, OrderDto>()
             .ForMember(dest => dest.OrderPlaced, opt => opt.MapFrom(src => src.OrderPlaced));
+        profile.CreateMap<Contact, ContactDto>();
+        profile.CreateMap<PersonalInfo, PersonalInfoDto>();
     }
 }

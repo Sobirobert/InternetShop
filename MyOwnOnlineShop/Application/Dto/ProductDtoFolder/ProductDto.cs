@@ -18,7 +18,7 @@ public record ProductDto(
     TypeProduct Type,
     Category Category,
     int CategoryId,
-    ICollection<OrderDto> OrderItems,
+    ICollection<OrderDto> Orders,
     ICollection<PictureDto> Pictures,
     ICollection<AttachmentDto> Attachments,
     DateTime CreationDate

@@ -3,7 +3,7 @@ using AutoMapper;
 using Domain.Entities;
 
 namespace Application.Dto.OrdersDto;
-public record CreateOrderDto( List<OrderItemDto> OrderItems) : IMap
+public record CreateOrderDto( List<OrderDto> OrderItems) : IMap
 {
     public record AdressDto(string AddressLine1, string AddressLine2, string ZipCode, string City, string State, string Country);
 

@@ -1,10 +1,11 @@
-﻿using Application.Dto.AttachmentDto;
+﻿using Application.Dto.AttachmentsDto;
 using Application.ExtensionMethods;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Http;
+using static Application.Dto.AttachmentsDto.AttachmentDto;
 
 namespace Application.Services;
 public class AttachmentService : IAttachmentService

@@ -1,5 +1,6 @@
-﻿using Application.Dto.AttachmentDto;
+﻿using Application.Dto.AttachmentsDto;
 using Microsoft.AspNetCore.Http;
+using static Application.Dto.AttachmentsDto.AttachmentDto;
 
 namespace Application.Interfaces;
 public interface IAttachmentService

@@ -4,6 +4,8 @@ using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.Extensions.Logging;
+using static Application.Dto.OrdersDto.CreateOrderDto;
+using static Domain.Entities.Order;
 
 namespace Application.Services;
 public class OrderService : IOrderService
@@ -38,21 +40,14 @@ public class OrderService : IOrderService
         return await _orderRepository.GetAllCount(filterBy);
     }
 
-    public async Task<double> GetOrdersTotal(int orderId)
+    public async Task<OrderDto> CreateOrder(CreateOrderDto orderDto, AdressDto adressDto, ContactDto contactDto, PersonalInfoDto infoDto)
     {
-       return await _orderRepository.GetOrdersTotal(orderId);
-    }
-
-    public async Task<OrderDto> CreateOrder(CreateOrderDto orderDto)
-    {
+        var info = _mapper.Map<PersonalInfo>(orderDto);
+        var contact = _mapper.Map<Contact>(orderDto);
+        var adress = _mapper.Map<Adress>(orderDto);
         var order = _mapper.Map<Order>(orderDto);
-        await _orderRepository.CreateOrder(order);
+        await _orderRepository.CreateOrder(order, adress, contact, info);
         return _mapper.Map<OrderDto>(order);
-    }
-
-    public async Task AddToOrder(int orderId, int amount, int productId)
-    {
-        await _orderRepository.AddToOrder(orderId, amount, productId);
     }
 
     public async Task DeleteOrder(int id)
@@ -65,12 +60,5 @@ public class OrderService : IOrderService
         var existingOrder = await _orderRepository.GetById(orderDto.OrderId);
         var order = _mapper.Map(orderDto, existingOrder);
         await _orderRepository.Update(order);
-    }
-
-    public async Task UpdateOrderItem(UpdateOrderItemDto orderItemDto)
-    {
-        var existingOrdeItem = await _orderRepository.GetItemById(orderItemDto.OrderItemId);
-        var orderItem = _mapper.Map(orderItemDto, existingOrdeItem);
-        await _orderRepository.Update(orderItem);
     }
 }

@@ -40,15 +40,14 @@ public class PictureRepository : IPictureRepository
     public async Task SetMainPicture(int productId, int id)
     {
         var currentMainPicture =
-            await _context.Pictures.Include(x => x.Products)
-            .Where(x => x.Products.Select(x => x.Id).Contains(productId))
-            .SingleOrDefaultAsync(x => x.Main);
-        currentMainPicture.Main = false;
+            await _context.Pictures
+        .Where(p => p.Products.Any(pr => pr.Id == productId))
+        .ExecuteUpdateAsync(p => p.SetProperty(x => x.Main, false));
 
         var newMainPicture =
             await _context.Pictures
-            .SingleOrDefaultAsync(x => x.Id == id);
-        newMainPicture.Main = true;
+        .Where(p => p.Id == id)
+        .ExecuteUpdateAsync(p => p.SetProperty(x => x.Main, true));
 
         await _context.SaveChangesAsync();
         await Task.CompletedTask;

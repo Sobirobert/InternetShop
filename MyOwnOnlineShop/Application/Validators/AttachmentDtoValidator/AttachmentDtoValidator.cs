@@ -1,4 +1,4 @@
-﻿using Application.Dto.AttachmentDto;
+﻿using Application.Dto.AttachmentsDto;
 using FluentValidation;
 
 namespace Application.Validators.AttachmentDtoValidator;

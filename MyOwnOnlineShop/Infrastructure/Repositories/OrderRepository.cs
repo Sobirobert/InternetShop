@@ -2,7 +2,9 @@
 using Domain.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.ExtensionMethods;
+using Infrastructure.Facories;
 using Microsoft.EntityFrameworkCore;
+using static Domain.Entities.Order;
 
 namespace Infrastructure.Repositories;
 public class OrderRepository : IOrderRepository
@@ -13,76 +15,66 @@ public class OrderRepository : IOrderRepository
     {
         _context = context;
     }
-    public async Task<Order> CreateOrder(Order order)
+    public async Task<Order> CreateOrder(Order order, Adress adress, Contact contact, PersonalInfo info)
     {
-        order.OrderPlaced = DateTime.Now;
-        order.ShippingStatus = 0;
-        order.PaymentStatus = 0;
-        order.OrderTotal = 0;
-        order.TotalPrice = 0;
-        order.CreatedBy = $"{order.FirstName} {order.LastName}";
-        order.LastModified = DateTime.Now;
-        await _context.Orders.AddAsync(order);
+        var newOrder = new OrderFactory()
+         .SetPublicId(order.PublicId)
+         .SetShippingStatus(order.ShippingStatus)
+         .SetPaymentStatus(order.PaymentStatus)
+         .SetShoppingCardsItems(order.ShoppingCardsItems)
+         .SetTotalPrice(order.ShoppingCardsItems)
+         .SetAdress(adress)
+         .SetContact(contact)
+         .SetPersonalInfo(info)
+         .SetOrderPlaced()
+         .Build();
+        await _context.Orders.AddAsync(newOrder);
         await _context.SaveChangesAsync();
         return order;
     }
 
-    public async Task AddToOrder(int orderId, int amount, int productId)
-    {
-        var order = await _context.Orders
-            .SingleOrDefaultAsync(s => s.OrderId == orderId);
-        if (order == null)
-        {
-            throw new ArgumentException("Order isn't exist!");
-        }
-        order.ShoppingCardsItems = new List<OrderItem>();
-        var product = await _context.Products
-            .SingleOrDefaultAsync(s => s.Id == productId);
-        if (product == null)
-        {
-            throw new ArgumentException("Product isn't exist!");
-        }
-        var orderItemExist = await _context.OrderItems.SingleOrDefaultAsync(x => x.OrderId == orderId && x.ProductId == productId);
-        if (orderItemExist == null)
-        {
-            var orderItem = new OrderItem
-            {
-                ItemName = product.Title,
-                ProductId = productId,
-                OrderId = orderId,
-                Amount = amount,
-                Price = product.Price * amount,
-            };
-            order.ShoppingCardsItems.Add(orderItem);
-            order.TotalPrice = await GetOrdersTotal(orderId);
-            await _context.SaveChangesAsync();
-        }
-        else
-        {
-            orderItemExist.Amount =+ amount;
-            orderItemExist.Price = product.Price + orderItemExist.Amount;
-            order.TotalPrice = await GetOrdersTotal(orderId);
-            await _context.SaveChangesAsync();
-        }
-    }
-
     public async Task<IEnumerable<Order>> GetAll(int pageNumber, int pageSize, string sortField, bool ascending, string filterBy)
     {
-        return await _context.Orders
-            .Where(m => m.Email.ToLower().Contains(filterBy.ToLower())
-            || m.FirstName.ToLower().Contains(filterBy.ToLower())
-            || m.LastName.ToLower().Contains(filterBy.ToLower())
-            || m.AddressLine1.ToLower().Contains(filterBy.ToLower())
-            || m.AddressLine2.ToLower().Contains(filterBy.ToLower())
-            || m.City.ToLower().Contains(filterBy.ToLower())
-            || m.Country.ToLower().Contains(filterBy.ToLower())
-            || m.PhoneNumber.ToLower().Contains(filterBy.ToLower())
-            )
+        var query = _context.Orders
+      .Include(o => o.CustomerContact)         
+      .Include(o => o.DeliveryAddress)
+      .Include(o => o.CustomerInfo)
+      .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(filterBy))
+        {
+            var filter = filterBy.ToLower();
+
+            query = query.Where(o =>
+                (o.CustomerInfo != null && (
+                    o.CustomerInfo.FirstName.ToLower().Contains(filter) ||
+                    o.CustomerInfo.LastName.ToLower().Contains(filter)
+                )) ||
+                (o.DeliveryAddress != null && (
+                    o.DeliveryAddress.AddressLine1.ToLower().Contains(filter) ||
+                    o.DeliveryAddress.AddressLine2.ToLower().Contains(filter) ||
+                    o.DeliveryAddress.City.ToLower().Contains(filter) ||
+                    o.DeliveryAddress.Country.ToLower().Contains(filter) ||
+                    o.DeliveryAddress.State.ToLower().Contains(filter) ||
+                    o.DeliveryAddress.ZipCode.ToLower().Contains(filter)
+                )) ||
+                o.PublicId.ToString().Contains(filter) ||
+                o.ShippingStatus.ToString().ToLower().Contains(filter) ||
+                o.PaymentStatus.ToString().ToLower().Contains(filter)&&                
+                (o.CustomerContact != null && (
+                    o.CustomerContact.Email.ToString().Contains(filter)||
+                    o.CustomerContact.PhoneNumber.ToString().Contains(filter)
+                ))
+            );
+        }
+
+        return await query
             .OrderByPropertyName(sortField, ascending)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
     }
+
     public async Task<int> GetAllCount(string filterBy)
     {
         return await _context.Products
@@ -92,14 +84,6 @@ public class OrderRepository : IOrderRepository
             .CountAsync();
     }
 
-    public async Task<double> GetOrdersTotal(int orderId)
-    {
-        var total = await _context.Orders
-            .Where(c => c.OrderId == orderId)
-            .SelectMany(c => c.ShoppingCardsItems)
-            .SumAsync(p => p.Price * p.Amount);
-        return total;
-    }
     public async Task<Order> GetById(int id)
     {
         var order = await _context.Orders
@@ -111,36 +95,19 @@ public class OrderRepository : IOrderRepository
         return order;
     }
 
-    public async Task<OrderItem> GetItemById(int id)
-    {
-        var orderItem = await _context.OrderItems
-            .SingleOrDefaultAsync(x => x.OrderItemId == id);
-        if (orderItem == null)
-        {
-            throw new Exception("Shopping Card Items aren't exist!");
-        }
-        return orderItem;
-    }
-
     public async Task Update(Order order)
     {
         if (order == null)
         {
             throw new Exception("Shopping Card Items aren't exist!");
         }
-        order.LastModified = DateTime.Now;
-        _context.Orders.Update(order);
-        await _context.SaveChangesAsync();
-    }
 
-    public async Task Update(OrderItem orderItem)
-    {
-        if (orderItem == null)
+        var updatedOrder = order with
         {
-            throw new Exception("Shopping Card Items aren't exist!");
-        }
-        orderItem.LastModified = DateTime.Now;
-        _context.OrderItems.Update(orderItem);
+            LastModified = DateTime.UtcNow
+        };
+
+        _context.Orders.Update(updatedOrder);
         await _context.SaveChangesAsync();
     }
 

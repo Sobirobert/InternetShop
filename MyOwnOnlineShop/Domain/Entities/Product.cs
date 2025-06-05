@@ -1,15 +1,10 @@
 ﻿using Domain.Common;
 using Domain.Enums;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities;
 [Table("Products")]
 public record Product(
-    DateTime Created, 
-    string? CreatedBy, 
-    DateTime? LastModified, 
-    string? LastModifiedBy,  
     int Id, 
     string Title, 
     string ShortDescription, 
@@ -21,7 +16,7 @@ public record Product(
     TypeProduct Type, 
     Category Category, 
     int CategoryId, 
-    ICollection<Order> OrderItems,
+    ICollection<Order> Orders,
     ICollection<Picture> Pictures, 
     ICollection<Attachment> Attachments) 
-    : AuditableEntity(Created, CreatedBy, LastModified, LastModifiedBy);
+    : AuditableEntity;
