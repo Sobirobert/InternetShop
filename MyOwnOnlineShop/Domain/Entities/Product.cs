@@ -15,8 +15,11 @@ public record Product(
     bool IsProductOfTheWeek, 
     TypeProduct Type, 
     Category Category, 
-    int CategoryId, 
-    ICollection<Order> Orders,
-    ICollection<Picture> Pictures, 
-    ICollection<Attachment> Attachments) 
-    : AuditableEntity;
+    int CategoryId)
+    : AuditableEntity
+{
+
+    public ICollection<Order> Orders { get; set; }
+    public ICollection<Picture> Pictures { get; set; }
+    public ICollection<Attachment> Attachments { get; set; }
+}

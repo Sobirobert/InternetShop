@@ -26,13 +26,7 @@ public class PictureService : IPictureService
         var product = await _productRepository.GetById(productId);
         var existingPictures = await _pictureRepository.GetByProductId(productId);
 
-        var picture = new Picture()
-        {
-            Products = new List<Product> { product },
-            Name = file.FileName,
-            Image = file.GetBytes(),
-            Main = existingPictures.Count() == 0 ? true : false
-        };
+        var picture = new Picture(0, file.FileName, file.GetBytes(), existingPictures.Count() == 0 ? true : false);
 
         var result = await _pictureRepository.Add(picture);
         return _mapper.Map<PictureDto>(result);

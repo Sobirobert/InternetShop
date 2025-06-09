@@ -1,6 +1,5 @@
 ﻿using Application.Dto.OrdersDto;
 using Application.Interfaces;
-using Domain.Enums;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -60,73 +59,21 @@ public class OrderController : Controller
 
         return Ok(new Response<OrderDto>(order));
     }
-
-    [ValidateFilter]
-    [SwaggerOperation(Summary = "Find the order by Id")]
-    [AllowAnonymous]
-    [HttpPost("OrderItem/Add")]
-    public async Task<IActionResult> AddNewOrderItem([FromBody] OrderItemModel orderItemModel)
-    {
-        await _orderService.AddToOrder(orderItemModel.orderId, orderItemModel.amount, orderItemModel.productId);
-        return Ok();
-    }
    
-    [ValidateFilter]
-    [SwaggerOperation(Summary = "Create a new order")]
-    [AllowAnonymous]
-    [HttpPost("OrderModel/Create")]
-    public async Task<IActionResult> CreateNewOrderWithModel([FromBody] OrderModel orderModel)
-    {
-        
-        CreateOrderDto createOrderDto = new CreateOrderDto()
-        {
-            FirstName = orderModel.FirstName,
-            LastName = orderModel.LastName,
-            AddressLine1 = orderModel.AddressLine1,
-            AddressLine2 = orderModel.AddressLine2,
-            ZipCode = orderModel.ZipCode,
-            City = orderModel.City,
-            State = orderModel.State,
-            Country = orderModel.Country,
-            PhoneNumber = orderModel.PhoneNumber,
-            Email = orderModel.Email,
-        };
-        var order = await _orderService.CreateOrder(createOrderDto);
-        return Created($"api/product/{order.OrderId}", new Response<OrderDto>(order));
-    }
+    //[ValidateFilter]
+    //[SwaggerOperation(Summary = "Create a new order")]
+    //[AllowAnonymous]
+    //[HttpPost("OrderModel/Create")]
+    //public async Task<IActionResult> CreateNewOrderWithModel([FromBody] OrderModel orderModel, [FromBody] AdressModel adress, [FromBody] ContactModel contact, [FromBody] NameModel name)
+    //{
+    //    var orderDto  = new OrderDto(
+    //        OrderTotal: orderModel.
+    //        );
 
-    [ValidateFilter]
-    [SwaggerOperation(Summary = "Update a existing Order")]
-    [AllowAnonymous]
-    [HttpPut("Order/Update")]
-    public async Task<IActionResult> Update([FromBody] UpdateOrderModel updateOrderModel)
-    {
-        UpdateOrderDto updateOrder = new UpdateOrderDto()
-        {
-            OrderId = updateOrderModel.OrderId,
-            ShippingStatus = (ShippingStatus)updateOrderModel.ShippingStatus,
-            PaymentStatus = (PaymentStatus)updateOrderModel.PaymentStatus
-        };
-        await _orderService.UpdateOrder(updateOrder);
-        return NoContent();
-    }
+    //    var order = await _orderService.CreateOrder(orderModel, adress, contact, name);
+    //    return Created($"api/product/{order.OrderId}", new Response<OrderDto>(order));
+    //}
 
-    [ValidateFilter]
-    [SwaggerOperation(Summary = "Update a existing OrderItem")]
-    [AllowAnonymous]
-    [HttpPut("OrderItem/Update")]
-    public async Task<IActionResult> UpdateItem([FromBody] UpdateOrderItemModel updateOrderItemModel )
-    {
-        UpdateOrderItemDto updateOrderItem = new UpdateOrderItemDto()
-        {
-            OrderItemId = updateOrderItemModel.OrderItemId,
-            OrderId = updateOrderItemModel.OrderId,
-            Amount = updateOrderItemModel.Amount,
-            Price = updateOrderItemModel.Price
-        };
-        await _orderService.UpdateOrderItem(updateOrderItem);
-        return NoContent();
-    }
 
     [ValidateFilter]
     [SwaggerOperation(Summary = "Delete a specific order")]

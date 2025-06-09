@@ -13,7 +13,7 @@ public class OrderFactory
     private ShippingStatus shippingStatus;
     private PaymentStatus paymentStatus;
     private double totalPrice;
-    private ICollection<Product> shoppingCardsItems;
+    private ICollection<Product> itemList;
     private DateTime orderPlaced;
     private Adress adress;
     private Contact contact;
@@ -55,9 +55,9 @@ public class OrderFactory
         return this;
     }
 
-    public OrderFactory SetShoppingCardsItems(ICollection<Product> shoppingCardsItems)
+    public OrderFactory SetShoppingCardsItems(ICollection<Product> itemList)
     {
-        this.shoppingCardsItems = shoppingCardsItems;
+        this.itemList = itemList;
         return this;
     }
 
@@ -93,17 +93,21 @@ public class OrderFactory
     public Order Build()
     {
         var order = new Order(
-                OrderId: id,
-                PublicId: publicId,
-                ShippingStatus: shippingStatus,
-                PaymentStatus: paymentStatus,
-                TotalPrice: totalPrice,
-                ShoppingCardsItems: shoppingCardsItems,
-                OrderPlaced: orderPlaced,
-                DeliveryAddress: adress,
-                CustomerContact: contact,
-                CustomerInfo: personalInfo
-            );
+            OrderId: id,
+            PublicId: publicId,
+            ShippingStatus: shippingStatus,
+            PaymentStatus: paymentStatus,
+            TotalPrice: totalPrice,
+            OrderPlaced: orderPlaced
+        ) with
+        {
+            // Ustaw właściwości init-only używając 'with'
+            DeliveryAddress = adress,
+            CustomerContact = contact,
+            CustomerInfo = personalInfo,
+            ProductsList = itemList ?? new List<Product>()
+        };
+
         return order;
     }
 }

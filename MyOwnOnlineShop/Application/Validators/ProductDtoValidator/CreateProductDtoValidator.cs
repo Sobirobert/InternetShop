@@ -30,10 +30,6 @@ public class CreateProductDtoValidator : AbstractValidator<CreateProductDto>
             .NotEmpty().WithMessage("Amount is required")
             .GreaterThanOrEqualTo(0).WithMessage("Amount cannot be negative");
 
-        RuleFor(p => p.Price)
-            .NotEmpty().WithMessage("Price is required")
-            .GreaterThan(0).WithMessage("Price must be greater than 0");
-
         RuleFor(p => p.Type)
             .IsInEnum().WithMessage("Invalid product type")
             .NotEmpty().WithMessage("Product type is required");

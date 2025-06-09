@@ -31,12 +31,7 @@ public class AttachmentService : IAttachmentService
     {
         var product = await _productRepository.GetById(productId);
 
-        var attachment = new Attachment()
-        {
-            Products = new List<Product> { product },
-            Name = file.FileName,
-            Path = file.SaveFile()
-        };
+        var attachment = new Attachment(0, file.FileName, file.SaveFile());
 
         var result = await _attachmentRepository.Add(attachment);
         return _mapper.Map<AttachmentDto>(result);
@@ -53,10 +48,6 @@ public class AttachmentService : IAttachmentService
     {
         var attachment = await _attachmentRepository.GetById(id);
 
-        return new DownloadAttachmentDto()
-        {
-            Name = attachment.Name,
-            Content = File.ReadAllBytes(attachment.Path)
-        };
+        return new DownloadAttachmentDto(attachment.Name, File.ReadAllBytes(attachment.Path));
     }
 }

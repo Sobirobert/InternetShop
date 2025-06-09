@@ -18,8 +18,5 @@ public class AttachmentValidator : AbstractValidator<Attachment>
             .NotEmpty().WithMessage("Attachment path is required")
             .MaximumLength(200).WithMessage("Attachment path cannot exceed 200 characters");
 
-        RuleFor(a => a.UserId)
-            .NotEmpty().WithMessage("User ID is required")
-            .GreaterThan(0).WithMessage("User ID must be greater than 0");
     }
 }

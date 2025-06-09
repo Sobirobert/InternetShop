@@ -45,6 +45,7 @@ public class OnlineShopDBContext : IdentityDbContext<ApplicationUser>
                 ((AuditableEntity)entityEntry.Entity).CreatedBy = _userResolverService.GetUser();
             }
         }
+
         return await base.SaveChangesAsync();
     }
 

@@ -1,9 +1,9 @@
 using HealthChecks.UI.Client;
+using Infrastructure.Data;
 using InternetShop.WebAPI.GlobalExceptionHandling;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
 using NLog.Web;
-using System.Reflection;
 using WebAPI.Installers;
 using WebAPI.MiddelWares;
 
@@ -17,7 +17,6 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         builder.Services.InstallServicesInAssembly(builder.Configuration);
         builder.Services.AddEndpointsApiExplorer();
-
         builder.Services.AddSwaggerGen();
         builder.Host.UseNLog();
         builder.Configuration

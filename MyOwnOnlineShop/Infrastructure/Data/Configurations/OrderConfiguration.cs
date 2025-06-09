@@ -9,11 +9,35 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
 {
     public void Configure(EntityTypeBuilder<Order> builder)
     {
-        builder.HasKey(e => e.OrderId);
-        builder.Property(x => x.ShippingStatus).IsRequired();
-        builder.Property(x => x.TotalPrice).IsRequired().HasPrecision(3);
-        builder.Property(x => x.ShoppingCardsItems).IsRequired();
-        builder.HasMany(x => x.ShoppingCardsItems)
-            .WithMany(x => x.Orders);
+        builder.ToTable("Orders");
+        builder.HasKey(o => o.OrderId);
+
+        // Konfiguracja z nowymi nazwami
+        builder.OwnsOne(o => o.DeliveryAddress, address =>
+        {
+            address.Property(a => a.AddressLine1).HasColumnName("DeliveryAddressLine1");
+            address.Property(a => a.AddressLine2).HasColumnName("DeliveryAddressLine2");
+            address.Property(a => a.ZipCode).HasColumnName("DeliveryZipCode");
+            address.Property(a => a.City).HasColumnName("DeliveryCity");
+            address.Property(a => a.State).HasColumnName("DeliveryState");
+            address.Property(a => a.Country).HasColumnName("DeliveryCountry");
+        });
+
+        builder.OwnsOne(o => o.CustomerContact, contact =>
+        {
+            contact.Property(c => c.PhoneNumber).HasColumnName("CustomerPhoneNumber");
+            contact.Property(c => c.Email).HasColumnName("CustomerEmail");
+        });
+
+        builder.OwnsOne(o => o.CustomerInfo, info =>
+        {
+            info.Property(i => i.FirstName).HasColumnName("CustomerFirstName");
+            info.Property(i => i.LastName).HasColumnName("CustomerLastName");
+        });
+
+        builder.HasMany(o => o.ProductsList)
+            .WithMany()
+            .UsingEntity(j => j.ToTable("OrderProducts"));
     }
 }
+

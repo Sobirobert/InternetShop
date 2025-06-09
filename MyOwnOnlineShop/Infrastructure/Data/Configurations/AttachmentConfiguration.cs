@@ -11,6 +11,5 @@ public class AttachmentConfiguration : IEntityTypeConfiguration<Attachment>
         builder.HasKey(e => e.Id);
         builder.Property(x => x.Name).IsRequired();
         builder.Property(x => x.Path).IsRequired();
-        builder.Property(x => x.UserId).IsRequired();
     }
 }

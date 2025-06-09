@@ -2,4 +2,7 @@
 
 namespace Domain.Entities;
 [Table("Attachments")]
-public record Attachment(int Id, string Name, string Path, int UserId, ICollection<Product> Products);
+public record Attachment(int Id, string Name, string Path)
+{
+    public ICollection<Product> Products { get; set; }
+}
