@@ -1,7 +1,5 @@
 ﻿using Domain.Common;
 using Domain.Enums;
-using System.ComponentModel.DataAnnotations.Schema;
-using static Domain.Entities.Order;
 
 namespace Domain.Entities;
 public record Order(int OrderId, Guid PublicId, ShippingStatus ShippingStatus, PaymentStatus PaymentStatus, double TotalPrice, 
@@ -12,7 +10,7 @@ public record Order(int OrderId, Guid PublicId, ShippingStatus ShippingStatus, P
     public Adress? DeliveryAddress { get; init; }
     public Contact? CustomerContact { get; init; }
     public PersonalInfo? CustomerInfo { get; init; }
-    public ICollection<Product> ProductsList { get; init; }
+    public ICollection<Product> ProductsList { get; init; } = new List<Product>();
     public record Adress(string AddressLine1, string AddressLine2, string ZipCode, string City, string State, string Country);
 
     public record Contact(string PhoneNumber, string Email);

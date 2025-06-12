@@ -36,7 +36,7 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         });
 
         builder.HasMany(o => o.ProductsList)
-            .WithMany()
+            .WithMany(p => p.Orders)
             .UsingEntity(j => j.ToTable("OrderProducts"));
     }
 }

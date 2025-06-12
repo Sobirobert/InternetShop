@@ -24,9 +24,6 @@ public class OnlineShopDBContext : IdentityDbContext<ApplicationUser>
     public DbSet<Domain.Entities.Attachment> Attachments { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Order> Orders { get; set; }
-    public DbSet<Address> Addresses { get; set; }
-    public DbSet<Contact> Contacts { get; set; }
-    public DbSet<PersonalInfo> PersonalInfos { get; set; }
 
     public async Task<int> SaveChangesAsync()
     {
@@ -51,6 +48,7 @@ public class OnlineShopDBContext : IdentityDbContext<ApplicationUser>
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
         SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
         modelBuilder.ApplyConfigurationsFromAssembly(this.GetType().Assembly);

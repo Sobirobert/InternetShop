@@ -8,6 +8,8 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
 {
     public void Configure(EntityTypeBuilder<Product> builder)
     {
+        builder.ToTable("Products");
+
         builder.HasKey(e => e.Id);
         builder.Property(x => x.Price).IsRequired().HasPrecision(3);
         builder.Property(x => x.YearOfProduction).IsRequired();
@@ -26,6 +28,8 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.HasOne(w => w.Category)
             .WithMany(x => x.Products)
             .HasForeignKey(w => w.CategoryId);
-
+        builder.HasMany(p => p.Orders)
+            .WithMany(o => o.ProductsList)
+            .UsingEntity(j => j.ToTable("OrderProducts"));
     }
 }

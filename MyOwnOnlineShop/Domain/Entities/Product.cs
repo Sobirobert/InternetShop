@@ -3,7 +3,6 @@ using Domain.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities;
-[Table("Products")]
 public record Product(
     int Id, 
     string Title, 
@@ -19,7 +18,7 @@ public record Product(
 
     public Category Category { get; set; }
     public int CategoryId { get; set; }
-    public ICollection<Order> Orders { get; set; }
+    public ICollection<Order> Orders { get; set; } = new List<Order>();
     public ICollection<Picture> Pictures { get; set; }
     public ICollection<Attachment> Attachments { get; set; }
 }
