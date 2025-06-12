@@ -13,12 +13,12 @@ public record Product(
     int YearOfProduction, 
     double Price, 
     bool IsProductOfTheWeek, 
-    TypeProduct Type, 
-    Category Category, 
-    int CategoryId)
+    TypeProduct Type)
     : AuditableEntity
 {
 
+    public Category Category { get; set; }
+    public int CategoryId { get; set; }
     public ICollection<Order> Orders { get; set; }
     public ICollection<Picture> Pictures { get; set; }
     public ICollection<Attachment> Attachments { get; set; }
