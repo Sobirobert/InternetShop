@@ -1,12 +1,11 @@
 ﻿using Domain.Entities;
 using Domain.Enums;
-using StackExchange.Redis;
 using static Domain.Entities.Order;
 using Order = Domain.Entities.Order;
 
-namespace Infrastructure.Facories;
+namespace Infrastructure.Builders;
 
-public class OrderFactory
+public class OrderBuilder
 {
     private int id;
     private Guid publicId;
@@ -20,31 +19,31 @@ public class OrderFactory
     private PersonalInfo personalInfo;
     //private IStrategy _strategy;
 
-    public OrderFactory SetId(int id)
+    public OrderBuilder SetId(int id)
     {
         this.id = id;
         return this;
     }
 
-    public OrderFactory SetPublicId(Guid publicId)
+    public OrderBuilder SetPublicId(Guid publicId)
     {
         this.publicId = publicId;
         return this;
     }
 
-    public OrderFactory SetShippingStatus(ShippingStatus shippingStatus)
+    public OrderBuilder SetShippingStatus(ShippingStatus shippingStatus)
     {
         this.shippingStatus = shippingStatus;
         return this;
     }
 
-    public OrderFactory SetPaymentStatus(PaymentStatus paymentStatus)
+    public OrderBuilder SetPaymentStatus(PaymentStatus paymentStatus)
     {
         this.paymentStatus = paymentStatus;
         return this;
     }
 
-    public OrderFactory SetTotalPrice(ICollection<Product> shoppingCardsItems)
+    public OrderBuilder SetTotalPrice(ICollection<Product> shoppingCardsItems)
     {
         double totalPrice = 0;
         foreach (var item in shoppingCardsItems)
@@ -55,31 +54,31 @@ public class OrderFactory
         return this;
     }
 
-    public OrderFactory SetShoppingCardsItems(ICollection<Product> itemList)
+    public OrderBuilder SetShoppingCardsItems(ICollection<Product> itemList)
     {
         this.itemList = itemList;
         return this;
     }
 
-    public OrderFactory SetOrderPlaced()
+    public OrderBuilder SetOrderPlaced()
     {
         this.orderPlaced = DateTime.Now;
         return this;
     }
 
-    public OrderFactory SetAdress(Adress adress)
+    public OrderBuilder SetAdress(Adress adress)
     {
         this.adress = adress;
         return this;
     }
 
-    public OrderFactory SetContact(Contact contact)
+    public OrderBuilder SetContact(Contact contact)
     {
         this.contact = contact;
         return this;
     }
 
-    public OrderFactory SetPersonalInfo(PersonalInfo personalInfo)
+    public OrderBuilder SetPersonalInfo(PersonalInfo personalInfo)
     {
         this.personalInfo = personalInfo;
         return this;
@@ -101,7 +100,6 @@ public class OrderFactory
             OrderPlaced: orderPlaced
         ) with
         {
-            // Ustaw właściwości init-only używając 'with'
             DeliveryAddress = adress,
             CustomerContact = contact,
             CustomerInfo = personalInfo,

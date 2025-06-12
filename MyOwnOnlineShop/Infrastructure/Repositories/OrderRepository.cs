@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Interfaces;
+using Infrastructure.Builders;
 using Infrastructure.Data;
 using Infrastructure.ExtensionMethods;
 using Infrastructure.Facories;
@@ -17,7 +18,7 @@ public class OrderRepository : IOrderRepository
     }
     public async Task<Order> CreateOrder(Order order, Adress adress, Contact contact, PersonalInfo info)
     {
-        var newOrder = new OrderFactory()
+        var newOrder = new OrderBuilder()
          .SetPublicId(order.PublicId)
          .SetShippingStatus(order.ShippingStatus)
          .SetPaymentStatus(order.PaymentStatus)

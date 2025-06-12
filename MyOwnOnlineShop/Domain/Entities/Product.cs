@@ -1,6 +1,5 @@
 ﻿using Domain.Common;
 using Domain.Enums;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities;
 public record Product(
@@ -12,7 +11,7 @@ public record Product(
     int YearOfProduction, 
     double Price, 
     bool IsProductOfTheWeek, 
-    TypeProduct Type)
+    TypeProduct TypeOfProduct)
     : AuditableEntity
 {
 
