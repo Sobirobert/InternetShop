@@ -14,15 +14,8 @@ using WebAPI.Wrappers;
 namespace WebAPI.Controllers.V1;
 
 [Authorize]
-public class OrderController : Controller
+public class OrderController(IOrderService orderService) : Controller
 {
-    private readonly IOrderService _orderService;
-
-    public OrderController(IOrderService orderService)
-    {
-        _orderService = orderService;
-    }
-
     [SwaggerOperation(Summary = "Retrieves sort fields")]
     [HttpGet("[action]")]
     public IActionResult GetSortFields()
@@ -38,9 +31,9 @@ public class OrderController : Controller
         var validPaginationFilter = new PaginationFilter(paginationFilter.PageNumber, paginationFilter.PageSize);
         var validSortingFilter = new SortingFilter(sortingFilter.SortField, sortingFilter.Ascending);
 
-        var products = await _orderService.GetAllOrders(validPaginationFilter.PageNumber, validPaginationFilter.PageSize,
+        var products = await orderService.GetAllOrders(validPaginationFilter.PageNumber, validPaginationFilter.PageSize,
                                                                  validSortingFilter.SortField, validSortingFilter.Ascending, filterBy);
-        var totalRecords = await _orderService.GetAllOrdersCount(filterBy);
+        var totalRecords = await orderService.GetAllOrdersCount(filterBy);
 
         return Ok(PaginationHelper.CreatePageResponse(products, validPaginationFilter, totalRecords));
     }
@@ -51,7 +44,7 @@ public class OrderController : Controller
     [HttpGet("OrderById/{id}")]
     public async Task<IActionResult> GetOrderByID(int id)
     {
-        var order = await _orderService.GetOrderById(id);
+        var order = await orderService.GetOrderById(id);
         if (order == null)
         {
             return NotFound(id);
@@ -86,7 +79,7 @@ public class OrderController : Controller
         {
             return BadRequest(new Response(false, "You do not own this post."));
         }
-        await _orderService.DeleteOrder(id);
+        await orderService.DeleteOrder(id);
         return NoContent();
     }
 }

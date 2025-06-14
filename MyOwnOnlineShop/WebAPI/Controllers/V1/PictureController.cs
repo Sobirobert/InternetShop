@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using WebAPI.Attributes;
 using WebAPI.Functions.Commands.Picture;
-using WebAPI.Functions.Commands.ProductCommnds;
 using WebAPI.Functions.Queries.Picture;
 using WebAPI.Wrappers;
 

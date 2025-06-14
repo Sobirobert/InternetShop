@@ -1,10 +1,13 @@
 ﻿using Application.Dto.AttachmentsDto;
 using Application.Interfaces;
 using Infrastructure.Identity;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using WebAPI.Attributes;
+using WebAPI.Functions.Commands.AttachmentCommands;
+using WebAPI.Functions.Queries.AttachmentQueries;
 using WebAPI.Wrappers;
 
 namespace WebAPI.Controllers.V1;
@@ -13,69 +16,43 @@ namespace WebAPI.Controllers.V1;
 [ApiVersion("1.0")]
 [Authorize(Roles = UserRoles.Admin)]
 [ApiController]
-public class AttachmentsController : ControllerBase
+public class AttachmentsController(IMediator mediator) : ControllerBase
 {
-    private readonly IAttachmentService _attachmentService;
-    private readonly IProductService _productService;
-
-    public AttachmentsController(IAttachmentService attachmentService, IProductService productService)
-    {
-        _attachmentService = attachmentService;
-        _productService = productService;
-    }
-
     [SwaggerOperation(Summary = "Retrieves a attachments by unique Product id")]
     [HttpGet("[action]/{productId}")]
     public async Task<IActionResult> GetByProductIdAsync(int productId)
     {
-        var pictures = await _attachmentService.GetAttachmentsByProductId(productId);
-        return Ok(new Response<IEnumerable<AttachmentDto>>(pictures));
+        var query = new GetAttachmentByProductIdQuery(productId);
+        var result = await mediator.Send(query);
+        return Ok(new Response<IEnumerable<AttachmentDto>>(result));
     }
 
     [ValidateFilter]
     [SwaggerOperation(Summary = "Download a specific attachment by unique if")]
     [HttpGet("{productId}/{id}")]
-    public async Task<IActionResult> DownloadAsync(int id, int productId)
+    public async Task<IActionResult> DownloadAttachment(int id, int productId)
     {
-        var product = await _productService.GetProductById(productId);
-        if (product == null)
-        {
-            return BadRequest(new Response(false, $"Product with id {productId} does not exist."));
-        }
-
-        var attachment = await _attachmentService.DownloadAttachmentById(id);
-        if (attachment == null)
-        {
-            return NotFound();
-        }
-        return File(attachment.Content, System.Net.Mime.MediaTypeNames.Application.Octet, attachment.Name);
+        var query = new DownloadAttachmentQuery(id, productId);
+        var result = await mediator.Send(query);
+        return File(result.Content, System.Net.Mime.MediaTypeNames.Application.Octet, result.Name);
     }
 
     [ValidateFilter]
     [SwaggerOperation(Summary = "Add a new attachment to Product")]
     [HttpPost("{productId}")]
-    public async Task<IActionResult> AddToPostAsync(int productId, IFormFile file)
+    public async Task<IActionResult> AddToProduct(int productId, IFormFile file)
     {
-        var product = await _productService.GetProductById(productId);
-        if (product == null)
-        {
-            return BadRequest(new Response(false, $"Product with id {productId} does not exist."));
-        }
-
-        var attachment = await _attachmentService.AddAttachmentToProduct(productId, file);
-        return Created($"api/attachments/{attachment.Id}", new Response<AttachmentDto>(attachment));
+        var command = new AddAttachmentToProductCommand(productId, file);
+        var result = await mediator.Send(command);
+        return Created($"api/attachments/{result.Id}", new Response<AttachmentDto>(result));
     }
 
     [SwaggerOperation(Summary = "Delete a specific attachment")]
     [HttpDelete("{productId}/{id}")]
     public async Task<IActionResult> DeleteAsync(int attachmentsId, int productId)
     {
-        var product = await _productService.GetProductById(productId);
-        if (product == null)
-        {
-            return BadRequest(new Response(false, $"Product with id {productId} does not exist."));
-        }
-        await _attachmentService.DelateAttachment(attachmentsId);
+        var command = new DeleteAttachmentCommand(attachmentsId, productId);
+        var result = await mediator.Send(command);
         return NoContent();
     }
 }

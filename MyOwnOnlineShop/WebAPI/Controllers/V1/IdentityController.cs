@@ -15,22 +15,9 @@ namespace WebAPI.Controllers.V1;
 
 [Route("api/[controller]")]
 [ApiController]
-public class IdentityController : ControllerBase
+public class IdentityController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration,
+        IEmailSenderService emailSenderService) : ControllerBase
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly RoleManager<IdentityRole> _roleManager;
-    private readonly IConfiguration _configuration;
-    private readonly IEmailSenderService _emailSenderService;
-
-    public IdentityController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration,
-        IEmailSenderService emailSenderService)
-    {
-        _roleManager = roleManager;
-        _userManager = userManager;
-        _configuration = configuration;
-        _emailSenderService = emailSenderService;
-    }
-
     /// <summary>
     /// Registers the user in the system
     /// </summary>
@@ -42,7 +29,7 @@ public class IdentityController : ControllerBase
     [Route("Register User")]
     public async Task<IActionResult> RegisterUser(RegisterModel register)
     {
-        var userExists = await _userManager.FindByNameAsync(register.UserNick);
+        var userExists = await userManager.FindByNameAsync(register.UserNick);
         if (userExists != null)
         {
             return StatusCode(StatusCodes.Status500InternalServerError, new Response
@@ -68,7 +55,7 @@ public class IdentityController : ControllerBase
             Country = register.Country,
         };
 
-        var result = await _userManager.CreateAsync(user, register.Password);
+        var result = await userManager.CreateAsync(user, register.Password);
         if (!result.Succeeded)
         {
             return StatusCode(StatusCodes.Status500InternalServerError, new Response<bool>
@@ -79,12 +66,12 @@ public class IdentityController : ControllerBase
             });
         }
 
-        if (!await _roleManager.RoleExistsAsync(UserRoles.User))
-            await _roleManager.CreateAsync(new IdentityRole(UserRoles.User));
+        if (!await roleManager.RoleExistsAsync(UserRoles.User))
+            await roleManager.CreateAsync(new IdentityRole(UserRoles.User));
 
-        await _userManager.AddToRoleAsync(user, UserRoles.User);
+        await userManager.AddToRoleAsync(user, UserRoles.User);
 
-        await _emailSenderService.Send(user.Email, "Registration confirmation", EmailTemplate.WelcomeMessage, user);
+        await emailSenderService.Send(user.Email, "Registration confirmation", EmailTemplate.WelcomeMessage, user);
 
         return Ok(new Response { Succeeded = true, Message = "User created successfully!" });
     }
@@ -100,7 +87,7 @@ public class IdentityController : ControllerBase
     [Route("RegisterAdmin")]
     public async Task<IActionResult> RegisterAdmin(RegisterModel register)
     {
-        var userExists = await _userManager.FindByNameAsync(register.UserNick);
+        var userExists = await userManager.FindByNameAsync(register.UserNick);
         if (userExists != null)
         {
             return StatusCode(StatusCodes.Status500InternalServerError, new Response
@@ -126,7 +113,7 @@ public class IdentityController : ControllerBase
             Country = register.Country,
         };
 
-        var result = await _userManager.CreateAsync(user, register.Password);
+        var result = await userManager.CreateAsync(user, register.Password);
         if (!result.Succeeded)
         {
             return StatusCode(StatusCodes.Status500InternalServerError, new Response<bool>
@@ -137,11 +124,11 @@ public class IdentityController : ControllerBase
             });
         }
 
-        if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
-            await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
+        if (!await roleManager.RoleExistsAsync(UserRoles.Admin))
+            await roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
 
-        await _userManager.AddToRoleAsync(user, UserRoles.Admin);
-        await _emailSenderService.Send(user.Email, "Registration confirmation", EmailTemplate.WelcomeMessage, user);
+        await userManager.AddToRoleAsync(user, UserRoles.Admin);
+        await emailSenderService.Send(user.Email, "Registration confirmation", EmailTemplate.WelcomeMessage, user);
 
         return Ok(new Response { Succeeded = true, Message = "User created successfully!" });
     }
@@ -155,8 +142,8 @@ public class IdentityController : ControllerBase
     [Route("Login")]
     public async Task<IActionResult> Login(LoginModel login)
     {
-        var user = await _userManager.FindByNameAsync(login.UserNick);
-        if (user != null && await _userManager.CheckPasswordAsync(user, login.Password))
+        var user = await userManager.FindByNameAsync(login.UserNick);
+        if (user != null && await userManager.CheckPasswordAsync(user, login.Password))
         {
             var authClaims = new List<Claim>
             {
@@ -165,13 +152,13 @@ public class IdentityController : ControllerBase
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
-            var userRoles = await _userManager.GetRolesAsync(user);
+            var userRoles = await userManager.GetRolesAsync(user);
             foreach (var userRole in userRoles)
             {
                 authClaims.Add(new Claim(ClaimTypes.Role, userRole));
             }
 
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]));
 
             var token = new JwtSecurityToken(
                 expires: DateTime.Now.AddHours(2),

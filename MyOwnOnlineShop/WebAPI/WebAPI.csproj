@@ -36,10 +36,8 @@
 
   <ItemGroup>
     <Folder Include="Controllers\V2\" />
-    <Folder Include="Functions\Commands\AttachmentCommands\" />
     <Folder Include="Functions\Commands\CategoryCommands\" />
     <Folder Include="Functions\Commands\OrderCommands\" />
-    <Folder Include="Functions\Queries\AttachmentQueries\" />
     <Folder Include="Functions\Queries\CategoryQueries\" />
     <Folder Include="Functions\Queries\OrderQueries\" />
     <Folder Include="Validators\" />

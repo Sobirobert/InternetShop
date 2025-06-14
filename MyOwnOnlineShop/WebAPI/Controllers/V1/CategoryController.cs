@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Security.Claims;
-using WebAPI.Attributes;
-using WebAPI.Models;
 using WebAPI.SwaggerExamples.Responses.CategoryResponses;
 using WebAPI.Wrappers;
 
@@ -15,20 +13,13 @@ namespace WebAPI.Controllers.V1;
 [Authorize(Roles = UserRoles.Admin)]
 [Route("api/[controller]")]
 [ApiController]
-public class CategoryController : ControllerBase
+public class CategoryController(ICategoryService categoryService) : ControllerBase
 {
-    private readonly ICategoryService _categoryService;
-
-    public CategoryController(ICategoryService categoryService)
-    {
-        _categoryService = categoryService;
-    }
-
     [SwaggerOperation(Summary = "Show all Categories.")]
     [HttpGet]
     public async Task<IActionResult> GetAllCategories()
     {
-        var categories = await _categoryService.GetAllCategories();
+        var categories = await categoryService.GetAllCategories();
         if (categories == null)
         {
             return BadRequest(new Response(false, "Categories are empty"));
@@ -146,12 +137,12 @@ public class CategoryController : ControllerBase
         }
         else
         {
-            var existCategory = await _categoryService.GetCategoryById(id);
+            var existCategory = await categoryService.GetCategoryById(id);
             if (existCategory == null)
             {
                 return BadRequest(new Response(false, "Category isn't exists!"));
             }
-            await _categoryService.DeleteCategory(id);
+            await categoryService.DeleteCategory(id);
             return StatusCode(StatusCodes.Status200OK, new Response
             {
                 Succeeded = true,
