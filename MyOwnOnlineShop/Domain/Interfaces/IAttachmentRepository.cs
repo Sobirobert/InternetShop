@@ -1,13 +1,5 @@
-﻿using Domain.Entities;
-
-namespace Domain.Interfaces;
-public interface IAttachmentRepository
+﻿namespace Domain.Interfaces;
+public interface IAttachmentRepository<T> : IBaseRepository<T> where T : class
 {
-    Task<IEnumerable<Attachment>> GetByProductId(int productId);
-
-    Task<Attachment> GetById(int id);
-
-    Task<Attachment> Add(Attachment attachment);
-
-    Task Delete(Attachment attachment);
+    Task<IEnumerable<T>> GetByProductId(int productId);
 }

@@ -1,5 +1,4 @@
 ﻿namespace Domain.Validation;
-
 public class ValidationResult
 {
     private readonly List<string> _errors = new List<string>();

@@ -2,7 +2,6 @@
 using FluentValidation;
 
 namespace Domain.Validation;
-
 public class ProductValidator : AbstractValidator<Product>
 {
     public ProductValidator()
@@ -36,7 +35,7 @@ public class ProductValidator : AbstractValidator<Product>
             .GreaterThan(0).WithMessage("Price must be greater than 0")
             .LessThan(1000000).WithMessage("Price cannot exceed 1,000,000");
 
-        RuleFor(p => p.Type)
+        RuleFor(p => p.TypeOfProduct)
             .IsInEnum().WithMessage("Invalid product type");
 
         RuleFor(p => p.CategoryId)

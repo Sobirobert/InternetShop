@@ -2,7 +2,6 @@
 using FluentValidation;
 
 namespace Domain.Validation;
-
 public class CategoryValidator : AbstractValidator<Category>
 {
     public CategoryValidator()
