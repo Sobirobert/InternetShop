@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using WebAPI.Attributes;
 using WebAPI.Functions.Commands.Picture;
+using WebAPI.Functions.Commands.ProductCommnds;
 using WebAPI.Functions.Queries.Picture;
 using WebAPI.Wrappers;
 
@@ -15,21 +16,14 @@ namespace WebAPI.Controllers.V1;
 [ApiVersion("1.0")]
 [Authorize(Roles = UserRoles.User)]
 [ApiController]
-public class PictureController : ControllerBase
+public class PictureController(IMediator mediator) : ControllerBase
 {
-    private readonly IMediator _mediator;
-
-    public PictureController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
     [SwaggerOperation(Summary = "Retrieves all picture by unique product id")]
     [HttpGet("[action]/{productId}")]
     public async Task<IActionResult> GetPicrtureByProductId(int productId)
     {
         var query =  new GetPicrtureByProductIdQuery(productId);
-        var result = await _mediator.Send(query);
+        var result = await mediator.Send(query);
         return Ok(new Response<IEnumerable<PictureDto>>(result));
         
     }
@@ -39,7 +33,7 @@ public class PictureController : ControllerBase
     public async Task<IActionResult> GetPictureById(int id)
     {
         var query = new GetPictureByIdQuery(id);
-        var result = await _mediator.Send(query);
+        var result = await mediator.Send(query);
         return Ok(new Response<PictureDto>(result));
     }
 
@@ -48,8 +42,8 @@ public class PictureController : ControllerBase
     [HttpPost("{productId}")]
     public async Task<IActionResult> AddToProductAsync(int productId, IFormFile file)
     {
-        var command = new AddToProductAsyncCommand(productId, file);
-        var result = await _mediator.Send(command);
+        var command = new AddPictureToProductCommand(productId, file);
+        var result = await mediator.Send(command);
         return Created($"api/pictures/{result.Id}", new Response<PictureDto>(result));
     }
 
@@ -58,7 +52,7 @@ public class PictureController : ControllerBase
     public async Task<IActionResult> SetMainPicture(int productId, int id)
     {
         var command = new SetMainPictureCommand(productId, id);
-        var result = await _mediator.Send(command);
+        var result = await mediator.Send(command);
         return NoContent();
     }
 
@@ -67,7 +61,7 @@ public class PictureController : ControllerBase
     public async Task<IActionResult> Delate(int id)
     {
         var command = new DelateCommand(id);
-        var resoult = await _mediator.Send(command);
+        var resoult = await mediator.Send(command);
         return NoContent();
     }
 }

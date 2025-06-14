@@ -5,18 +5,11 @@ using Infrastructure.ExtensionMethods;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
-public class ProductRepository : IProductRepository
+public class ProductRepository(OnlineShopDBContext context) : IProductRepository
 {
-    private readonly OnlineShopDBContext _context;
-
-    public ProductRepository(OnlineShopDBContext context)
-    {
-        _context = context;
-    }
-
     public async Task<IEnumerable<Product>> GetAll(int pageNumber, int pageSize, string sortField, bool ascending, string filterBy)
     {
-        return await _context.Products
+        return await context.Products
             .Where(m => m.Title.ToLower().Contains(filterBy.ToLower()) || m.ShortDescription.ToLower().Contains(filterBy.ToLower()))
             .OrderByPropertyName(sortField, ascending)
             .Skip((pageNumber - 1) * pageSize)
@@ -26,7 +19,7 @@ public class ProductRepository : IProductRepository
 
     public async Task<Product> GetById(int id)
     {
-        var product = await _context.Products
+        var product = await context.Products
             .FirstOrDefaultAsync(x => x.Id == id);
         if (product == null)
         {
@@ -37,7 +30,7 @@ public class ProductRepository : IProductRepository
 
     public async Task<int> GetAllCount(string filterBy)
     {
-        return await _context.Products
+        return await context.Products
             .Where(m => m.Title.ToLower()
             .Contains(filterBy.ToLower()) || m.ShortDescription.ToLower()
             .Contains(filterBy.ToLower()))
@@ -47,16 +40,16 @@ public class ProductRepository : IProductRepository
     public async Task<Product> Add(Product product)
     {
         product.Created = DateTime.Now;
-        await _context.Products.AddAsync(product);
-        await _context.SaveChangesAsync();
+        await context.Products.AddAsync(product);
+        await context.SaveChangesAsync();
         return product;
     }
 
     public async Task Update(Product product)
     {
         product.LastModified = DateTime.Now;
-        _context.Products.Update(product);
-        await _context.SaveChangesAsync();
+        context.Products.Update(product);
+        await context.SaveChangesAsync();
     }
 
     public async Task Delete(int id)
@@ -66,12 +59,12 @@ public class ProductRepository : IProductRepository
         {
             throw new Exception("The Product with this id does not exist");
         }
-        _context.Products.Remove(product);
-        await _context.SaveChangesAsync();
+        context.Products.Remove(product);
+        await context.SaveChangesAsync();
     }
 
     public async Task<IEnumerable<Product>> ProductOfTheWeek()
     {
-        return _context.Products.Include(c => c.CategoryId).Where(p => p.IsProductOfTheWeek);
+        return context.Products.Include(c => c.CategoryId).Where(p => p.IsProductOfTheWeek);
     }
 }

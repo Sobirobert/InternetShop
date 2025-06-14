@@ -1,17 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 
 namespace Application.Services;
-public class UserResolverService
+public class UserResolverService(IHttpContextAccessor context)
 {
-    private readonly IHttpContextAccessor _context;
-
-    public UserResolverService(IHttpContextAccessor context)
-    {
-        _context = context;
-    }
-
     public string GetUser()
     {
-        return _context.HttpContext.User?.Identity?.Name;
+        return context.HttpContext.User?.Identity?.Name;
     }
 }

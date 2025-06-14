@@ -1,27 +1,19 @@
 ﻿using Application.Services;
 using Domain.Common;
 using Domain.Entities;
-using FluentEmail.Core.Models;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using static Domain.Entities.Order;
 
 namespace Infrastructure.Data;
-public class OnlineShopDBContext : IdentityDbContext<ApplicationUser>
+public class OnlineShopDBContext(DbContextOptions<OnlineShopDBContext> options, UserResolverService userService) : IdentityDbContext<ApplicationUser>(options)
 {
-    private readonly UserResolverService _userResolverService;
-
-    public OnlineShopDBContext(DbContextOptions<OnlineShopDBContext> options, UserResolverService userService)
-        : base(options)
-    {
-        _userResolverService = userService;
-    }
+    private readonly UserResolverService _userResolverService = userService;
 
     public DbSet<Product> Products { get; set; }
     public DbSet<Picture> Pictures { get; set; }
-    public DbSet<Domain.Entities.Attachment> Attachments { get; set; }
+    public DbSet<Attachment> Attachments { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Order> Orders { get; set; }
 

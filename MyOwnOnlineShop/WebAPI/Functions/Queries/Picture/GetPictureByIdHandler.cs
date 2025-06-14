@@ -4,17 +4,11 @@ using MediatR;
 
 namespace WebAPI.Functions.Queries.Picture;
 
-public class GetPictureByIdHandler : IRequestHandler<GetPictureByIdQuery, PictureDto>
+public class GetPictureByIdHandler(IPictureService pictureService) : IRequestHandler<GetPictureByIdQuery, PictureDto>
 {
-    private readonly IPictureService _pictureService;
-    public GetPictureByIdHandler(IPictureService pictureService)
-    {
-        _pictureService = pictureService;
-    }
-
     public async Task<PictureDto> Handle(GetPictureByIdQuery request, CancellationToken cancellationToken)
     {
-        var picture = await _pictureService.GetPictureById(request.PictureId);
+        var picture = await pictureService.GetPictureById(request.PictureId);
         return picture == null ? null : picture;
     }
 }

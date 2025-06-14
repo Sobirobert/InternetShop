@@ -1,11 +1,7 @@
 ﻿namespace Application;
 
 [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
-public class DisplayPropertyAttribute : Attribute
+public class DisplayPropertyAttribute(string name) : Attribute
 {
-    public string Name { get; set; }
-    public DisplayPropertyAttribute(string name)
-    {
-            Name = name;
-    }
+    public string Name { get; } = name;
 }

@@ -2,13 +2,8 @@
 
 namespace WebAPI.Functions.Commands.Picture;
 
-public class SetMainPictureCommand : IRequest
+public class SetMainPictureCommand(int productId, int pictureId) : IRequest
 {
-    public int ProductId { get; set; }
-    public int PictureId { get; set; }
-    public SetMainPictureCommand(int productId, int pictureId)
-    {
-        ProductId = productId;
-        PictureId = pictureId;
-    }
+    public int ProductId { get; } = productId;
+    public int PictureId { get; } = pictureId;
 }

@@ -25,9 +25,9 @@ public class OrderBuilder
         return this;
     }
 
-    public OrderBuilder SetPublicId(Guid publicId)
+    public OrderBuilder SetPublicId()
     {
-        this.publicId = publicId;
+        this.publicId = Guid.NewGuid();
         return this;
     }
 

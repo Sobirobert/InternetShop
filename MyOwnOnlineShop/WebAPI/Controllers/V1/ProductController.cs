@@ -1,14 +1,15 @@
 ﻿using Application.Dto.ProductDtoFolder;
-using Application.Interfaces;
 using Infrastructure.Identity;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Security.Claims;
 using WebAPI.Attributes;
 using WebAPI.Cache;
 using WebAPI.Filters;
+using WebAPI.Functions.Commands.ProductCommnds;
+using WebAPI.Functions.Queries.ProductQueries;
 using WebAPI.Helpers;
 using WebAPI.Wrappers;
 
@@ -17,7 +18,7 @@ namespace WebAPI.Controllers.V1;
 [Route("api/[controller]")]
 [ApiVersion("1.0")]
 [ApiController]
-public class ProductController(IProductService _productService, IMemoryCache _memoryCache, ILogger _logger) : ControllerBase
+public class ProductController(IMediator mediator) : ControllerBase
 {
     [SwaggerOperation(Summary = "Retrieves sort fields")]
     [HttpGet("[action]")]
@@ -31,25 +32,12 @@ public class ProductController(IProductService _productService, IMemoryCache _me
     [HttpGet]
     public async Task<IActionResult> GetAllProducts([FromQuery] PaginationFilter paginationFilter, [FromQuery] SortingFilter sortingFilter, [FromQuery] string filterBy = "")
     {
-        var validPaginationFilter = new PaginationFilter(paginationFilter.PageNumber, paginationFilter.PageSize);
-        var validSortingFilter = new SortingFilter(sortingFilter.SortField, sortingFilter.Ascending);
 
-        var products = _memoryCache.Get<IEnumerable<ProductDto>>("Product");
-        if (products == null)
-        {
-            _logger.LogInformation("Fetching from server");
-            products = await _productService.GetAllProducts(validPaginationFilter.PageNumber, validPaginationFilter.PageSize,
-                                                                 validSortingFilter.SortField, validSortingFilter.Ascending, filterBy);
-            _memoryCache.Set("product", products, TimeSpan.FromMinutes(1));
-        }
-        else
-        {
-            _logger.LogInformation("Fetching from cache");
-        }
+        var query = new GetAllProductQuery(paginationFilter.PageNumber, paginationFilter.PageSize,
+                                          sortingFilter.SortField, sortingFilter.Ascending, filterBy);
 
-        var totalRecords = await _productService.GetAllProductsCount(filterBy);
-
-        return Ok(PaginationHelper.CreatePageResponse(products, validPaginationFilter, totalRecords));
+        var result = await mediator.Send(query);
+        return Ok(result);
     }
 
     [ValidateFilter]
@@ -58,13 +46,9 @@ public class ProductController(IProductService _productService, IMemoryCache _me
     [HttpGet("{id}")]
     public async Task<IActionResult> GetProductById(int id)
     {
-        var product = await _productService.GetProductById(id);
-        if (product == null)
-        {
-            return NotFound(id);
-        }
-
-        return Ok(new Response<ProductDto>(product));
+        var query = new GetProductByIdQuery(id);
+        var result = await mediator.Send(query);
+        return Ok(new Response<ProductDto>(result));
     }
 
     /// <summary>
@@ -78,8 +62,10 @@ public class ProductController(IProductService _productService, IMemoryCache _me
     [HttpPost]
     public async Task<IActionResult> Create(CreateProductDto newProduct)
     {
-        var product = await _productService.AddNewProduct(newProduct);
-        return Created($"api/product/{product.Id}", new Response<ProductDto>(product));
+
+        var command = new AddToProductCommand(newProduct);
+        var result = await mediator.Send(command);
+        return Created($"api/product/{result.Id}", new Response<ProductDto>(result));
     }
 
     [ValidateFilter]
@@ -88,7 +74,8 @@ public class ProductController(IProductService _productService, IMemoryCache _me
     [HttpPut]
     public async Task<IActionResult> Update(UpdateProductDto updateProduct)
     {
-        await _productService.UpdateProduct(updateProduct);
+        var command = new UpdateProductCommand(updateProduct);
+        var result = await mediator.Send(command);
         return NoContent();
     }
 
@@ -99,11 +86,12 @@ public class ProductController(IProductService _productService, IMemoryCache _me
     public async Task<IActionResult> Delete(int id)
     {
         var isAdmin = User.FindFirstValue(ClaimTypes.Role).Contains(UserRoles.Admin);
-        if (!isAdmin)
+        if (isAdmin)
         {
-            return BadRequest(new Response(false, "You do not own this product."));
+            var command = new DeleteProductCommand(id);
+            var result = await mediator.Send(command);
+            return NoContent();
         }
-        await _productService.DeleteProduct(id);
-        return NoContent();
+        return BadRequest(new Response(false, "You do not own this product."));
     }
 }
