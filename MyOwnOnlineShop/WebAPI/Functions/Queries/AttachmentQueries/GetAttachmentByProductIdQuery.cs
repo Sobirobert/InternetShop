@@ -3,7 +3,4 @@ using MediatR;
 
 namespace WebAPI.Functions.Queries.AttachmentQueries;
 
-public class GetAttachmentByProductIdQuery(int productId) : IRequest<IEnumerable<AttachmentDto>>
-{
-    public int ProductId { get; } = productId;
-}
+public record GetAttachmentByProductIdQuery(int ProductId) : IRequest<IEnumerable<AttachmentDto>>;

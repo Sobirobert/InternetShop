@@ -1,5 +1,4 @@
-﻿using Application.Dto;
-using Application.Dto.ProductDtoFolder;
+﻿using Application.Dto.ProductDtoFolder;
 using Application.Interfaces;
 using AutoMapper;
 using MediatR;

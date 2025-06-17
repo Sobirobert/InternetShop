@@ -1,10 +1,13 @@
 ﻿using Application.Dto.CategoryDto;
-using Application.Interfaces;
 using Infrastructure.Identity;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Security.Claims;
+using WebAPI.Attributes;
+using WebAPI.Functions.Commands.CategoryCommands;
+using WebAPI.Functions.Queries.CategoryQueries;
+using WebAPI.Models;
 using WebAPI.SwaggerExamples.Responses.CategoryResponses;
 using WebAPI.Wrappers;
 
@@ -13,109 +16,75 @@ namespace WebAPI.Controllers.V1;
 [Authorize(Roles = UserRoles.Admin)]
 [Route("api/[controller]")]
 [ApiController]
-public class CategoryController(ICategoryService categoryService) : ControllerBase
+public class CategoryController(IMediator mediator) : ControllerBase
 {
     [SwaggerOperation(Summary = "Show all Categories.")]
     [HttpGet]
     public async Task<IActionResult> GetAllCategories()
     {
-        var categories = await categoryService.GetAllCategories();
-        if (categories == null)
-        {
-            return BadRequest(new Response(false, "Categories are empty"));
-        }
-
-        return Ok(new Response<IEnumerable<CategoryDto>>(categories));
+        var query = new GetAllCategoriesQuery();
+        var result = await mediator.Send(query);
+        return Ok(new Response<IEnumerable<CategoryDto>>(result));
     }
 
-    ///// <summary>
-    ///// Show all specifics from one category by id.
-    ///// </summary>
-    //[SwaggerOperation(Summary = "Show specific category by id.")]
-    //[HttpGet("{id}")]
-    //public async Task<IActionResult> Details(int id)
-    //{
-    //    var category = await _categoryService.GetCategoryById(id);
-    //    if (category == null)
-    //    {
-    //        return NotFound();
-    //    }
-    //    category.TotalRecords = await _categoryService.GetProductsCount(id);
-    //    return Ok(new Response<CategoryDto>(category));
-    //}
+    /// <summary>
+    /// Show all specifics from one category by id.
+    /// </summary>
+    [SwaggerOperation(Summary = "Show specific category by id.")]
+    [HttpGet("{id}")]
+    public async Task<IActionResult> DetailsSpecificCategory(int id)
+    {
+        var query = new DetailsSpecificCategoryQuery(id);
+        var result = await mediator.Send(query);
+        return Ok(new Response<CategoryDto>(result));
+    }
 
-    ///// <summary>
-    ///// Create new category and complete description.
-    ///// </summary>
-    //[ProducesResponseType(typeof(CategoryCreateResponseStatus200), StatusCodes.Status200OK)]
-    //[ProducesResponseType(typeof(CategoryCreateResponseStatus500), StatusCodes.Status500InternalServerError)]
-    //[ValidateFilter]
-    //[SwaggerOperation(Summary = "Create the new Category")]
-    //[HttpPost]
-    //public async Task<IActionResult> Create([FromBody] CreateCategoryDto categoryModelDto)
-    //{
-    //    CreateCategoryDto createCategoryDto = new CreateCategoryDto()
-    //    {
-    //        CategoryName = categoryModelDto.CategoryName,
-    //        Description = categoryModelDto.Description,
-    //    };
+    /// <summary>
+    /// Create new category and complete description.
+    /// </summary>
+    [ProducesResponseType(typeof(CategoryCreateResponseStatus200), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CategoryCreateResponseStatus500), StatusCodes.Status500InternalServerError)]
+    [ValidateFilter]
+    [SwaggerOperation(Summary = "Create the new Category")]
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] CreateCategoryDto categoryModelDto)
+    {
+        var command = new CreateCategoryCommand(
+            categoryModelDto.CategoryName,
+            categoryModelDto.Description
+            );
 
+        await mediator.Send(command);
 
-    //    var categoryExists = await _categoryService.GetCategoryByName(createCategoryDto.CategoryName);
-    //    if (categoryExists != null)
-    //    {
-    //        return StatusCode(StatusCodes.Status500InternalServerError, new Response
-    //        {
-    //            Succeeded = false,
-    //            Message = "Category already exists!"
-    //        });
-    //    }
+        return Ok(new Response
+        {
+            Succeeded = true,
+            Message = "Category created!"
+        });
+    }
 
-    //    await _categoryService.CreateCategory(createCategoryDto);
+    /// <summary>
+    /// Update existed category.
+    /// </summary>
+    [ProducesResponseType(typeof(CategoryResponseStatus200), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CategoryResponseStatus500), StatusCodes.Status500InternalServerError)]
+    [HttpPut]
+    public async Task<IActionResult> UpdateCategory([FromBody] UpdateCategoryModel categoryUpdateModel)
+    {
+        var command = new UpdateCategoryCommand(
+               categoryUpdateModel.Id,
+               categoryUpdateModel.CategoryName,
+               categoryUpdateModel.Description
+           );
 
-    //    return StatusCode(StatusCodes.Status200OK, new Response
-    //    {
-    //        Succeeded = true,
-    //        Message = "Category created!"
-    //    });
-    //}
+        await mediator.Send(command);
 
-    ///// <summary>
-    ///// Update existed category.
-    ///// </summary>
-    //[ProducesResponseType(typeof(CategoryResponseStatus200), StatusCodes.Status200OK)]
-    //[ProducesResponseType(typeof(CategoryResponseStatus500), StatusCodes.Status500InternalServerError)]
-    //[HttpPut]
-    //public async Task<IActionResult> Update([FromBody] UpdateCategoryModel categoryUpdateModel)
-    //{
-    //    var isAdmin = User.FindFirstValue(ClaimTypes.Role).Contains(UserRoles.Admin);
-    //    if (!isAdmin)
-    //    {
-    //        return BadRequest(new Response(false, "You can't change category."));
-    //    }
-    //    else
-    //    {
-    //        UpdateCategoryDto updateCategoryDto = new UpdateCategoryDto()
-    //        {
-    //            Id = categoryUpdateModel.Id,
-    //            CategoryName = categoryUpdateModel.CategoryName,
-    //            Description = categoryUpdateModel.Description
-    //        };
-
-    //        await _categoryService.GetCategoryById(updateCategoryDto.Id);
-    //        if (updateCategoryDto.CategoryName == null)
-    //        {
-    //            return BadRequest(new Response(false, "Category isn't exists!"));
-    //        }
-
-    //        await _categoryService.UpdateCategory(updateCategoryDto);
-    //        return StatusCode(StatusCodes.Status200OK, new Response
-    //        {
-    //            Succeeded = true,
-    //            Message = "You update category successfully."
-    //        });
-    //    }
-    //}
+        return Ok(new Response
+        {
+            Succeeded = true,
+            Message = "You update category successfully."
+        });
+    }
 
     /// <summary>
     /// Delete existed category by id.
@@ -124,30 +93,26 @@ public class CategoryController(ICategoryService categoryService) : ControllerBa
     [ProducesResponseType(typeof(CategoryResponseStatus500), StatusCodes.Status500InternalServerError)]
     [SwaggerOperation(Summary = "Delete the Category by Id")]
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> DeleteCategory(int id)
     {
-        var isAdmin = User.FindFirstValue(ClaimTypes.Role).Contains(UserRoles.Admin);
-        if (isAdmin == false)
+        try
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, new Response
-            {
-                Succeeded = false,
-                Message = "You aren't Admin! Only Admin can delete Category"
-            });
-        }
-        else
-        {
-            var existCategory = await categoryService.GetCategoryById(id);
-            if (existCategory == null)
-            {
-                return BadRequest(new Response(false, "Category isn't exists!"));
-            }
-            await categoryService.DeleteCategory(id);
-            return StatusCode(StatusCodes.Status200OK, new Response
+            var command = new DeleteCategoryCommand(id);
+            await mediator.Send(command);
+
+            return Ok(new Response
             {
                 Succeeded = true,
                 Message = "You deleted category."
             });
+        }
+        catch (ForbiddenException ex)
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, new Response(false, ex.Message));
+        }
+        catch (NotFoundException ex)
+        {
+            return BadRequest(new Response(false, ex.Message));
         }
     }
 }
